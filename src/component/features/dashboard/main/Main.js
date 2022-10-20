@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function Main() {
   return (
-    <div>Main</div>
+    <div>MaiAAAAAAAAAAA1n245n125AAAn</div>
   )
 }
