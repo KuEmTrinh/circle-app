@@ -1,0 +1,29 @@
+.nav_list{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height:60px ;
+    background-color: #FFFF;
+    padding: 3px 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.nav_item{
+    text-decoration: none;
+    width: 25%;
+    margin-right: 0px;
+    padding: 5px;
+    display: inline-flex;
+    flex-direction: column;
+    margin: 0 auto;
+    align-items: center;
+
+}
+.nav_item--span{
+    font-size: 10px;
+    text-align: center;
+    color:#848484;
+    font-weight: bolder;
+    
+}
