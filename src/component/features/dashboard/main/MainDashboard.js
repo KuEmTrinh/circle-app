@@ -2,6 +2,8 @@ import React from 'react'
 
 export default function MainDashboard() {
   return (
-    <div>This is dashboard page</div>
+  <div>
+  This is dashboard page koredeoke
+  </div>
   )
 }
