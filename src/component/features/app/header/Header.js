@@ -84,7 +84,7 @@ export default function Header() {
     checkLogin();
   }, []);
   return (
-    <Card width="100%" height="52px">
+    <Card width="100%" height="80px">
       {isLoading ? (
         <>
           {isLogin ? (

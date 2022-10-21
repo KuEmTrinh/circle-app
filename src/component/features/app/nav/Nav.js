@@ -11,83 +11,57 @@ const iconNavItemStyles = {
 };
 
 export default function Nav() {
-  // const [isActive,setIsActive]=useState(false);
-  // const handleClick=()=>{
-  //   setIsActive(current=>!current)
-  // }
-  const tabs = ["cricle", "home", "account", "notifications"];
-  const icon = [
-    MenuOutlinedIcon,
-    HomeOutlinedIcon,
-    PermIdentityOutlinedIcon,
-    NotificationsOutlinedIcon,
-  ];
-  const [type, setType] = useState("home");
+  const [type, setType] = useState("home")
   return (
     <>
-      {/* <div className="nav_list">
-      {tabs.map((tab,index)=>{
-         <Link
-         to={`/${tab}`}
-         name={tab}
-         className="nav_item"
-         style={type=="tab"?{backgroundColor:"red"}:{}}
-         onClick={() => {
-           setType(tab);
-         }}
-       >
-         {icon[index]} sx={iconNavItemStyles} 
-         <span class="nav_item--span">サークル</span>
-       </Link>
-      })}
-    </div> */}
-
-      <div>{type}</div>
       <div className="nav_list">
         <Link
           to="/circle"
           name="circle"
           className="nav_item"
-          style={type == "circle" ? { backgroundColor: "red" } : {}}
+          style={type == "circle" ? { backgroundColor: "#CE476B" } : {}}
           onClick={() => {
             setType("circle");
           }}
         >
-          <MenuOutlinedIcon sx={iconNavItemStyles} />
-          <span class="nav_item--span">サークル</span>
+          <MenuOutlinedIcon sx={iconNavItemStyles}  style={type == "circle" ? { color: "white" } : {}}/>
+          <span className="nav_item--span" style={type == "circle" ? { color: "white" } : {}}>サークル</span>
         </Link>
         <Link
           to="/home"
           name="home"
           className="nav_item"
+          style={type == "home" ? { backgroundColor: "#CE476B" } : {}}
           onClick={() => {
             setType("home");
           }}
         >
-          <HomeOutlinedIcon sx={iconNavItemStyles} />
-          <span class="nav_item--span">ホーム</span>
+          <HomeOutlinedIcon sx={iconNavItemStyles}  style={type == "home" ? { color: "white" } : {}}/>
+          <span className="nav_item--span"style={type == "home" ? { color: "white" } : {}}>ホーム</span>
         </Link>
         <Link
           to="/account"
           name="account"
           className="nav_item"
+          style={type == "account" ? { backgroundColor: "#CE476B" } : {}}
           onClick={() => {
             setType("account");
           }}
         >
-          <PermIdentityOutlinedIcon sx={iconNavItemStyles} />
-          <span class="nav_item--span">アカウント</span>
+          <PermIdentityOutlinedIcon sx={iconNavItemStyles} style={type == "account" ? { color: "white" } : {}}/>
+          <span className="nav_item--span"style={type == "account" ? { color: "white" } : {}}>アカウント</span>
         </Link>
         <Link
           to="/notifications"
           name="notifications"
           className="nav_item"
+          style={type == "notifications" ? { backgroundColor: "#CE476B" } : {}}
           onClick={() => {
             setType("notifications");
           }}
         >
-          <NotificationsOutlinedIcon sx={iconNavItemStyles} />
-          <span class="nav_item--span">通知</span>
+          <NotificationsOutlinedIcon sx={iconNavItemStyles} style={type == "notifications" ? { color: "white" } : {}}/>
+          <span className="nav_item--span"style={type == "notifications" ? { color: "white" } : {}}>通知</span>
         </Link>
       </div>
     </>
