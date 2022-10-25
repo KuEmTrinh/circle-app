@@ -9,7 +9,7 @@ export const loginSlice = createSlice({
   initialState,
   reducers: {
     saveLoginInfo: (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.data = action.payload;
     },
   },
