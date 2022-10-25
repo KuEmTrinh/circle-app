@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Header.css";
 import Card from "../../../ui/card";
 import LoginIcon from "@mui/icons-material/Login";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import { authentication } from "../../../../app/firebase";
 import { signOut } from "firebase/auth";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -29,7 +29,7 @@ function ContentComponent() {
         }}
       >
         <p>Logout</p>
-        <LogoutIcon color="action" />
+        <LogoutIcon color="whiteColor" />
       </div>
     </>
   );
@@ -49,7 +49,7 @@ function LoginComponent({ setUser }) {
       });
   };
   return (
-    <div className="login">
+    <div className="loginBox">
       <div
         className="loginContent"
         onClick={() => {
@@ -57,7 +57,7 @@ function LoginComponent({ setUser }) {
         }}
       >
         <p>Login</p>
-        <LoginIcon color="action" />
+        <LoginIcon color="whiteColor" />
       </div>
     </div>
   );
@@ -84,24 +84,24 @@ export default function Header() {
     checkLogin();
   }, []);
   return (
-    <Card width="100%" height="52px">
-      {isLoading ? (
-        <>
-          {isLogin ? (
-            <div className="headerContent sbHeaderContent">
-              <ContentComponent />
-            </div>
-          ) : (
-            <div className="headerContent rightHeaderContent">
-              <LoginComponent setUser={setUser} user={user} />
-            </div>
-          )}
-        </>
-      ) : (
-        <>
-          <p>Loading</p>
-        </>
-      )}
-    </Card>
+    <div className="login">
+        {isLoading ? (
+          <>
+            {isLogin ? (
+              <div className="headerContent sbHeaderContent">
+                <ContentComponent/>
+              </div>
+            ) : (
+              <div className="headerContent rightHeaderContent">
+                <LoginComponent setUser={setUser}/>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <p>Loading</p>
+          </>
+        )}
+    </div>
   );
 }
