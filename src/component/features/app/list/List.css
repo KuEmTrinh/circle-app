@@ -1,5 +1,49 @@
-.list{
-    width: 100%;
-    height: auto;
-    background-color: white;
+.list {
+  width: 100%;
+  height: auto;
+  background-color: white;
+}
+
+.listBox {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.circleImage {
+  width: 210px;
+  height: 100px;
+  background: linear-gradient(180deg, #ff72dc 0%, #ff6471 100%);
+  border-radius: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.circleElementTitle {
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff;
+}
+.iconBox {
+  margin-top: 12px;
+  display: flex;
+}
+.iconItem {
+  display: flex;
+  align-items: center;
+}
+.iconItem p {
+  margin-left: 5px;
+}
+.circleElementBox{
+    margin-right: 24px;
+}
+.circleTitle {
+  color: #c13450;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+.circleElementList {
+  display: flex;
+  overflow-y: auto;
 }
