@@ -1,3 +1,7 @@
+.login{
+    height: 65px;
+    background-color: #C13450;
+}
 img{
    max-width: 100%;
    max-height: 100%;
@@ -25,10 +29,22 @@ img{
     display: flex;
     align-items: center;
 }
-.loginContent p {
+.loginContent p ,.headerUserName p {
     margin-top: -4px;
     font-size: 16px;
     margin-right: 6px;
     font-weight: bold;
+<<<<<<< HEAD
     color: #FFFF;
+=======
+    color: #fff;
+}
+.headerUserImage{
+    margin-right: 15px;
+}
+.headerUserInformation{
+    display: flex;
+    align-items: center;
+    
+>>>>>>> 4e7bd47768f493b82cd87087f5b626eaf96b4e9a
 }

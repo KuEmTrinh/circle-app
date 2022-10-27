@@ -2,16 +2,20 @@ import React, { useEffect, useState } from "react";
 import "./Header.css";
 import Card from "../../../ui/card";
 import LoginIcon from "@mui/icons-material/Login";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import { authentication } from "../../../../app/firebase";
 import { signOut } from "firebase/auth";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
 import { useDispatch } from "react-redux";
 import { saveLoginInfo } from "../../../slice/loginSlice";
+<<<<<<< HEAD
 
 
 function ContentComponent() {
+=======
+function ContentComponent({...props}) {
+>>>>>>> 4e7bd47768f493b82cd87087f5b626eaf96b4e9a
   const logout = () => {
     signOut(authentication)
       .then(() => {
@@ -23,7 +27,16 @@ function ContentComponent() {
   };
   return (
     <>
+<<<<<<< HEAD
       <img alt=" "src="https://plus.unsplash.com/premium_photo-1661645343248-230a3669f161?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80" />
+=======
+      <div className="headerUserInformation">
+        <img className="headerUserImage" alt="" src={props.photoURL} />
+        <div className="headerUserName">
+          <p>{props.username}</p>
+        </div>
+      </div>
+>>>>>>> 4e7bd47768f493b82cd87087f5b626eaf96b4e9a
       <div
         className="loginContent"
         onClick={() => {
@@ -31,7 +44,11 @@ function ContentComponent() {
         }}
       >
         <p>Logout</p>
+<<<<<<< HEAD
         <LogoutIcon sx={{ color:"white" }}  />
+=======
+        <LogoutIcon color="whiteColor" />
+>>>>>>> 4e7bd47768f493b82cd87087f5b626eaf96b4e9a
       </div>
     </>
   );
@@ -51,7 +68,7 @@ function LoginComponent({ setUser }) {
       });
   };
   return (
-    <div className="login">
+    <div className="loginBox">
       <div
         className="loginContent"
         onClick={() => {
@@ -59,7 +76,11 @@ function LoginComponent({ setUser }) {
         }}
       >
         <p>Login</p>
+<<<<<<< HEAD
         <LoginIcon sx={{ color:"white" }} />
+=======
+        <LoginIcon color="whiteColor" />
+>>>>>>> 4e7bd47768f493b82cd87087f5b626eaf96b4e9a
       </div>
     </div>
   );
@@ -71,10 +92,14 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
+  const [username,setUsername]=useState("")
+  const [photoURL,setPhotoURL]=useState("")
   const checkLogin = async () => {
     await firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const userInfomation = JSON.stringify(user);
+        setUsername(user.displayName);
+        setPhotoURL(user.photoURL)
         dispatch(saveLoginInfo(userInfomation));
         return setIsLogin(true);
       } else {
@@ -87,16 +112,20 @@ export default function Header() {
     checkLogin();
   }, []);
   return (
+<<<<<<< HEAD
     <Card width="100%" height="80px">
+=======
+    <div className="login">
+>>>>>>> 4e7bd47768f493b82cd87087f5b626eaf96b4e9a
       {isLoading ? (
         <>
           {isLogin ? (
             <div className="headerContent sbHeaderContent">
-              <ContentComponent />
+              <ContentComponent username={username} photoURL={photoURL}/>
             </div>
           ) : (
             <div className="headerContent rightHeaderContent">
-              <LoginComponent setUser={setUser} user={user} />
+              <LoginComponent setUser={setUser}  />
             </div>
           )}
         </>
@@ -105,6 +134,6 @@ export default function Header() {
           <p>Loading</p>
         </>
       )}
-    </Card>
+    </div>
   );
 }
