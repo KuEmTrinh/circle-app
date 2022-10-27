@@ -29,10 +29,18 @@ img{
     display: flex;
     align-items: center;
 }
-.loginContent p {
+.loginContent p ,.headerUserName p {
     margin-top: -4px;
     font-size: 14px;
     margin-right: 6px;
     font-weight: bold;
     color: #fff;
+}
+.headerUserImage{
+    margin-right: 15px;
+}
+.headerUserInformation{
+    display: flex;
+    align-items: center;
+    
 }

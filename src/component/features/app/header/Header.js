@@ -9,7 +9,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
 import { useDispatch } from "react-redux";
 import { saveLoginInfo } from "../../../slice/loginSlice";
-function ContentComponent() {
+function ContentComponent({...props}) {
   const logout = () => {
     signOut(authentication)
       .then(() => {
@@ -21,7 +21,12 @@ function ContentComponent() {
   };
   return (
     <>
-      <img src="https://plus.unsplash.com/premium_photo-1661645343248-230a3669f161?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80" />
+      <div className="headerUserInformation">
+        <img className="headerUserImage" alt="" src={props.photoURL} />
+        <div className="headerUserName">
+          <p>{props.username}</p>
+        </div>
+      </div>
       <div
         className="loginContent"
         onClick={() => {
@@ -68,10 +73,14 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [username,setUsername]=useState("")
+  const [photoURL,setPhotoURL]=useState("")
   const checkLogin = async () => {
     await firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const userInfomation = JSON.stringify(user);
+        setUsername(user.displayName);
+        setPhotoURL(user.photoURL)
         dispatch(saveLoginInfo(userInfomation));
         return setIsLogin(true);
       } else {
@@ -85,23 +94,23 @@ export default function Header() {
   }, []);
   return (
     <div className="login">
-        {isLoading ? (
-          <>
-            {isLogin ? (
-              <div className="headerContent sbHeaderContent">
-                <ContentComponent/>
-              </div>
-            ) : (
-              <div className="headerContent rightHeaderContent">
-                <LoginComponent setUser={setUser}/>
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <p>Loading</p>
-          </>
-        )}
+      {isLoading ? (
+        <>
+          {isLogin ? (
+            <div className="headerContent sbHeaderContent">
+              <ContentComponent username={username} photoURL={photoURL}/>
+            </div>
+          ) : (
+            <div className="headerContent rightHeaderContent">
+              <LoginComponent setUser={setUser}  />
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <p>Loading</p>
+        </>
+      )}
     </div>
   );
 }
