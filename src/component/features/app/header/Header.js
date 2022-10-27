@@ -9,6 +9,8 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
 import { useDispatch } from "react-redux";
 import { saveLoginInfo } from "../../../slice/loginSlice";
+
+
 function ContentComponent() {
   const logout = () => {
     signOut(authentication)
@@ -21,7 +23,7 @@ function ContentComponent() {
   };
   return (
     <>
-      <img src="https://plus.unsplash.com/premium_photo-1661645343248-230a3669f161?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80" />
+      <img alt=" "src="https://plus.unsplash.com/premium_photo-1661645343248-230a3669f161?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80" />
       <div
         className="loginContent"
         onClick={() => {
@@ -29,7 +31,7 @@ function ContentComponent() {
         }}
       >
         <p>Logout</p>
-        <LogoutIcon color="action" />
+        <LogoutIcon sx={{ color:"white" }}  />
       </div>
     </>
   );
@@ -57,7 +59,7 @@ function LoginComponent({ setUser }) {
         }}
       >
         <p>Login</p>
-        <LoginIcon color="action" />
+        <LoginIcon sx={{ color:"white" }} />
       </div>
     </div>
   );
@@ -67,6 +69,7 @@ export default function Header() {
   const [user, setUser] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
   const checkLogin = async () => {
     await firebase.auth().onAuthStateChanged((user) => {
