@@ -3,17 +3,26 @@ import "./Header.css";
 import Card from "../../../ui/card";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { authentication } from "../../../../app/firebase";
+import { authentication, db ,database} from "../../../../app/firebase";
 import { signOut } from "firebase/auth";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
 import { useDispatch } from "react-redux";
 import { saveLoginInfo } from "../../../slice/loginSlice";
+import {deleteLoginInfor} from "../../../slice/loginSlice";
+import { collection, addDoc, getDocs,doc, setDoc } from "firebase/firestore"
+
+// import 
+
+
+
 function ContentComponent({...props}) {
+  const dispatch = useDispatch();
   const logout = () => {
     signOut(authentication)
-      .then(() => {
+      .then((res) => {
         console.log("da dang xuat");
+        // dispatch.deleteLoginInfor(res);
       })
       .catch((error) => {
         console.log(error);
@@ -48,6 +57,7 @@ function LoginComponent({ setUser }) {
       .then((res) => {
         dispatch(saveLoginInfo(res.user));
         console.log("Da dang nhap");
+        // addUserAuth();
       })
       .catch((error) => {
         console.log("Login Failed");
@@ -73,14 +83,17 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [userId,setUserId]=useState("")
   const [username,setUsername]=useState("")
-  const [photoURL,setPhotoURL]=useState("")
+  const [userphotoURL,setPhotoURL]=useState("")
+  
   const checkLogin = async () => {
     await firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const userInfomation = JSON.stringify(user);
         setUsername(user.displayName);
         setPhotoURL(user.photoURL)
+        setUserId(user.uid)
         dispatch(saveLoginInfo(userInfomation));
         return setIsLogin(true);
       } else {
@@ -88,17 +101,29 @@ export default function Header() {
       }
     });
     await setIsLoading(true);
+    
   };
   useEffect(() => {
     checkLogin();
   }, []);
+   const addUserAuth=()=>{
+    const userAuth= collection(database,"userAuth");
+    const addUserAuth={
+      uid:userId,
+      username:username,
+      userPhotoURL:userphotoURL
+    }
+     addDoc(userAuth,addUserAuth);
+  }
+  
+  // addUserAuth();
   return (
     <div className="login">
       {isLoading ? (
         <>
           {isLogin ? (
             <div className="headerContent sbHeaderContent">
-              <ContentComponent username={username} photoURL={photoURL}/>
+              <ContentComponent username={username} photoURL={userphotoURL}/>
             </div>
           ) : (
             <div className="headerContent rightHeaderContent">
@@ -113,4 +138,7 @@ export default function Header() {
       )}
     </div>
   );
+
 }
+
+
