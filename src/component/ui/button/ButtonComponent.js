@@ -6,9 +6,9 @@ export default function ButtonComponent({ ...props }) {
 
     const ButtonComponent = styled.div`
   background-color: ${props => props.mode === "cancel" ? "#686465" : "rgb(206, 71, 107);"};
-  background-color: ${props => props.mode === "send" ?  "rgb(206, 71, 107);":"#686465"};
+  background-color: ${props => props.mode === "send" ? "rgb(206, 71, 107);" : "#686465"};
   color: #FFFFFF;
-`
+`;
     return (
         <>
             <ButtonComponent className={styles.button} mode={props.mode} onClick={props.onClick}>{props.children}</ButtonComponent>

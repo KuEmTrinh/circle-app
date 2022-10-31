@@ -3,21 +3,64 @@ import "./Header.css";
 import Card from "../../../ui/card";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { authentication, db ,database} from "../../../../app/firebase";
+import { authentication, db, database } from "../../../../app/firebase";
 import { signOut } from "firebase/auth";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
 import { useDispatch } from "react-redux";
 import { saveLoginInfo } from "../../../slice/loginSlice";
-import {deleteLoginInfor} from "../../../slice/loginSlice";
-import { collection, addDoc, getDocs,doc, setDoc } from "firebase/firestore"
+import { deleteLoginInfor } from "../../../slice/loginSlice";
+import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore"
 
 // import 
 
 
 
-function ContentComponent({...props}) {
-  const dispatch = useDispatch();
+function ContentComponent({ ...props }) {
+  const userAuth = collection(database, "userAuth");
+
+  const addUserAuth = async () => {
+    const addUserAuth = {
+      uid: props.userId,
+      username: props.username,
+      userPhotoURL: props.photoURL,
+      userEmail: props.userEmail
+    }
+    await addDoc(userAuth, addUserAuth);
+  }
+  const checkExistUserAuth = () => {
+    const checkUserIdArray = [1,2,3]
+    getDocs(userAuth)
+      .then(res => {
+        res.docs.map(doc => {
+          checkUserIdArray.push(doc.data().uid);
+          // if (!checkUserIdArray.includes(props.userId)) {
+          //   // console.log('Different')
+          //   addUserAuth();
+          // }
+
+        }
+        )
+      }
+      )
+
+      .catch(err => {
+        console.log(err)
+      })
+    const nums=[1,2,3,4];
+    nums.push(5,6,7)
+    console.log(nums)
+    console.log("--------------")
+    console.log(checkUserIdArray)
+    // console.log(props.userId)
+    // console.log(checkUserIdArray.includes(props.userId))
+    // if (!checkUserIdArray.includes(props.userId)) {
+    //   console.log("Exits")
+    // } else {
+    //   console.log("Not ton tai")
+    // }
+  }
+  checkExistUserAuth();
   const logout = () => {
     signOut(authentication)
       .then((res) => {
@@ -28,6 +71,7 @@ function ContentComponent({...props}) {
         console.log(error);
       });
   };
+  // addUserAuth();
   return (
     <>
       <div className="headerUserInformation">
@@ -83,10 +127,11 @@ export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const [userId,setUserId]=useState("")
-  const [username,setUsername]=useState("")
-  const [userphotoURL,setPhotoURL]=useState("")
-  
+  const [userId, setUserId] = useState("")
+  const [username, setUsername] = useState("")
+  const [userphotoURL, setPhotoURL] = useState("")
+  const [userEmail, setUserEmail] = useState("")
+
   const checkLogin = async () => {
     await firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -94,6 +139,7 @@ export default function Header() {
         setUsername(user.displayName);
         setPhotoURL(user.photoURL)
         setUserId(user.uid)
+        setUserEmail(user.email)
         dispatch(saveLoginInfo(userInfomation));
         return setIsLogin(true);
       } else {
@@ -101,21 +147,22 @@ export default function Header() {
       }
     });
     await setIsLoading(true);
-    
+
   };
   useEffect(() => {
     checkLogin();
   }, []);
-   const addUserAuth=()=>{
-    const userAuth= collection(database,"userAuth");
-    const addUserAuth={
-      uid:userId,
-      username:username,
-      userPhotoURL:userphotoURL
-    }
-     addDoc(userAuth,addUserAuth);
-  }
-  
+  //  const addUserAuth=()=>{
+  //   const userAuth= collection(database,"userAuth");
+  //   const addUserAuth={
+  //     uid:userId,
+  //     username:username,
+  //     userPhotoURL:userphotoURL,
+  //     userEmail:userEmail
+  //   }
+  //    addDoc(userAuth,addUserAuth);
+  // }
+
   // addUserAuth();
   return (
     <div className="login">
@@ -123,11 +170,11 @@ export default function Header() {
         <>
           {isLogin ? (
             <div className="headerContent sbHeaderContent">
-              <ContentComponent username={username} photoURL={userphotoURL}/>
+              <ContentComponent userId={userId} userEmail={userEmail} username={username} photoURL={userphotoURL} />
             </div>
           ) : (
             <div className="headerContent rightHeaderContent">
-              <LoginComponent setUser={setUser}  />
+              <LoginComponent setUser={setUser} />
             </div>
           )}
         </>
