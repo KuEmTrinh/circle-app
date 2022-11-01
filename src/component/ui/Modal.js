@@ -7,14 +7,24 @@ export default function Modal(props) {
       {props.show ? (
         <div className={"modal "+props.className}>
           <div className="modalContent">{props.children}</div>
+          {props.closeIcon==="none"?<></>:
           <div
+          className="closeIcon"
+          onClick={() => {
+            props.onClose();
+          }}
+        >
+         <CloseIcon></CloseIcon>
+        </div>
+          }
+          {/* <div
             className="closeIcon"
             onClick={() => {
               props.onClose();
             }}
           >
-            <CloseIcon></CloseIcon>
-          </div>
+           <CloseIcon></CloseIcon>
+          </div> */}
         </div>
       ) : (
         ""
