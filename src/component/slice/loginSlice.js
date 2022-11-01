@@ -9,12 +9,22 @@ export const loginSlice = createSlice({
   initialState,
   reducers: {
     saveLoginInfo: (state, action) => {
-      // console.log(action.payload);
+
       state.data = action.payload;
     },
+
   },
+}, {
+  name: "deleteLoginInformation",
+  initialState,
+  reducers: {
+    deleteLoginInfor: (state, action) => {
+      console.log("hellu logout")
+      state.data = action.payload;
+    }
+  }
 });
 
-export const { saveLoginInfo } = loginSlice.actions;
+export const { saveLoginInfo,deleteLoginInfor } = loginSlice.actions;
 
 export default loginSlice.reducer;
