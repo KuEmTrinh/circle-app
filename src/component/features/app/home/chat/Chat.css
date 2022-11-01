@@ -42,7 +42,7 @@
   justify-content: center;
   padding: 10px 15px;
   border-radius: 5px;
-  max-width: 70%;
+  /* max-width: 70%; */
   word-wrap: break-word;
 }
 .messageBody{
@@ -64,6 +64,7 @@
   background-color: #c13450;
   color: #fff;
   text-align: left;
+  max-width: 100%;
 }
 .messagesBox {
   width: 95%;
@@ -82,6 +83,4 @@
   margin-right: 15px;
   
 }
-.messageText{
-  min-width: 50px;
-}
+
