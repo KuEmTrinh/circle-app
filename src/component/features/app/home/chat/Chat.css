@@ -1,0 +1,65 @@
+.chatInputBox {
+  width: 95%;
+  position: fixed;
+  bottom: 80px;
+  display: flex;
+}
+.chatInput {
+  width: 85%;
+}
+.chatSendIcon {
+  width: 15%;
+}
+.wrapChatSendIcon {
+  background-color: #c13450;
+  border-radius: 50%;
+  padding: 8px;
+}
+.sendIcon {
+  transform: translateX(2px);
+}
+.messageUserPhoto {
+  border-radius: 50%;
+  width: 3rem;
+}
+.messageItem {
+  display: flex;
+}
+.messageItemLeft {
+  display: flex;
+  justify-content: flex-end;
+}
+.messageItemLeft:not(:first-child),
+.messageItem:not(:first-child) {
+  margin-top: 15px;
+}
+.messageContent,
+.messageContentLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+.messageContent {
+  margin-left: 15px;
+  background-color: #eeeeee;
+  color: rgb(60, 60, 60);
+}
+.messageContentLeft {
+  margin-right: 15px;
+  background-color: #c13450;
+  color: #fff;
+  text-align: right;
+}
+.messagesBox {
+  width: 95%;
+  margin-top: 1rem;
+  height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+.messageUserName {
+  font-weight: 600;
+}
