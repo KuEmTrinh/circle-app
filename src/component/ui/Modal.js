@@ -5,7 +5,7 @@ export default function Modal(props) {
   return (
     <>
       {props.show ? (
-        <div className="modal">
+        <div className={"modal "+props.className}>
           <div className="modalContent">{props.children}</div>
           <div
             className="closeIcon"
