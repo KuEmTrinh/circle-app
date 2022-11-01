@@ -61,10 +61,13 @@ function ChatMessage({ message, userId }) {
     <>
       {userId == message.userId ? (
         <div className="messageItemLeft">
-          <div className="messageContentLeft">
-            <p className="messageUserName">{message.userName}</p>
-            <div className="messageText">{message.message}</div>
+          <div className="messageBody">
+            <p className="messageUserName messageUserNameLeft">{message.userName}</p>
+            <div className="messageContentLeft">
+              <div className="messageText">{message.message}</div>
+            </div>
           </div>
+
           <div className="messagePhoto">
             <img src={message.userPhoto} alt="" className="messageUserPhoto" />
           </div>
@@ -74,9 +77,11 @@ function ChatMessage({ message, userId }) {
           <div className="messagePhoto">
             <img src={message.userPhoto} alt="" className="messageUserPhoto" />
           </div>
-          <div className="messageContent">
+          <div className="messageBody">
             <p className="messageUserName">{message.userName}</p>
-            <div className="messageText">{message.message}</div>
+            <div className="messageContent">
+              <div className="messageText">{message.message}</div>
+            </div>
           </div>
         </div>
       )}
@@ -91,6 +96,7 @@ function ChatMessages({ circleId }) {
     getMessages();
   }, []);
 
+  
   //function
   const getMessages = async () => {
     await db

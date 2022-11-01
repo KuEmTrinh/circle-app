@@ -6,11 +6,11 @@ import { authentication, db } from "../../../../app/firebase";
 import { signOut } from "firebase/auth";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveLoginInfo, deleteUserInfo } from "../../../slice/loginSlice";
 
-function ContentComponent({ user,dispatch }) {
-
+function ContentComponent({ dispatch }) {
+  let userInfo = useSelector(state => state.login.data)
   // function
 
   const removeUserInfomation = async () =>{
@@ -29,9 +29,9 @@ function ContentComponent({ user,dispatch }) {
   return (
     <>
       <div className="headerUserInformation">
-        <img className="headerUserImage" alt="" src={user.photoURL} />
+        <img className="headerUserImage" alt="" src={userInfo.photoURL} />
         <div className="headerUserName">
-          <p>{user.displayName}</p>
+          <p>{userInfo.displayName}</p>
         </div>
       </div>
       <div
@@ -47,7 +47,7 @@ function ContentComponent({ user,dispatch }) {
   );
 }
 
-function LoginComponent({ setUser }) {
+function LoginComponent() {
   //function
 
   const setUserInfomationOnDatabase = async (user) => {
@@ -78,7 +78,6 @@ function LoginComponent({ setUser }) {
     const provider = new GoogleAuthProvider();
     signInWithPopup(authentication, provider)
       .then(async (res) => {
-        await setUser(res.user);
         await dispatch(saveLoginInfo(res.user));
         await checkUserExists(res.user);
         console.log("Da dang nhap");
@@ -103,7 +102,6 @@ function LoginComponent({ setUser }) {
 }
 
 export default function Header() {
-  const [user, setUser] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -111,8 +109,8 @@ export default function Header() {
   const checkLogin = async () => {
     await firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        const userInfomation = JSON.stringify(user);
-        dispatch(saveLoginInfo(userInfomation));
+        // const userInfomation = JSON.stringify(user);
+        dispatch(saveLoginInfo(user));
         return setIsLogin(true);
       } else {
         return setIsLogin(false);
@@ -129,11 +127,11 @@ export default function Header() {
         <>
           {isLogin ? (
             <div className="headerContent sbHeaderContent">
-              <ContentComponent user={user} dispatch={dispatch}/>
+              <ContentComponent dispatch={dispatch}/>
             </div>
           ) : (
             <div className="headerContent rightHeaderContent">
-              <LoginComponent setUser={setUser} />
+              <LoginComponent />
             </div>
           )}
         </>
