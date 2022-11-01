@@ -96,6 +96,7 @@ function ChatMessages({ circleId }) {
     getMessages();
   }, []);
 
+  
   //function
   const getMessages = async () => {
     await db
