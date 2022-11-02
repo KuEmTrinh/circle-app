@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import "./Chat.css";
 import TextField from "@mui/material/TextField";
@@ -56,34 +56,71 @@ function ChatRoomInputBox({ circleId }) {
   );
 }
 
-function ChatMessage({ message, userId }) {
+function ChatMessage({ message, userId, index, messages }) {
+  let show = true;
+  if (messages[index]?.userId == messages[index - 1]?.userId) {
+    show = false;
+  }
   return (
     <>
       {userId == message.userId ? (
-        <div className="messageItemLeft">
-          <div className="messageBody">
-            <p className="messageUserName messageUserNameLeft">{message.userName}</p>
-            <div className="messageContentLeft">
-              <div className="messageText">{message.message}</div>
+        <>
+          {show ? (
+            <div className="messageItemLeft">
+              <div className="messageBody">
+                <p className="messageUserName messageUserNameLeft">
+                  {message.userName}
+                </p>
+                <div className="messageContentLeft">
+                  <div className="messageText">{message.message}</div>
+                </div>
+              </div>
+              <div className="messagePhoto">
+                <img
+                  src={message.userPhoto}
+                  alt=""
+                  className="messageUserPhoto"
+                />
+              </div>
             </div>
-          </div>
-
-          <div className="messagePhoto">
-            <img src={message.userPhoto} alt="" className="messageUserPhoto" />
-          </div>
-        </div>
+          ) : (
+            <div className="messageItemLeftOnly">
+              <div className="messageBody">
+                <div className="messageContentLeftOnly">
+                  <div className="messageText">{message.message}</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       ) : (
-        <div className="messageItem">
-          <div className="messagePhoto">
-            <img src={message.userPhoto} alt="" className="messageUserPhoto" />
-          </div>
-          <div className="messageBody">
-            <p className="messageUserName">{message.userName}</p>
-            <div className="messageContent">
-              <div className="messageText">{message.message}</div>
+        <>
+          {show ? (
+            <div className="messageItem">
+              <div className="messagePhoto">
+                <img
+                  src={message.userPhoto}
+                  alt=""
+                  className="messageUserPhoto"
+                />
+              </div>
+              <div className="messageBody">
+                <p className="messageUserName">{message.userName}</p>
+                <div className="messageContent">
+                  <div className="messageText">{message.message}</div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ) : (
+            <div className="messageItemOnly">
+              <div className="messageBodyOnly">
+                <div className="messageContent">
+                  <div className="messageText">{message.message}</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </>
   );
@@ -92,14 +129,14 @@ function ChatMessage({ message, userId }) {
 function ChatMessages({ circleId }) {
   const [messages, setMessages] = useState();
   const userId = useSelector((state) => state.login.data.uid);
+  const messagesEndPoint = useRef();
   useEffect(() => {
     getMessages();
   }, []);
 
-  
   //function
-  const getMessages = async () => {
-    await db
+  const getMessages = () => {
+    const query = db
       .collection("circle")
       .doc(circleId)
       .collection("chat")
@@ -110,16 +147,26 @@ function ChatMessages({ circleId }) {
           data.push(doc.data());
         });
         setMessages(data);
+        messagesEndPoint.current?.scrollIntoView({ behavior: "smooth" });
       });
+    return query;
   };
   return (
     <>
       {messages ? (
         <div className="center">
           <div className="messagesBox">
-            {messages.map((message) => {
-              return <ChatMessage message={message} userId={userId} />;
+            {messages.map((message, index) => {
+              return (
+                <ChatMessage
+                  messages={messages}
+                  message={message}
+                  userId={userId}
+                  index={index}
+                />
+              );
             })}
+            <div ref={messagesEndPoint}></div>
           </div>
         </div>
       ) : (
