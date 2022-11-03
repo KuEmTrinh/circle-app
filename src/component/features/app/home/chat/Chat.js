@@ -113,7 +113,7 @@ function ChatMessage({ message, userId, index, messages }) {
             </div>
           ) : (
             <div className="messageItemOnly">
-              <div className="messageBodyOnly">
+              <div className="messageBody">
                 <div className="messageContent">
                   <div className="messageText">{message.message}</div>
                 </div>

@@ -54,7 +54,7 @@
   word-wrap: break-word;
 }
 .messageBody {
-  display: flex;
+  display: inline-block;
   flex-direction: column;
   max-width: 70%;
 }
@@ -68,7 +68,7 @@
   margin-left: 15px;
   background-color: #eeeeee;
   color: rgb(60, 60, 60);
-  max-width: 100%;
+  /* max-width: 100%; */
 }
 .messageContentLeft,
 .messageContentLeftOnly {
@@ -99,4 +99,7 @@
 }
 .messageUserNameLeft {
   margin-right: 15px;
+}
+.messageItemOnly{
+  
 }
