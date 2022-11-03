@@ -8,6 +8,7 @@ export default function Account() {
   const [createCircleToggle, setCreateCircleToggle] = useState(false);
   return (
     <>
+    <p>Test</p>
       <Modal
         className="creatNewCircleModal"
         show={createCircleToggle}
