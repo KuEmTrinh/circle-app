@@ -1,0 +1,17 @@
+.newCircleButton{
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.creatNewCircleModal{
+    min-width: 80%;
+}
+.creatNewCircleModalInputBox{
+    margin-top: 20px;
+   
+}
+.createNewCircleTextField{
+    margin-top: 5px;
+    margin-bottom: 15px !important;
+    width: 100%;
+}
