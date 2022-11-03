@@ -13,7 +13,7 @@
 .wrapChatSendIcon {
   background-color: #c13450;
   border-radius: 50%;
-  padding: 8px; 
+  padding: 8px;
 }
 .sendIcon {
   transform: translateX(2px);
@@ -26,45 +26,62 @@
   display: flex;
   align-items: center;
 }
-.messageItemLeft {
+.messageItemLeft,
+.messageItemLeftOnly {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+.messageItemLeftOnly {
+  margin-top: 2px;
 }
 .messageItemLeft:not(:first-child),
 .messageItem:not(:first-child) {
   margin-top: 15px;
 }
+.messageItemOnly{
+  margin-top: 2px;
+  margin-left: 3rem;
+}
 .messageContent,
-.messageContentLeft {
+.messageContentLeft,
+.messageContentLeftOnly {
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 10px 15px;
   border-radius: 5px;
-  /* max-width: 70%; */
   word-wrap: break-word;
 }
-.messageBody{
-  display: flex;
+.messageBody {
+  display: inline-block;
   flex-direction: column;
   max-width: 70%;
 }
-.messageItemLeft .messageBody{
+.messageBodyOnly{
+
+}
+.messageItemLeft .messageBody {
   align-items: flex-end;
 }
 .messageContent {
   margin-left: 15px;
   background-color: #eeeeee;
   color: rgb(60, 60, 60);
-  max-width: 100%;
+  /* max-width: 100%; */
 }
-.messageContentLeft {
-  margin-right: 15px;
+.messageContentLeft,
+.messageContentLeftOnly {
   background-color: #c13450;
   color: #fff;
   text-align: left;
   max-width: 100%;
+}
+.messageContentLeft {
+  margin-right: 15px;
+}
+.messageContentLeftOnly {
+  margin-right: calc(15px + 3rem);
 }
 .messagesBox {
   width: 95%;
@@ -73,14 +90,16 @@
   overflow-y: auto;
   /* overflow-x: hidden; */
 }
-.messageUserName,.messageUserNameLeft {
+.messageUserName,
+.messageUserNameLeft {
   font-weight: 600;
   font-size: 12px;
   margin-left: 15px;
   margin-bottom: 5px;
 }
-.messageUserNameLeft{
+.messageUserNameLeft {
   margin-right: 15px;
+}
+.messageItemOnly{
   
 }
-
