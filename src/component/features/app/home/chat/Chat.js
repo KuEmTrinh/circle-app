@@ -56,9 +56,11 @@ function ChatRoomInputBox({ circleId }) {
   );
 }
 
-function ChatMessage({ message, userId, index, messages }) {
+function ChatMessage({ message, userId, messagePre }) {
+  // console.log(messagesPre?.userId)
+  console.log()
   let show = true;
-  if (messages[index]?.userId == messages[index - 1]?.userId) {
+  if (messagePre?.userId == message?.userId) {
     show = false;
   }
   return (
@@ -159,7 +161,7 @@ function ChatMessages({ circleId }) {
             {messages.map((message, index) => {
               return (
                 <ChatMessage
-                  messages={messages}
+                  messagePre={messages[index-1]}
                   message={message}
                   userId={userId}
                   index={index}
