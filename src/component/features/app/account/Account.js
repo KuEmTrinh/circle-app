@@ -39,23 +39,6 @@ export default function Account() {
   return (
     <>
       <Modal
-        closeIcon="none"
-        className="confirmModal"
-        show={confirmToggle}
-        onClose={() => {
-          setConfirmToggle(false);
-        }}
-      >
-        Confirm Modal
-        <ButtonComponent
-          onClick={() => {
-            sendInfor();
-          }}
-        >
-          確認
-        </ButtonComponent>
-      </Modal>
-      <Modal
         className="creatNewCircleModal"
         show={createCircleToggle}
         onClose={() => {
@@ -116,6 +99,25 @@ export default function Account() {
             }}
           >
             申請
+          </ButtonComponent>
+        </div>
+      </Modal>
+      <Modal
+        closeIcon="none"
+        show={confirmToggle}
+        className="confirmModal"
+        onClose={() => {
+          setConfirmToggle(false);
+        }}
+      >
+        <p className="subTitle">情報を確認してください！</p>
+        <div className="center">
+          <ButtonComponent
+            onClick={() => {
+              sendInfor();
+            }}
+          >
+            確認
           </ButtonComponent>
         </div>
       </Modal>
