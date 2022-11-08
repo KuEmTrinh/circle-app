@@ -10,11 +10,12 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import { db } from "../../../../app/firebase";
+import { Link } from "react-router-dom";
 
 function CircleItem({ circle }) {
   return (
     <div className="circleItem">
-      <Card sx={{ minWidth: 200 }}>
+      <Card sx={{ minWidth: "100%" }}>
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -67,7 +68,14 @@ export default function List() {
         {circleList ? (
           <>
             {circleList.map((circle) => {
-              return <CircleItem circle={circle}></CircleItem>;
+              return (
+                <>
+                  <Link to={circle.id +"/home_page"}>
+                    <CircleItem circle={circle}></CircleItem>
+                  </Link>
+                  
+                </>
+              );
             })}
           </>
         ) : (

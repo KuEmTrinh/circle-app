@@ -132,7 +132,7 @@ export default function Header() {
   };
 
   const getUserRole = async (uid) => {
-    console.log(uid);
+    
     db.collection("user")
       .doc(uid)
       .get()

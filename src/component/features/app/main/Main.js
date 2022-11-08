@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import Account from "../account/Account";
 import Chat from "../home/chat/Chat";
 import MainDashboard from "../../dashboard/main/MainDashboard";
+import Circle from "../list/circle/Circle";
 function NeedLogin() {
   return (
     <>
@@ -27,7 +28,7 @@ export default function Main() {
       <Routes>
         <Route path="/">
           <Route path="list" element={<List />} />
-
+          <Route path="list/:circleId/home_page" element={<Circle/>}/>
           {loginStatus ? (
             <>
               <Route
