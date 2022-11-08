@@ -58,9 +58,6 @@
   flex-direction: column;
   max-width: 70%;
 }
-.messageBodyOnly{
-
-}
 .messageItemLeft .messageBody {
   align-items: flex-end;
 }
@@ -99,7 +96,4 @@
 }
 .messageUserNameLeft {
   margin-right: 15px;
-}
-.messageItemOnly{
-  
 }

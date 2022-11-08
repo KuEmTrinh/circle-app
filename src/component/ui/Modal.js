@@ -5,15 +5,17 @@ export default function Modal(props) {
   return (
     <>
       {props.show ? (
-        <div className={"modal "+props.className}>
-          <div className="modalContent">{props.children}</div>
-          <div
-            className="closeIcon"
-            onClick={() => {
-              props.onClose();
-            }}
-          >
-            <CloseIcon></CloseIcon>
+        <div className="overlayModal">
+          <div className={"modal " + props.className}>
+            <div
+              className="closeIcon"
+              onClick={() => {
+                props.onClose();
+              }}
+            >
+              <CloseIcon></CloseIcon>
+            </div>
+            <div className="modalContent">{props.children}</div>
           </div>
         </div>
       ) : (
