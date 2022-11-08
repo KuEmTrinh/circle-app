@@ -50,7 +50,7 @@ function NewCircleComponent() {
   };
   const confirmCreateCircle = async () => {
     const circleInfo = JSON.parse(JSON.stringify(creatNewCircleInfor));
-    await db.collection("circle").add({ circleInfo });
+    await db.collection("circle").add(circleInfo);
     await setNormalInfo();
   };
   return (
