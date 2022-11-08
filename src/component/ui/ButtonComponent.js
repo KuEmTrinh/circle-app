@@ -25,7 +25,7 @@ export default function ButtonComponent({ ...props }) {
 
   const setBackgroundButton = () => {
     if (props.mode === "cancel") {
-      return "background-color: #000; color: #ffffff;";
+      return "background-color: #848484; color: #ffffff;";
     } else {
       return "background-color: #C13450; color: #ffffff;";
     }
