@@ -7,15 +7,19 @@ import { signOut } from "firebase/auth";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { saveLoginInfo, deleteUserInfo } from "../../../slice/loginSlice";
+import {
+  saveLoginInfo,
+  deleteUserInfo,
+  saveUserRole,
+} from "../../../slice/loginSlice";
 
 function ContentComponent({ dispatch }) {
-  let userInfo = useSelector(state => state.login.data)
+  let userInfo = useSelector((state) => state.login.data);
   // function
 
-  const removeUserInfomation = async () =>{
+  const removeUserInfomation = async () => {
     dispatch(deleteUserInfo());
-  }
+  };
   const logout = () => {
     signOut(authentication)
       .then((res) => {
@@ -51,13 +55,16 @@ function LoginComponent() {
   //function
 
   const setUserInfomationOnDatabase = async (user) => {
-    db.collection("user").doc(user.uid).set({
-      name: user.displayName,
-      email: user.email,
-      emailVerified: user.emailVerified,
-      uid: user.uid,
-      photoURL: user.photoURL,
-    });
+    db.collection("user")
+      .doc(user.uid)
+      .set({
+        name: user.displayName,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        uid: user.uid,
+        photoURL: user.photoURL,
+        role: ["user"],
+      });
   };
 
   const checkUserExists = async (user) => {
@@ -107,16 +114,31 @@ export default function Header() {
   const dispatch = useDispatch();
 
   const checkLogin = async () => {
-    await firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // const userInfomation = JSON.stringify(user);
-        dispatch(saveLoginInfo(user));
-        return setIsLogin(true);
-      } else {
-        return setIsLogin(false);
-      }
-    });
-    await setIsLoading(true);
+    try {
+      await firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // const userInfomation = JSON.stringify(user);
+          dispatch(saveLoginInfo(user));
+          getUserRole(user.uid);
+          return setIsLogin(true);
+        } else {
+          return setIsLogin(false);
+        }
+      });
+      await setIsLoading(true);
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const getUserRole = async (uid) => {
+    console.log(uid);
+    db.collection("user")
+      .doc(uid)
+      .get()
+      .then((snapshot) => {
+        dispatch(saveUserRole(snapshot.data().role));
+      });
   };
   useEffect(() => {
     checkLogin();
@@ -127,7 +149,7 @@ export default function Header() {
         <>
           {isLogin ? (
             <div className="headerContent sbHeaderContent">
-              <ContentComponent dispatch={dispatch}/>
+              <ContentComponent dispatch={dispatch} />
             </div>
           ) : (
             <div className="headerContent rightHeaderContent">

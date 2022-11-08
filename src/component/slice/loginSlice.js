@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   data: "",
   login: false,
+  role: [],
 };
 
 export const loginSlice = createSlice({
@@ -13,6 +14,9 @@ export const loginSlice = createSlice({
       state.data = action.payload;
       state.login = true;
     },
+    saveUserRole: (state, action) => {
+      state.role = [...action.payload];
+    },
     deleteUserInfo: (state) => {
       state.data = "";
       state.login = false;
@@ -20,6 +24,7 @@ export const loginSlice = createSlice({
   },
 });
 
-export const { saveLoginInfo, deleteUserInfo } = loginSlice.actions;
+export const { saveLoginInfo, deleteUserInfo, saveUserRole } =
+  loginSlice.actions;
 
 export default loginSlice.reducer;

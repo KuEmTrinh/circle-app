@@ -8,7 +8,7 @@ import ButtonComponent from "../../../ui/ButtonComponent";
 import { db } from "../../../../app/firebase";
 import { useSelector } from "react-redux";
 
-export default function Account() {
+function NewCircleComponent() {
   let userInfo = useSelector((state) => state.login.data);
   const confirmModal = () => {
     setConfirmToggle(true);
@@ -21,8 +21,8 @@ export default function Account() {
     registerUserEmail: userInfo.email,
     type: "",
     name: "",
-    members: "",
-    money: "",
+    members: 0,
+    money: 0,
     motivation: "",
     status: false,
   });
@@ -32,9 +32,26 @@ export default function Account() {
       [e.target.name]: e.target.value,
     });
   };
-  const sendInfor = () => {
+
+  const setNormalInfo = async () => {
+    setCreateNewCircleInfor({
+      resgiterUid: userInfo.uid,
+      registerUsername: userInfo.displayName,
+      registerUserEmail: userInfo.email,
+      type: "",
+      name: "",
+      members: 0,
+      money: 0,
+      motivation: "",
+      status: false,
+    });
+    await setCreateCircleToggle(false);
+    await setConfirmToggle(false);
+  };
+  const confirmCreateCircle = async () => {
     const circleInfo = JSON.parse(JSON.stringify(creatNewCircleInfor));
-    db.collection("circle").add({ circleInfo });
+    await db.collection("circle").add({ circleInfo });
+    await setNormalInfo();
   };
   return (
     <>
@@ -86,14 +103,6 @@ export default function Account() {
         </div>
         <div className="creatNewCircleModalButtonBox">
           <ButtonComponent
-            mode="cancel"
-            onClick={() => {
-              setCreateCircleToggle(false);
-            }}
-          >
-            取り消し
-          </ButtonComponent>
-          <ButtonComponent
             onClick={() => {
               confirmModal();
             }}
@@ -114,7 +123,7 @@ export default function Account() {
         <div className="center">
           <ButtonComponent
             onClick={() => {
-              sendInfor();
+              confirmCreateCircle();
             }}
           >
             確認
@@ -129,6 +138,14 @@ export default function Account() {
       >
         <Button size="medium">Create new Circle</Button>
       </div>
+    </>
+  );
+}
+
+export default function Account() {
+  return (
+    <>
+      <NewCircleComponent></NewCircleComponent>
     </>
   );
 }
