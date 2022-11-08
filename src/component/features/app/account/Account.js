@@ -6,6 +6,7 @@ import "./Account.css";
 import TitleText from "../../../ui/TitleText";
 import ButtonComponent from "../../../ui/ButtonComponent";
 import { db } from "../../../../app/firebase";
+import { firebase } from "../../../../app/firebase";
 import { useSelector } from "react-redux";
 
 function NewCircleComponent() {
@@ -50,6 +51,8 @@ function NewCircleComponent() {
   };
   const confirmCreateCircle = async () => {
     const circleInfo = JSON.parse(JSON.stringify(creatNewCircleInfor));
+    let time = firebase.firestore.FieldValue.serverTimestamp();
+    circleInfo.createdAt = time;
     await db.collection("circle").add(circleInfo);
     await setNormalInfo();
   };
