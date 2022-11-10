@@ -28,7 +28,7 @@ export default function Main() {
       <Routes>
         <Route path="/">
           <Route path="list" element={<List />} />
-          <Route path="list/:circleId/home_page" element={<Circle/>}/>
+          <Route path="list/:circleId/circle_details" element={<Circle/>}/>
           {loginStatus ? (
             <>
               <Route
