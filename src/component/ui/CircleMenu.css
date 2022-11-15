@@ -1,0 +1,15 @@
+.circelMenu{
+
+ 
+    margin: 10px 10px;
+    position: fixed;
+    height: 60px;
+
+}
+.circleMenuList{
+   height: 100%;
+}
+.circleMenuItem{
+    font-size: 12px !important;
+    padding: 5px !important;
+}

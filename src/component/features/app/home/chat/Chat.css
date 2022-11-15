@@ -3,9 +3,10 @@
   position: fixed;
   bottom: 80px;
   display: flex;
+  margin-left: 10px;
 }
 .chatInput {
-  width: 85%;
+  width: 90%;
 }
 .chatSendIcon {
   width: 15%;
@@ -16,7 +17,7 @@
   padding: 8px;
 }
 .sendIcon {
-  transform: translateX(2px);
+  transform: translateX(2px) translateY(3px);
 }
 .messageUserPhoto {
   border-radius: 50%;
@@ -83,7 +84,7 @@
 .messagesBox {
   width: 95%;
   margin-top: 1rem;
-  height: calc(100vh - 210px);
+  height: calc(100vh - 290px);
   overflow-y: auto;
   /* overflow-x: hidden; */
 }
