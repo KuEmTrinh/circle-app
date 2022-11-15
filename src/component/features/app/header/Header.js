@@ -11,6 +11,7 @@ import {
   saveLoginInfo,
   deleteUserInfo,
   saveUserRole,
+  saveCircleList
 } from "../../../slice/loginSlice";
 
 function ContentComponent({ dispatch }) {
@@ -119,7 +120,7 @@ export default function Header() {
         if (user) {
           // const userInfomation = JSON.stringify(user);
           dispatch(saveLoginInfo(user));
-          getUserRole(user.uid);
+          getUserInfomationForReduxStore(user.uid);
           return setIsLogin(true);
         } else {
           return setIsLogin(false);
@@ -131,13 +132,13 @@ export default function Header() {
     }
   };
 
-  const getUserRole = async (uid) => {
-    console.log(uid);
+  const getUserInfomationForReduxStore = async (uid) => {
     db.collection("user")
       .doc(uid)
       .get()
       .then((snapshot) => {
         dispatch(saveUserRole(snapshot.data().role));
+        dispatch(saveCircleList(snapshot.data().circleList));
       });
   };
   useEffect(() => {

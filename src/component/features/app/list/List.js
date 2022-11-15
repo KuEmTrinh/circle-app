@@ -10,6 +10,7 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import { db } from "../../../../app/firebase";
+import { Link } from "react-router-dom";
 
 function CircleItem({ circle }) {
   return (
@@ -17,19 +18,23 @@ function CircleItem({ circle }) {
       <Card sx={{ minWidth: 200 }}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              R
-            </Avatar>
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe"  src={circle.registerUserPhotoURL}/>
+             
+
           }
           title={circle.name}
           subheader={circle.registerUsername}
         />
-        <CardMedia
-          component="img"
-          height="100"
-          image="https://images.unsplash.com/photo-1661956602139-ec64991b8b16?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1265&q=80"
-          alt="Paella dish"
-        />
+
+        <Link to={circle.id + "/circle_details"}>
+          <CardMedia
+            component="img"
+            height="100"
+            image="https://images.unsplash.com/photo-1661956602139-ec64991b8b16?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1265&q=80"
+            alt="Paella dish"
+          />
+        </Link>
+
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
             <FavoriteIcon />

@@ -4,6 +4,7 @@ const initialState = {
   data: "",
   login: false,
   role: [],
+  circleList: [],
 };
 
 export const loginSlice = createSlice({
@@ -21,10 +22,14 @@ export const loginSlice = createSlice({
       state.data = "";
       state.login = false;
     },
+    saveCircleList: (state, action) => {
+      state.circleList = action.payload;
+      console.log(state.circleList);
+    },
   },
 });
 
-export const { saveLoginInfo, deleteUserInfo, saveUserRole } =
+export const { saveLoginInfo, deleteUserInfo, saveUserRole, saveCircleList } =
   loginSlice.actions;
 
 export default loginSlice.reducer;
