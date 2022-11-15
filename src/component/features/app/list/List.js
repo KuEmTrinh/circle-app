@@ -30,7 +30,7 @@ function CircleItem({ circle }) {
           <CardMedia
             component="img"
             height="100"
-            image="https://images.unsplash.com/photo-1661956602139-ec64991b8b16?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1265&q=80"
+            image="https://100partners.city.fukuoka.lg.jp/app/wp-content/uploads/2020/05/%E4%B9%9D%E5%B7%9E%E7%94%A3%E6%A5%AD%E5%A4%A7%E5%AD%A6.jpg"
             alt="Paella dish"
           />
         </Link>
