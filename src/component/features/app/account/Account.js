@@ -17,9 +17,10 @@ function NewCircleComponent() {
   const [createCircleToggle, setCreateCircleToggle] = useState(false);
   const [confirmToggle, setConfirmToggle] = useState(false);
   const [creatNewCircleInfor, setCreateNewCircleInfor] = useState({
-    resgiterUid: userInfo.uid,
-    registerUsername: userInfo.displayName,
-    registerUserEmail: userInfo.email,
+    registerUid: userInfo.uid,
+      registerUsername: userInfo.displayName,
+      registerUserEmail: userInfo.email,
+      registerUserPhotoURL: userInfo.photoURL,
     type: "",
     name: "",
     members: 0,
@@ -36,9 +37,10 @@ function NewCircleComponent() {
 
   const setNormalInfo = async () => {
     setCreateNewCircleInfor({
-      resgiterUid: userInfo.uid,
+      registerUid: userInfo.uid,
       registerUsername: userInfo.displayName,
       registerUserEmail: userInfo.email,
+      registerUserPhotoURL: userInfo.photoURL,
       type: "",
       name: "",
       members: 0,

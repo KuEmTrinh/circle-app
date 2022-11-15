@@ -12,7 +12,7 @@ import "./List.css";
 import { db } from "../../../../app/firebase";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
-
+import { arrayUnion } from "firebase/firestore";
 function CircleItemComponent({ circle }) {
   const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
   const toDateTime = (secs) => {
@@ -25,10 +25,22 @@ function CircleItemComponent({ circle }) {
     return month + "月" + day + "日 " + hours + "時" + min + "分";
   };
 
-  const confirmCircle = (id) => {
-    db.collection("circle").doc(id).update({
+  const confirmCircle = (circle) => {
+    
+    db.collection("circle").doc(circle.id).update({
       status: true,
     });
+    db.collection("circle").doc(circle.id).collection("member").add({
+      role: "circleAdmin",
+      userName: circle.registerUsername,
+      userId: circle.registerUid,
+      userPhotoURL: circle.registerUserPhotoURL,
+    });
+    db.collection("user")
+      .doc(circle.registerUid)
+      .update({
+        circleList: arrayUnion(circle.id),
+      });
   };
   return (
     <>
@@ -44,7 +56,7 @@ function CircleItemComponent({ circle }) {
           <ButtonComponent mode="cancel">キャンセル</ButtonComponent>
           <ButtonComponent
             onClick={() => {
-              confirmCircle(circle.id);
+              confirmCircle(circle);
               setCircleDetailsToggle(false);
             }}
           >
