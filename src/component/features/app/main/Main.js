@@ -9,6 +9,7 @@ import Account from "../account/Account";
 import Chat from "../home/chat/Chat";
 import MainDashboard from "../../dashboard/main/MainDashboard";
 import Circle from "./../list/circle/Circle"
+import CircleHome from "../home/CircleHome";
 function NeedLogin() {
   return (
     <>
@@ -37,6 +38,7 @@ export default function Main() {
               />
               <Route path="account" element={<Account />} />
               <Route path="chat/:circleId" element={<Chat />} />
+              <Route path=":circleId/circle_home" element={<CircleHome />} />
             </>
           ) : (
             <Route path="*" element={<NeedLogin />} />
