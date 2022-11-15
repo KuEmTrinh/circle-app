@@ -1,0 +1,12 @@
+.circelMenu{
+    max-width: 100%;
+    margin: 10px 20px;
+
+}
+.circleMenuList{
+ display: flex;   
+}
+.circleMenuItem{
+    font-size: 12px !important;
+    padding: 5px !important;
+}

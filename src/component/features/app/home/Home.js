@@ -13,6 +13,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import { useEffect, useState } from "react";
 import { db } from "../../../../app/firebase";
+import { firebase } from "../../../../app/firebase";
 import { useSelector } from "react-redux";
 function MyCircleItem({ circle }) {
   return (
@@ -30,7 +31,7 @@ function MyCircleItem({ circle }) {
           subheader={circle.registerUsername}
         />
 
-        <Link to={circle.id + "/circle_details"}>
+        <Link to={circle.id + "/circle_home"}>
           <CardMedia
             component="img"
             height="100"
@@ -56,37 +57,38 @@ export default function Home() {
   let circleId = "jazyNqrjDziBoPjOKxfM";
   // get myCircleList
   let userInfo = useSelector((state) => state.login.data);
+  let circleJoinedList = useSelector((state) => state.login.circleList);
   // console.log(userInfo.uid);
   const [circleList, setCircleList] = useState();
   useEffect(() => {
-    fetchCircleData();
-  }, []);
-  const fetchCircleData = () => {
-    db.collection("circle")
-      .doc()
-      .collection("member")
-      .get()
-      .then((querySnapshot) => {
-        console.log(querySnapshot)
-        const data = [];
-        querySnapshot.docs.map((doc) => {
-          // let item = doc.data();
-          // item.id = doc.id;
-          // data.push(item);
-          console.log(doc.data())
-          console.log("1")
+    if (circleJoinedList.length > 0) {
+      fetchCircleData(circleJoinedList);
+    }
+  }, [circleJoinedList]);
+  const fetchCircleData = (circleJoinedList) => {
+    if (circleJoinedList) {
+      const query = db
+        .collection("circle")
+        .where(
+          firebase.firestore.FieldPath.documentId(),
+          "in",
+          circleJoinedList
+        )
+        .get()
+        .then((querySnapshot) => {
+          const data = [];
+          querySnapshot.docs.map((doc) => {
+            let item = doc.data();
+            item.id = doc.id;
+            data.push(item);
+          });
+          setCircleList(data);
         });
-        setCircleList(data);
-      });
+      return query;
+    }
   };
-  // console.log(circleList);
   return (
     <>
-      <div className="homeTitle">
-        <Link to={"/chat/" + circleId}>
-          <ButtonComponent>Click to Chat</ButtonComponent>
-        </Link>
-      </div>
       <div className="myCircleList">
         {circleList ? (
           <>
