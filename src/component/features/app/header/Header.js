@@ -133,12 +133,15 @@ export default function Header() {
   };
 
   const getUserInfomationForReduxStore = async (uid) => {
-    db.collection("user")
+    await db.collection("user")
       .doc(uid)
       .get()
       .then((snapshot) => {
         dispatch(saveUserRole(snapshot.data().role));
-        dispatch(saveCircleList(snapshot.data().circleList));
+        let list = snapshot.data().circleList;
+        if(list.length > 0){
+          dispatch(saveCircleList(list));
+        }
       });
   };
   useEffect(() => {

@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useEffect, useState } from "react";
 import { db } from "../../../../app/firebase";
 import { firebase } from "../../../../app/firebase";
@@ -29,8 +30,14 @@ function MyCircleItem({ circle }) {
           }
           title={circle.name}
           subheader={circle.registerUsername}
+          action=
+        {
+          <IconButton aria-label="settings">
+            <MoreHorizIcon />
+          </IconButton>
+        }
         />
-
+        
         <Link to={circle.id + "/circle_home"}>
           <CardMedia
             component="img"
@@ -39,7 +46,6 @@ function MyCircleItem({ circle }) {
             alt="Paella dish"
           />
         </Link>
-
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
             <FavoriteIcon />
@@ -56,7 +62,7 @@ function MyCircleItem({ circle }) {
 export default function Home() {
   let circleId = "jazyNqrjDziBoPjOKxfM";
   // get myCircleList
-  let userInfo = useSelector((state) => state.login.data);
+
   let circleJoinedList = useSelector((state) => state.login.circleList);
   // console.log(userInfo.uid);
   const [circleList, setCircleList] = useState();
@@ -82,7 +88,8 @@ export default function Home() {
             item.id = doc.id;
             data.push(item);
           });
-          setCircleList(data);
+          console.log(data);
+          // setCircleList(data);
         });
       return query;
     }
