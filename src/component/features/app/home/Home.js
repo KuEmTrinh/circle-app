@@ -88,7 +88,8 @@ export default function Home() {
             item.id = doc.id;
             data.push(item);
           });
-          setCircleList(data);
+          console.log(data);
+          // setCircleList(data);
         });
       return query;
     }
