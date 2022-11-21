@@ -16,7 +16,22 @@ import { useEffect, useState } from "react";
 import { db } from "../../../../app/firebase";
 import { firebase } from "../../../../app/firebase";
 import { useSelector } from "react-redux";
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
 function MyCircleItem({ circle }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClickMoreHorizIcon = (event) => {
+    setAnchorEl(event.currentTarget)
+
+  }
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
   return (
     <div className="myCircleItem">
       <Card sx={{ minWidth: 200 }}>
@@ -31,13 +46,44 @@ function MyCircleItem({ circle }) {
           title={circle.name}
           subheader={circle.registerUsername}
           action=
-        {
-          <IconButton aria-label="settings">
-            <MoreHorizIcon />
-          </IconButton>
-        }
+          {
+            <>
+              <IconButton aria-label="settings" aria-describedby={id} variant="contained" onClick={(e) => { handleClickMoreHorizIcon(e) }}>
+                <MoreHorizIcon />
+              </IconButton>
+              <Popover
+
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <Typography sx={{}}>
+                  <MenuList
+                    className="circlePopup"
+                    autoFocusItem={open}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                  >
+                    <MenuItem onClick={handleClose}>ホーム編集</MenuItem>
+                    <MenuItem onClick={handleClose}>サークル削除</MenuItem>
+
+                  </MenuList>
+                </Typography>
+              </Popover>
+            </>
+
+          }
         />
-        
+
         <Link to={circle.id + "/circle_home"}>
           <CardMedia
             component="img"
@@ -60,7 +106,6 @@ function MyCircleItem({ circle }) {
 }
 
 export default function Home() {
-  let circleId = "jazyNqrjDziBoPjOKxfM";
   // get myCircleList
 
   let circleJoinedList = useSelector((state) => state.login.circleList);

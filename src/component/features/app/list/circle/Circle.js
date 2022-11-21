@@ -177,8 +177,8 @@ function CircleHomePage({ circleId }) {
 export default function Circle() {
   let { circleId } = useParams();
   return (
-    <>
+    <div className="circleHomePage">
       <CircleHomePage circleId={circleId}></CircleHomePage>
-    </>
+    </div>
   );
 }
