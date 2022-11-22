@@ -12,6 +12,10 @@ import { useSelector } from "react-redux";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import imageCompression from "browser-image-compression";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 function NewCircleComponent() {
   let userInfo = useSelector((state) => state.login.data);
   const confirmModal = () => {
@@ -23,12 +27,12 @@ function NewCircleComponent() {
   const [resultBox, setResultBox] = useState(false);
   const [file, setFile] = useState("");
   const [preview, setPreview] = useState();
+  const [circleType, setCircleType] = useState("");
   const [creatNewCircleInfor, setCreateNewCircleInfor] = useState({
     registerUid: userInfo.uid,
     registerUsername: userInfo.displayName,
     registerUserEmail: userInfo.email,
     registerUserPhotoURL: userInfo.photoURL,
-    type: "",
     name: "",
     members: 0,
     money: 0,
@@ -48,6 +52,10 @@ function NewCircleComponent() {
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl);
   }, [file]);
+
+  const handleChangeCircleType = (event) => {
+    setCircleType(event.target.value);
+  };
 
   const handleChangeImage = async (event) => {
     const options = {
@@ -76,7 +84,6 @@ function NewCircleComponent() {
       registerUsername: userInfo.displayName,
       registerUserEmail: userInfo.email,
       registerUserPhotoURL: userInfo.photoURL,
-      type: "",
       name: "",
       members: 0,
       money: 0,
@@ -92,6 +99,7 @@ function NewCircleComponent() {
     let time = firebase.firestore.FieldValue.serverTimestamp();
     circleInfo.createdAt = time;
     circleInfo.imgUrl = url;
+    circleInfo.circleType = circleType;
     await db.collection("circle").add(circleInfo);
     await setNormalInfo();
   };
@@ -142,6 +150,21 @@ function NewCircleComponent() {
           ) : (
             ""
           )}
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">サークル選択</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={circleType}
+              label="サークル選択"
+              onChange={handleChangeCircleType}
+            >
+              <MenuItem value={"五者執行部"}>五者執行部</MenuItem>
+              <MenuItem value={"体育会系"}>体育会系</MenuItem>
+              <MenuItem value={"学術文化系"}>学術文化系</MenuItem>
+              <MenuItem value={"任意団体愛好会"}>任意団体愛好会</MenuItem>
+            </Select>
+          </FormControl>
           <div className="inputBox">
             <label for="accountSettingInput">
               <div className="accountSettingInputUpload">
@@ -158,13 +181,6 @@ function NewCircleComponent() {
               </div>
             </label>
           </div>
-          <TextField
-            className="createNewCircleTextField"
-            label="種類"
-            inputProps={{ maxLength: 25 }}
-            name="type"
-            onChange={handleChange}
-          ></TextField>
           <TextField
             className="createNewCircleTextField"
             label="名前"
