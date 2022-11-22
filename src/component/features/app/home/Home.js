@@ -107,9 +107,8 @@ function MyCircleItem({ circle }) {
 
 export default function Home() {
   // get myCircleList
-
   let circleJoinedList = useSelector((state) => state.login.circleList);
-  // console.log(userInfo.uid);
+  // console.log(circleJoinedList);
   const [circleList, setCircleList] = useState();
   useEffect(() => {
     if (circleJoinedList.length > 0) {
@@ -133,8 +132,8 @@ export default function Home() {
             item.id = doc.id;
             data.push(item);
           });
-          console.log(data);
-          // setCircleList(data);
+          // console.log(data);
+          setCircleList(data);
         });
       return query;
     }
