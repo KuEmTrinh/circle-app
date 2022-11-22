@@ -3,17 +3,29 @@ import CircleMenu from "../../../ui/CircleMenu";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ButtonComponent from "../../../ui/ButtonComponent";
-import "./CircleHome.css"
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import "./CircleHome.css";
 export default function CircleHome() {
   let { circleId } = useParams();
   return (
-    <div className="circleHome">
-      <CircleMenu></CircleMenu>
-      <div className="homeTitle">
-        {/* <Link to={"/chat/" + circleId}>
-          <ButtonComponent>Click to Chat</ButtonComponent>
-        </Link> */}
+    <>
+      <Link to="/">
+        <div className="backButtonBox">
+          <ButtonComponent size="small">
+            <div className="backButton">
+              <div className="backButtonIcon">
+                <KeyboardBackspaceIcon fontSize="small"></KeyboardBackspaceIcon>
+              </div>
+              <p>戻る</p>
+            </div>
+          </ButtonComponent>
+        </div>
+      </Link>
+
+      <div className="circleHome">
+        <CircleMenu></CircleMenu>
+        <div className="homeTitle"></div>
       </div>
-    </div>
+    </>
   );
 }

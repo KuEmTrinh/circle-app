@@ -73,3 +73,16 @@
 .circleIntro p{
   line-height: normal;
 }
+.circleMemberList{
+  display: flex;
+}
+.circleMemberItemUsername{
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+.circleJoinButton{
+  position: fixed;
+  bottom: 5rem;
+  margin-left: 10px;
+}
