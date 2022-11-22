@@ -9,3 +9,16 @@
 .myCircleItem{
     margin-bottom: 20px;
 }
+.circlePopup{
+    border-radius: 50%;
+}
+.menuPopup{
+    font-size:12px !important ;
+    display: flex !important;
+}
+.menuPopup:last-child{
+    color: red;
+}
+.menuPopupIcon{
+    margin-right: 5px;
+}

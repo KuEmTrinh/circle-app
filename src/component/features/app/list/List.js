@@ -18,9 +18,9 @@ function CircleItem({ circle }) {
       <Card sx={{ minWidth: 200 }}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe"  src={circle.registerUserPhotoURL}/>
-             
-
+            <Avatar
+              src={circle.registerUserPhotoURL}
+            />
           }
           title={circle.name}
           subheader={circle.registerUsername}
@@ -29,8 +29,8 @@ function CircleItem({ circle }) {
         <Link to={circle.id + "/circle_details"}>
           <CardMedia
             component="img"
-            height="100"
-            image="https://images.unsplash.com/photo-1661956602139-ec64991b8b16?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1265&q=80"
+            height="150"
+            image="https://100partners.city.fukuoka.lg.jp/app/wp-content/uploads/2020/05/%E4%B9%9D%E5%B7%9E%E7%94%A3%E6%A5%AD%E5%A4%A7%E5%AD%A6.jpg"
             alt="Paella dish"
           />
         </Link>
@@ -54,7 +54,8 @@ export default function List() {
     fetchCircleData();
   }, []);
   const fetchCircleData = () => {
-    db.collection("circle")
+    const query = db
+      .collection("circle")
       .where("status", "==", true)
       .onSnapshot((querySnapshot) => {
         const data = [];
@@ -65,6 +66,7 @@ export default function List() {
         });
         setCircleList(data);
       });
+    return query;
   };
   return (
     <div className="listBox">
@@ -76,7 +78,7 @@ export default function List() {
             })}
           </>
         ) : (
-          ""
+          "Loading"
         )}
       </div>
     </div>
