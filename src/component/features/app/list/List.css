@@ -6,7 +6,8 @@
 
 .listBox {
   margin-left: 20px;
-  margin-top: 20px;
+  height: calc(100vh - 9rem);
+  overflow: auto;
 }
 .circleListItem {
   display: flex;
@@ -19,4 +20,10 @@
 }
 .circleListItem::-webkit-scrollbar {
   display: none;
+}
+.circleListTitle {
+  font-weight: bold;
+  font-size: 24px;
+  color: #c13450;
+  padding: 1rem 0;
 }

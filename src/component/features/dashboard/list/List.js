@@ -73,7 +73,7 @@ function CircleItemComponent({ circle }) {
       >
         <TableCell align="left">{circle.name}</TableCell>
         <TableCell align="right">{circle.registerUsername}</TableCell>
-        <TableCell align="right">{circle.type}</TableCell>
+        <TableCell align="right">{circle.circleType}</TableCell>
         <TableCell align="right">{toDateTime(circle.createdAt)}</TableCell>
       </TableRow>
     </>
