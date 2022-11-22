@@ -17,11 +17,7 @@ function CircleItem({ circle }) {
     <div className="circleItem">
       <Card sx={{ minWidth: 200 }}>
         <CardHeader
-          avatar={
-            <Avatar
-              src={circle.registerUserPhotoURL}
-            />
-          }
+          avatar={<Avatar src={circle.registerUserPhotoURL} />}
           title={circle.name}
           subheader={circle.registerUsername}
         />
@@ -30,7 +26,7 @@ function CircleItem({ circle }) {
           <CardMedia
             component="img"
             height="150"
-            image="https://100partners.city.fukuoka.lg.jp/app/wp-content/uploads/2020/05/%E4%B9%9D%E5%B7%9E%E7%94%A3%E6%A5%AD%E5%A4%A7%E5%AD%A6.jpg"
+            image={circle.imgUrl}
             alt="Paella dish"
           />
         </Link>
@@ -64,6 +60,7 @@ export default function List() {
           item.id = doc.id;
           data.push(item);
         });
+        console.log(data);
         setCircleList(data);
       });
     return query;
