@@ -20,6 +20,8 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
 function MyCircleItem({ circle }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClickMoreHorizIcon = (event) => {
@@ -73,8 +75,14 @@ function MyCircleItem({ circle }) {
                     id="composition-menu"
                     aria-labelledby="composition-button"
                   >
-                    <MenuItem onClick={handleClose}>ホーム編集</MenuItem>
-                    <MenuItem onClick={handleClose}>サークル削除</MenuItem>
+                    <MenuItem className="menuPopup" onClick={handleClose}>
+                      <ModeEditIcon className="menuPopupIcon" fontSize="small" />
+                      ホーム編集
+                      </MenuItem>
+                    <MenuItem className="menuPopup" onClick={handleClose}>
+                      <DeleteIcon className="menuPopupIcon" fontSize="small"/>
+                      サークル削除
+                      </MenuItem>
 
                   </MenuList>
                 </Typography>
