@@ -9,3 +9,6 @@
 .myCircleItem{
     margin-bottom: 20px;
 }
+.circlePopup{
+    border-radius: 50%;
+}
