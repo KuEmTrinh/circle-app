@@ -69,7 +69,7 @@ export default function CircleMenu() {
             label="メンバー"
           />
         </Tabs>
-        <TabPanel value={value} index={0}>
+        <TabPanel className="tabPanel" value={value} index={0}>
             <Circle></Circle>
         </TabPanel>
         <TabPanel value={value} index={1}></TabPanel>

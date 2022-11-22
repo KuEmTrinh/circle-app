@@ -13,3 +13,6 @@
     font-size: 12px !important;
     padding: 5px !important;
 }
+.tabPanel{
+    height: 100%;
+}
