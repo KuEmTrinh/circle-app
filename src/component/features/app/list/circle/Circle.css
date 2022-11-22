@@ -1,0 +1,41 @@
+.circleDeatailsBox {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.circleName {
+  color: #c13450;
+  font-size: 26px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+}
+.circleImageBox {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  height: 160px;
+  overflow-x: scroll;
+}
+.circleImageBox ul {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.circleImageBox ul li {
+  margin-right: 5px;
+  height: 100%;
+}
+.circleImageBox ul li img {
+  max-width: 180px;
+  height: auto;
+}
+.circleTitleBox {
+  color: #c13450;
+ 
+  display: flex;
+}
+.circleTitleBox p {
+  font-size: 15px;
+  position: relative;
+  font-weight: bolder;
+  top: 3px;
+}

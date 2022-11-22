@@ -7,6 +7,9 @@ import { Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Account from "../account/Account";
 import Chat from "../home/chat/Chat";
+import MainDashboard from "../../dashboard/main/MainDashboard";
+import Circle from "./../list/circle/Circle"
+import CircleHome from "../home/CircleHome";
 function NeedLogin() {
   return (
     <>
@@ -16,6 +19,8 @@ function NeedLogin() {
 }
 
 export default function Main() {
+  let userRole = useSelector((state) => state.login.role);
+  let isSystemAdmin = userRole.includes("systemAdmin");
   //   const [user, setUser] = useState(false);
   const loginStatus = useSelector((state) => state.login.login);
   return (
@@ -24,12 +29,16 @@ export default function Main() {
       <Routes>
         <Route path="/">
           <Route path="list" element={<List />} />
-
+          <Route path="list/:circleId/circle_details" element={<Circle/>}/>
           {loginStatus ? (
             <>
-              <Route index element={<Home />} />
+              <Route
+                index
+                element={isSystemAdmin ? <MainDashboard /> : <Home />}
+              />
               <Route path="account" element={<Account />} />
               <Route path="chat/:circleId" element={<Chat />} />
+              <Route path=":circleId/circle_home" element={<CircleHome />} />
             </>
           ) : (
             <Route path="*" element={<NeedLogin />} />

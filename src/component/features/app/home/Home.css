@@ -1,0 +1,11 @@
+.myCircleList{
+    height: 77%;
+    overflow: auto;
+}
+
+.myCircleList{
+    margin: 10px 20px;
+}
+.myCircleItem{
+    margin-bottom: 20px;
+}
