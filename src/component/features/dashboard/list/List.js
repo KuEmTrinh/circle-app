@@ -26,7 +26,6 @@ function CircleItemComponent({ circle }) {
   };
 
   const confirmCircle = (circle) => {
-    
     db.collection("circle").doc(circle.id).update({
       status: true,
     });
@@ -35,6 +34,7 @@ function CircleItemComponent({ circle }) {
       userName: circle.registerUsername,
       userId: circle.registerUid,
       userPhotoURL: circle.registerUserPhotoURL,
+      status: true,
     });
     db.collection("user")
       .doc(circle.registerUid)
