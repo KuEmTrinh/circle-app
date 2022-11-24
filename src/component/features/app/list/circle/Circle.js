@@ -68,6 +68,10 @@ function CircleJoinComponent({ circleId }) {
   const [circleJoinToggle, setCircleJoinToggle] = useState(false);
   const [circleJoinUsername, setCircleJoinUsername] = useState("");
   const [circleJoinUsernumber, setCircleJoinUsernumber] = useState("");
+  const [circleJoinUseraddress, setCircleJoinUseraddress] = useState("");
+  const [circleJoinUserguarantor, setCircleJoinUserguarantor] = useState("");
+  const [circleJoinUserorganizationname, setCircleJoinUserorganizationname] = useState("");
+  const [circleJoinUserjoiningdate, setCircleJoinUserjoiningdate] = useState("");
   const [circleJoinMotivation, setCircleJoinMotivation] = useState("");
   let userInfo = useSelector((state) => state.login.data);
 
@@ -82,11 +86,19 @@ function CircleJoinComponent({ circleId }) {
         userId: userInfo.uid,
         userName: circleJoinUsername,
         userNumber: circleJoinUsernumber,
+        useraddress: circleJoinUseraddress,
+        userguarantor: circleJoinUserguarantor,
+        userorganizationname: circleJoinUserorganizationname,
+        userjoiningdate: circleJoinUserjoiningdate,
         userMotivation: circleJoinMotivation,
         status: false,
       });
     setCircleJoinUsername("");
     setCircleJoinUsernumber("");
+    setCircleJoinUseraddress("");
+    setCircleJoinUserguarantor("");
+    setCircleJoinUserorganizationname("");
+    setCircleJoinUserjoiningdate("");
     setCircleJoinMotivation("");
     setCircleJoinToggle(false);
     return query;
@@ -100,7 +112,7 @@ function CircleJoinComponent({ circleId }) {
           setCircleJoinToggle(false);
         }}
       >
-        <TitleText>サークル参加申請</TitleText>
+        <TitleText>参加申請</TitleText>
         <TextField
           className="createNewCircleTextField"
           label="名前"
@@ -119,15 +131,40 @@ function CircleJoinComponent({ circleId }) {
             setCircleJoinUsernumber(e.target.value);
           }}
         ></TextField>
+         <TextField
+          className="createNewCircleTextField"
+          label="住所"
+          inputProps={{ maxLength: 25 }}
+          value={circleJoinUseraddress}
+          onChange={(e) => {
+            setCircleJoinUseraddress(e.target.value);
+          }}
+        ></TextField>
         <TextField
           className="createNewCircleTextField"
-          label="志望動機"
-          multiline
-          rows={4}
-          name="motivation"
-          value={circleJoinMotivation}
+          label="保証人氏名"
+          inputProps={{ maxLength: 25 }}
+          value={circleJoinUserguarantor}
           onChange={(e) => {
-            setCircleJoinMotivation(e.target.value);
+            setCircleJoinUserguarantor(e.target.value);
+          }}
+        ></TextField>
+         <TextField
+          className="createNewCircleTextField"
+          label="団体名"
+          inputProps={{ maxLength: 25 }}
+          value={circleJoinUserorganizationname}
+          onChange={(e) => {
+            setCircleJoinUserorganizationname(e.target.value);
+          }}
+        ></TextField>
+        <TextField
+          className="createNewCircleTextField"
+          label="入部日"
+          inputProps={{ maxLength: 25 }}
+          value={circleJoinUserjoiningdate}
+          onChange={(e) => {
+            setCircleJoinUserjoiningdate(e.target.value);
           }}
         ></TextField>
         <div className="circleJoinCircleConfirm center">
