@@ -55,13 +55,13 @@ function CircleTimeLine() {
     </Timeline>
   );
 }
-export default function CircleInfo({ dataCircleInfor, memberOfCircle }) {
+export default function CircleInfo({ circleData, memberData }) {
   return (
     <div className="circleDeatailsBox">
-      <h1 className="circleName">{dataCircleInfor.name}</h1>
+      <h1 className="circleName">{circleData.name}</h1>
       <div className="circleImageBox">
         <ul>
-          <img className="circleImage" src={dataCircleInfor.imgUrl}></img>
+          <img className="circleImage" src={circleData.imgUrl}></img>
         </ul>
       </div>
       <div className="circleMemberBox">
@@ -69,9 +69,9 @@ export default function CircleInfo({ dataCircleInfor, memberOfCircle }) {
           {<FiberManualRecordIcon fontSize="small" />}
           <p>サークル会員</p>
         </div>
-        {memberOfCircle ? (
+        {memberData ? (
           <div className="circleMemberList">
-            {memberOfCircle.map((member) => {
+            {memberData.map((member) => {
               return (
                 <div className="circleMemberItem">
                   <Avatar src={member.userPhotoURL} />

@@ -137,7 +137,7 @@ function CircleJoinComponent({ circleId, circleName }) {
 }
 
 function CircleHomePage({ circleId }) {
-  const [dataCircleInfor, setDataCircleInfor] = useState({});
+  const [dataCircleInfor, setDataCircleInfor] = useState();
   const [memberOfCircle, setMemberOfCircle] = useState([]);
   useEffect(() => {
     circleInforFromFirebase();
@@ -171,26 +171,32 @@ function CircleHomePage({ circleId }) {
   };
   return (
     <>
-      <Link to="/list">
-        <div className="backButtonBox">
-          <ButtonComponent size="small">
-            <div className="backButton">
-              <div className="backButtonIcon">
-                <KeyboardBackspaceIcon fontSize="small"></KeyboardBackspaceIcon>
-              </div>
-              <p>戻る</p>
+      {dataCircleInfor ? (
+        <>
+          <Link to="/list">
+            <div className="backButtonBox">
+              <ButtonComponent size="small">
+                <div className="backButton">
+                  <div className="backButtonIcon">
+                    <KeyboardBackspaceIcon fontSize="small"></KeyboardBackspaceIcon>
+                  </div>
+                  <p>戻る</p>
+                </div>
+              </ButtonComponent>
             </div>
-          </ButtonComponent>
-        </div>
-      </Link>
-      <CircleInfo
-        dataCircleInfor={dataCircleInfor}
-        memberOfCircle={memberOfCircle}
-      ></CircleInfo>
-      <CircleJoinComponent
-        circleId={circleId}
-        circleName={dataCircleInfor.name}
-      ></CircleJoinComponent>
+          </Link>
+          <CircleInfo
+            circleData={dataCircleInfor}
+            memberData={memberOfCircle}
+          ></CircleInfo>
+          <CircleJoinComponent
+            circleId={circleId}
+            circleName={dataCircleInfor.name}
+          ></CircleJoinComponent>
+        </>
+      ) : (
+        "Loading"
+      )}
     </>
   );
 }
