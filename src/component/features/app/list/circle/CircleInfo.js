@@ -55,39 +55,7 @@ function CircleTimeLine() {
     </Timeline>
   );
 }
-export default function CircleInfo({ circleId }) {
-  const [dataCircleInfor, setDataCircleInfor] = useState({});
-  const [memberOfCircle, setMemberOfCircle] = useState([]);
-  useEffect(() => {
-    circleInforFromFirebase();
-    memberListOfCircleFromFirebase();
-  }, []);
-  const circleInforFromFirebase = async () =>
-    db
-      .collection("circle")
-      .doc(circleId)
-      .get()
-      .then((doc) => {
-        const dataInfor = {
-          name: doc.data().name,
-          type: doc.data().type,
-          imgUrl: doc.data().imgUrl,
-        };
-        setDataCircleInfor(dataInfor);
-      });
-  const memberListOfCircleFromFirebase = async () => {
-    const memberData = [];
-    db.collection("circle")
-      .doc(circleId)
-      .collection("member")
-      .where("status", "==", true)
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.docs.map((doc) => {
-          memberData.push(doc.data());
-        });
-      });
-    setMemberOfCircle(memberData);
-  };
+export default function CircleInfo({ dataCircleInfor, memberOfCircle }) {
   return (
     <div className="circleDeatailsBox">
       <h1 className="circleName">{dataCircleInfor.name}</h1>

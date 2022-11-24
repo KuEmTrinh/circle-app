@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./Circle.css";
 import ButtonComponent from "../../../../ui/ButtonComponent";
 import { db } from "./../../../../../app/firebase";
+import { firebase } from "./../../../../../app/firebase";
 import Modal from "../../../../ui/Modal";
 import TitleText from "../../../../ui/TitleText";
 import TextField from "@mui/material/TextField";
@@ -11,14 +12,12 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Link } from "react-router-dom";
 import CircleInfo from "./CircleInfo";
 
-function CircleJoinComponent({ circleId }) {
+function CircleJoinComponent({ circleId, circleName }) {
   const [circleJoinToggle, setCircleJoinToggle] = useState(false);
   const [circleJoinUsername, setCircleJoinUsername] = useState("");
   const [circleJoinUsernumber, setCircleJoinUsernumber] = useState("");
   const [circleJoinUseraddress, setCircleJoinUseraddress] = useState("");
   const [circleJoinUserguarantor, setCircleJoinUserguarantor] = useState("");
-  const [circleJoinUserorganizationname, setCircleJoinUserorganizationname] = useState("");
-  const [circleJoinUserjoiningdate, setCircleJoinUserjoiningdate] = useState("");
   const [circleJoinMotivation, setCircleJoinMotivation] = useState("");
   let userInfo = useSelector((state) => state.login.data);
   console.log(userInfo);
@@ -34,19 +33,16 @@ function CircleJoinComponent({ circleId }) {
         userPhotoURL: userInfo.photoURL,
         userName: circleJoinUsername,
         userNumber: circleJoinUsernumber,
-        useraddress: circleJoinUseraddress,
-        userguarantor: circleJoinUserguarantor,
-        userorganizationname: circleJoinUserorganizationname,
-        userjoiningdate: circleJoinUserjoiningdate,
+        userAddress: circleJoinUseraddress,
+        userGuarantor: circleJoinUserguarantor,
         userMotivation: circleJoinMotivation,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         status: false,
       });
     setCircleJoinUsername("");
     setCircleJoinUsernumber("");
     setCircleJoinUseraddress("");
     setCircleJoinUserguarantor("");
-    setCircleJoinUserorganizationname("");
-    setCircleJoinUserjoiningdate("");
     setCircleJoinMotivation("");
     setCircleJoinToggle(false);
     return query;
@@ -62,6 +58,13 @@ function CircleJoinComponent({ circleId }) {
       >
         <TitleText>参加申請</TitleText>
         <TextField
+          disabled
+          className="createNewCircleTextField"
+          label={circleName}
+          inputProps={{ maxLength: 25 }}
+        ></TextField>
+        <TextField
+          required
           className="createNewCircleTextField"
           label="名前"
           inputProps={{ maxLength: 25 }}
@@ -71,6 +74,7 @@ function CircleJoinComponent({ circleId }) {
           }}
         ></TextField>
         <TextField
+          required
           className="createNewCircleTextField"
           label="学籍番号"
           inputProps={{ maxLength: 25 }}
@@ -79,16 +83,18 @@ function CircleJoinComponent({ circleId }) {
             setCircleJoinUsernumber(e.target.value);
           }}
         ></TextField>
-         <TextField
+        <TextField
+          required
           className="createNewCircleTextField"
           label="住所"
-          inputProps={{ maxLength: 25 }}
+          inputProps={{ maxLength: 100 }}
           value={circleJoinUseraddress}
           onChange={(e) => {
             setCircleJoinUseraddress(e.target.value);
           }}
         ></TextField>
         <TextField
+          required
           className="createNewCircleTextField"
           label="保証人氏名"
           inputProps={{ maxLength: 25 }}
@@ -97,22 +103,13 @@ function CircleJoinComponent({ circleId }) {
             setCircleJoinUserguarantor(e.target.value);
           }}
         ></TextField>
-         <TextField
-          className="createNewCircleTextField"
-          label="団体名"
-          inputProps={{ maxLength: 25 }}
-          value={circleJoinUserorganizationname}
-          onChange={(e) => {
-            setCircleJoinUserorganizationname(e.target.value);
-          }}
-        ></TextField>
         <TextField
           className="createNewCircleTextField"
-          label="入部日"
-          inputProps={{ maxLength: 25 }}
-          value={circleJoinUserjoiningdate}
+          label="志望動機"
+          multiline
+          rows={4}
           onChange={(e) => {
-            setCircleJoinUserjoiningdate(e.target.value);
+            setCircleJoinMotivation(e.target.value);
           }}
         ></TextField>
         <div className="circleJoinCircleConfirm center">
@@ -140,6 +137,38 @@ function CircleJoinComponent({ circleId }) {
 }
 
 function CircleHomePage({ circleId }) {
+  const [dataCircleInfor, setDataCircleInfor] = useState({});
+  const [memberOfCircle, setMemberOfCircle] = useState([]);
+  useEffect(() => {
+    circleInforFromFirebase();
+    memberListOfCircleFromFirebase();
+  }, []);
+  const circleInforFromFirebase = async () =>
+    db
+      .collection("circle")
+      .doc(circleId)
+      .get()
+      .then((doc) => {
+        const dataInfor = {
+          name: doc.data().name,
+          type: doc.data().type,
+          imgUrl: doc.data().imgUrl,
+        };
+        setDataCircleInfor(dataInfor);
+      });
+  const memberListOfCircleFromFirebase = async () => {
+    const memberData = [];
+    db.collection("circle")
+      .doc(circleId)
+      .collection("member")
+      .where("status", "==", true)
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.docs.map((doc) => {
+          memberData.push(doc.data());
+        });
+      });
+    setMemberOfCircle(memberData);
+  };
   return (
     <>
       <Link to="/list">
@@ -154,8 +183,14 @@ function CircleHomePage({ circleId }) {
           </ButtonComponent>
         </div>
       </Link>
-      <CircleInfo circleId={circleId}></CircleInfo>
-      <CircleJoinComponent circleId={circleId}></CircleJoinComponent>
+      <CircleInfo
+        dataCircleInfor={dataCircleInfor}
+        memberOfCircle={memberOfCircle}
+      ></CircleInfo>
+      <CircleJoinComponent
+        circleId={circleId}
+        circleName={dataCircleInfor.name}
+      ></CircleJoinComponent>
     </>
   );
 }
