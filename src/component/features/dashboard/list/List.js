@@ -26,7 +26,6 @@ function CircleItemComponent({ circle }) {
   };
 
   const confirmCircle = (circle) => {
-    
     db.collection("circle").doc(circle.id).update({
       status: true,
     });
@@ -35,6 +34,7 @@ function CircleItemComponent({ circle }) {
       userName: circle.registerUsername,
       userId: circle.registerUid,
       userPhotoURL: circle.registerUserPhotoURL,
+      status: true,
     });
     db.collection("user")
       .doc(circle.registerUid)
@@ -73,7 +73,7 @@ function CircleItemComponent({ circle }) {
       >
         <TableCell align="left">{circle.name}</TableCell>
         <TableCell align="right">{circle.registerUsername}</TableCell>
-        <TableCell align="right">{circle.type}</TableCell>
+        <TableCell align="right">{circle.circleType}</TableCell>
         <TableCell align="right">{toDateTime(circle.createdAt)}</TableCell>
       </TableRow>
     </>

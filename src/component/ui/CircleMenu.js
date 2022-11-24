@@ -8,7 +8,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import "./CircleMenu.css";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Circle from "../features/app/list/circle/Circle";
+import CircleInfo from "../features/app/list/circle/CircleInfo";
 import Chat from "../features/app/home/chat/Chat";
 import Members from "../features/app/home/members/Member";
 function TabPanel(props) {
@@ -23,7 +23,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{  }}>
+        <Box sx={{}}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -71,7 +71,9 @@ export default function CircleMenu() {
           />
         </Tabs>
         <TabPanel className="tabPanel" value={value} index={0}>
-            <Circle></Circle>
+          <div className="circleInfoBox">
+            <CircleInfo></CircleInfo>
+          </div>
         </TabPanel>
         <TabPanel value={value} index={1}></TabPanel>
         <TabPanel value={value} index={2}>

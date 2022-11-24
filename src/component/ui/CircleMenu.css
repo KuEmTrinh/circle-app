@@ -1,18 +1,19 @@
-.circelMenu{
-
- 
-    margin: 10px 10px;
-    position: fixed;
-    height: 60px;
-
+.circelMenu {
+  margin: 10px 10px;
+  position: fixed;
+  height: 60px;
 }
-.circleMenuList{
-   height: 100%;
+.circleMenuList {
+  height: 100%;
 }
-.circleMenuItem{
-    font-size: 12px !important;
-    padding: 5px !important;
+.circleMenuItem {
+  font-size: 12px !important;
+  padding: 5px !important;
 }
-.tabPanel{
-    height: 100%;
+.tabPanel {
+  height: 100%;
+}
+.circleInfoBox {
+  height: calc(100vh - 10rem);
+  overflow: auto;
 }
