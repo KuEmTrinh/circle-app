@@ -1,0 +1,23 @@
+.editCircelPage{
+    margin: 20px;
+}
+.circleTitle{
+    max-width: 100vw;
+    color: #c13450;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+ 
+}
+.editCircleBox{
+    margin-top: 20px;
+}
+.editCircleItem{
+
+    margin-bottom: 15px;
+}
+.editCircleItemInput{
+    width: 100%;
+}
