@@ -17,7 +17,7 @@ function CircleJoinComponent({ circleId }) {
   const [circleJoinUsernumber, setCircleJoinUsernumber] = useState("");
   const [circleJoinMotivation, setCircleJoinMotivation] = useState("");
   let userInfo = useSelector((state) => state.login.data);
-
+  console.log(userInfo);
   //function
   const circleJoinConfirm = async () => {
     const query = db
@@ -27,6 +27,7 @@ function CircleJoinComponent({ circleId }) {
       .add({
         role: "user",
         userId: userInfo.uid,
+        userPhotoURL: userInfo.photoURL,
         userName: circleJoinUsername,
         userNumber: circleJoinUsernumber,
         userMotivation: circleJoinMotivation,
