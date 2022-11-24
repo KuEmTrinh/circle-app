@@ -5,3 +5,16 @@
 .homeTitle{
     padding-top: 150px;
 }
+.backButton{
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+.backButton p{
+    font-size: 12px;
+    margin-left: 5px;
+}
+.backButtonBox{
+    margin-top: 5px;
+    margin-left: 10px;
+}

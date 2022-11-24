@@ -12,16 +12,49 @@ import ShareIcon from "@mui/icons-material/Share";
 import { db } from "../../../../app/firebase";
 import { Link } from "react-router-dom";
 
+function CircleListComponent({ circleType }) {
+  const [circleList, setCircleList] = useState();
+  useEffect(() => {
+    fetchCircleData();
+  }, []);
+  const fetchCircleData = () => {
+    const query = db
+      .collection("circle")
+      .where("status", "==", true)
+      .where("circleType", "==", circleType)
+      .onSnapshot((querySnapshot) => {
+        const data = [];
+        querySnapshot.docs.map((doc) => {
+          let item = doc.data();
+          item.id = doc.id;
+          data.push(item);
+        });
+        // console.log(data);
+        setCircleList(data);
+      });
+    return query;
+  };
+  return (
+    <div className="circleListItem">
+      {circleList ? (
+        <>
+          {circleList.map((circle) => {
+            return <CircleItem circle={circle}></CircleItem>;
+          })}
+        </>
+      ) : (
+        "Loading"
+      )}
+    </div>
+  );
+}
+
 function CircleItem({ circle }) {
   return (
     <div className="circleItem">
       <Card sx={{ minWidth: 200 }}>
         <CardHeader
-          avatar={
-            <Avatar
-              src={circle.registerUserPhotoURL}
-            />
-          }
+          avatar={<Avatar src={circle.registerUserPhotoURL} />}
           title={circle.name}
           subheader={circle.registerUsername}
         />
@@ -30,7 +63,7 @@ function CircleItem({ circle }) {
           <CardMedia
             component="img"
             height="150"
-            image="https://100partners.city.fukuoka.lg.jp/app/wp-content/uploads/2020/05/%E4%B9%9D%E5%B7%9E%E7%94%A3%E6%A5%AD%E5%A4%A7%E5%AD%A6.jpg"
+            image={circle.imgUrl}
             alt="Paella dish"
           />
         </Link>
@@ -49,38 +82,16 @@ function CircleItem({ circle }) {
 }
 
 export default function List() {
-  const [circleList, setCircleList] = useState();
-  useEffect(() => {
-    fetchCircleData();
-  }, []);
-  const fetchCircleData = () => {
-    const query = db
-      .collection("circle")
-      .where("status", "==", true)
-      .onSnapshot((querySnapshot) => {
-        const data = [];
-        querySnapshot.docs.map((doc) => {
-          let item = doc.data();
-          item.id = doc.id;
-          data.push(item);
-        });
-        setCircleList(data);
-      });
-    return query;
-  };
   return (
     <div className="listBox">
-      <div className="circleListItem">
-        {circleList ? (
-          <>
-            {circleList.map((circle) => {
-              return <CircleItem circle={circle}></CircleItem>;
-            })}
-          </>
-        ) : (
-          "Loading"
-        )}
-      </div>
+      <p className="circleListTitle">五者執行部</p>
+      <CircleListComponent circleType={"五者執行部"}></CircleListComponent>
+      <p className="circleListTitle">体育会系</p>
+      <CircleListComponent circleType={"体育会系"}></CircleListComponent>
+      <p className="circleListTitle">学術文化系</p>
+      <CircleListComponent circleType={"学術文化系"}></CircleListComponent>
+      <p className="circleListTitle">任意団体愛好会</p>
+      <CircleListComponent circleType={"任意団体愛好会"}></CircleListComponent>
     </div>
   );
 }
