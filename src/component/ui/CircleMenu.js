@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import CircleInfo from "../features/app/list/circle/CircleInfo";
 import Chat from "../features/app/home/chat/Chat";
+import Members from "../features/app/home/members/Member";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -79,7 +80,7 @@ export default function CircleMenu() {
           <Chat></Chat>
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <CircleInfo></CircleInfo>
+          <Members></Members>
         </TabPanel>
       </div>
     </>

@@ -1,0 +1,70 @@
+.memberPage {
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+}
+.wantToJoinUser {
+  margin: 5px 10px;
+  display: flex;
+  align-items: center;
+}
+.wantToJoinUserAvatar {
+  margin-right: 30px;
+}
+.wantToJoinUserAvatar img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.wantToJoinUserMessageBox {
+  width: 75%;
+}
+.wantToJoinUserMessage {
+  width: 100%;
+  border-radius: 10px;
+  background-color: #c13450;
+}
+.wantToJoinUserName {
+  font-size: 14px;
+  padding-top: 8px;
+  padding-left: 15px;
+  font-weight: bold;
+  color: #ffff;
+}
+.wantToJoinUserMessageTextBox {
+  padding-top: 2px;
+  padding-left: 15px;
+  padding-bottom: 10px;
+  color: #ffff;
+  overflow-wrap: break-word;
+}
+
+.wantToJoinUserRep {
+  margin-top: 5px;
+  display: flex;
+  justify-content: flex-end;
+}
+.wantToJoinUserRepButton {
+  margin-left: 10px;
+  padding: 3px;
+  width: 80px;
+  display: flex;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 13px;
+  background-color: #d9d9d9;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.wantToJoinUserRepButton p {
+  margin-left: 3px;
+}
+.memberAvatar img{
+    /* max-height: 100%; */
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+}
