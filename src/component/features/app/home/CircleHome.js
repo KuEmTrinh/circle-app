@@ -23,7 +23,7 @@ export default function CircleHome() {
       </Link>
 
       <div className="circleHome">
-        <CircleMenu></CircleMenu>
+        <CircleMenu circleId={circleId}></CircleMenu>
         <div className="homeTitle"></div>
       </div>
     </>

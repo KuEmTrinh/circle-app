@@ -30,7 +30,7 @@ function TabPanel(props) {
     </div>
   );
 }
-export default function CircleMenu() {
+export default function CircleMenu({ circleId }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -80,7 +80,7 @@ export default function CircleMenu() {
           <Chat></Chat>
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <Members></Members>
+          <Members circleId={circleId}></Members>
         </TabPanel>
       </div>
     </>

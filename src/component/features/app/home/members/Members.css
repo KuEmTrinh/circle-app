@@ -9,9 +9,9 @@
   align-items: center;
 }
 .wantToJoinUserAvatar {
-  margin-right: 30px;
+  margin-right: 15px;
 }
-.wantToJoinUserAvatar img{
+.wantToJoinUserAvatar img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -26,24 +26,23 @@
   background-color: #c13450;
 }
 .wantToJoinUserName {
-  font-size: 14px;
+  font-size: 12px;
   padding-top: 8px;
-  padding-left: 15px;
   font-weight: bold;
-  color: #ffff;
+  color: #c13450;
 }
 .wantToJoinUserMessageTextBox {
-  padding-top: 2px;
-  padding-left: 15px;
-  padding-bottom: 10px;
+  padding: 5px 15px;
   color: #ffff;
   overflow-wrap: break-word;
+  font-size: 14px;
 }
 
-.wantToJoinUserRep {
+.repButtonBox {
   margin-top: 5px;
   display: flex;
   justify-content: flex-end;
+  margin-right: 35px;
 }
 .wantToJoinUserRepButton {
   margin-left: 10px;
@@ -61,10 +60,75 @@
 .wantToJoinUserRepButton p {
   margin-left: 3px;
 }
-.memberAvatar img{
-    /* max-height: 100%; */
-    width: 80px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 10px;
+.memberAvatar img {
+  /* max-height: 100%; */
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.memberCard {
+  margin-right: 1rem;
+  min-width: 240px;
+  height: auto;
+  border-radius: 10px;
+  border: 1px #b9b9c65b solid;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  padding: 1rem;
+}
+.memberCardAvatar {
+  width: 80px;
+  height: 80px;
+}
+.memberCardAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.memberCardInfo {
+  margin-left: 1rem;
+}
+.memberCardUsername {
+  padding: 2px 0;
+  font-weight: bold;
+  font-size: 16px;
+}
+.memberCardUsercode {
+  font-size: 12px;
+  color: #838399;
+}
+.memberCardUserrole {
+  margin-top: 7px;
+  color: #c13450;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 2px 6px;
+  border: 1px #e38a9ca8 solid;
+  text-align: center;
+  border-radius: 15px;
+}
+.memberCardTag {
+  max-width: 50px;
+}
+.memberList {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: auto;
+  padding: 10px 5px;
+}
+.textOfButton {
+  font-size: 12px;
+  margin-left: 2px;
+  font-weight: bold;
+}
+.buttonJoin {
+  display: flex;
+  align-self: center;
+  justify-content: center;
+}
+.wrapButton {
+  margin-right: 1rem;
 }
