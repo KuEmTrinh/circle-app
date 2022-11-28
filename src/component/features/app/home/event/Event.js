@@ -20,6 +20,8 @@ import "./Event.css"
 import EditEvent from "./EditEvent"
 import CreateEvent from './CreateEvent';
 import { useParams } from 'react-router-dom';
+import { createEvent } from '@testing-library/react';
+import { db } from '../../../../../app/firebase';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -50,6 +52,24 @@ export default function Event() {
   const openCircleEditDialog = () => {
     handleClickOpenDialog();
   };
+  // Create Event Function
+  const [newEventInfor, setNewEventInfor] = useState()
+  const callbackFunction = (childData) => {
+    setNewEventInfor(childData)
+  }
+  
+  const createEvent = () => {
+    const query = db
+    .collection("circle")
+    .doc(circleId)
+    .collection("event")
+    .add(newEventInfor)
+    return query
+    
+
+  }
+
+
 
   return (
     <>
@@ -143,26 +163,35 @@ export default function Event() {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 1, flex: 1 }} variant="h7" component="div">
-            {typeOfActive=="editEvent"&&
-                  "イベント編集"
-             }
-             {typeOfActive=="createEvent"&&
-                   "イベント追加"
-             }
+              {typeOfActive == "editEvent" &&
+                "イベント編集"
+              }
+              {typeOfActive == "createEvent" &&
+                "イベント追加"
+              }
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleCloseDialog}>
+            <Button autoFocus color="inherit" onClick={
+              () => {
+                handleCloseDialog()
+                if (typeOfActive === "createEvent") {
+                  createEvent();
+                }
+              }
+
+
+            }>
               保存
             </Button>
           </Toolbar>
         </AppBar>
         <>
           <div>
-             {typeOfActive=="editEvent"&&
-                    <EditEvent circleId={ circleId }></EditEvent>
-             }
-             {typeOfActive=="createEvent"&&
-                    <CreateEvent circleId={circleId}></CreateEvent>
-             }
+            {typeOfActive == "editEvent" &&
+              <EditEvent circleId={circleId}></EditEvent>
+            }
+            {typeOfActive == "createEvent" &&
+              <CreateEvent circleId={circleId} parentCallback={callbackFunction}></CreateEvent>
+            }
           </div>
         </>
       </Dialog>
