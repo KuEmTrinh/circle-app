@@ -22,6 +22,7 @@ import CreateEvent from './CreateEvent';
 import { useParams } from 'react-router-dom';
 import { createEvent } from '@testing-library/react';
 import { db } from '../../../../../app/firebase';
+import { QuerySnapshot } from 'firebase/firestore';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -52,93 +53,130 @@ export default function Event() {
   const openCircleEditDialog = () => {
     handleClickOpenDialog();
   };
+  // Get currentEvent
+  const [events, setEvents] = useState();
+  const getEvents = () => {
+    const query = db
+      .collection("circle")
+      .doc(circleId)
+      .collection("event")
+      .onSnapshot((QuerySnapshot) => {
+        const data = [];
+        QuerySnapshot.docs.map((doc) => {
+          data.push(doc.data())
+        })
+        setEvents(data)
+      })
+    console.log(events)
+    return query;
+  }
+  useEffect(() => {
+    getEvents();
+  }, []);
   // Create Event Function
   const [newEventInfor, setNewEventInfor] = useState()
   const callbackFunction = (childData) => {
     setNewEventInfor(childData)
   }
-  
+
   const createEvent = () => {
     const query = db
-    .collection("circle")
-    .doc(circleId)
-    .collection("event")
-    .add(newEventInfor)
+      .collection("circle")
+      .doc(circleId)
+      .collection("event")
+      .add(newEventInfor)
     return query
-    
+
 
   }
 
 
-
+  // RENDER
   return (
+
     <>
-
-
       <div className='eventPage'>
         <div className='eventList'>
-
-          <div className='eventItem'>
-            <div className='eventName'>福岡サッカーCompetition</div>
-            <div className='eventImage'>
-              <img src="https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"></img>
-            </div>
-            <div className='eventTimeBox'>
-              <span className='eventTimeText'> 日時</span>
-              <span className='eventTime'>9/24-10/30</span>
-            </div>
-            <div className='eventPlaceBox'></div>
-            <div className='eventMoneyBox'></div>
-            <div className='eventPeopleBox'></div>
-            <div className='eventContentBox'></div>
-            <div className='eventSetting' >
-              <MoreHorizIcon fontSize="large" onClick={handleClick}></MoreHorizIcon>
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                <Typography sx={{}}>
-                  <MenuList
-                    className="circlePopup"
-                    autoFocusItem={open}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
-                  >
-                    <MenuItem
-                      className="menuPopup"
-                      onClick={() => {
-                        openCircleEditDialog();
-                        setTypeOfActive("editEvent")
+          {events ? <>
+            {events.map((event) => {
+              return <>
+                <div className='eventItem'>
+                  <div className='eventName'>{event.name}</div>
+                  <div className='eventImage'>
+                    <img src="https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"></img>
+                  </div>
+                  <div className='eventTimeBox eventDetailImfor'>
+                    <span className=''> 日時: </span>
+                    <span className=''>{event.time}</span>
+                  </div>
+                  <div className='eventPlaceBox eventDetailImfor'>
+                  <span className=''> 場所: </span>
+                  <span className=''>{event.place}</span>
+                  </div>
+                  <div className='eventMoneyBox eventDetailImfor'>
+                  <span className=''> 料金: </span>
+                  <span className=''>{event.money} 円</span>
+                  </div>
+                  <div className='eventPeopleBox eventDetailImfor'>
+                  <span className=''> 最大人数: </span>
+                  <span className=''>{event.maxMembers}人</span>
+                  </div>
+                  <div className='eventContentBox eventDetailImfor'>
+                  <span className=''> イベント内容: </span>
+                  <span className=''>{event.content}</span>
+                  </div>
+                  <div className='eventSetting' >
+                    <MoreHorizIcon fontSize="large" onClick={handleClick}></MoreHorizIcon>
+                    <Popover
+                      id={id}
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
                       }}
                     >
-                      <ModeEditIcon
-                        className="menuPopupIcon"
-                        fontSize="small"
-                      />
-                      イベント編集
-                    </MenuItem>
-                    <MenuItem className="menuPopup" onClick={handleClose}>
-                      <DeleteIcon
-                        className="menuPopupIcon"
-                        fontSize="small"
-                      />
-                      イベント削除
-                    </MenuItem>
-                  </MenuList>
-                </Typography>
-              </Popover>
-            </div>
-          </div>
+                      <Typography sx={{}}>
+                        <MenuList
+                          className="circlePopup"
+                          autoFocusItem={open}
+                          id="composition-menu"
+                          aria-labelledby="composition-button"
+                        >
+                          <MenuItem
+                            className="menuPopup"
+                            onClick={() => {
+                              openCircleEditDialog();
+                              setTypeOfActive("editEvent")
+                            }}
+                          >
+                            <ModeEditIcon
+                              className="menuPopupIcon"
+                              fontSize="small"
+                            />
+                            イベント編集
+                          </MenuItem>
+                          <MenuItem className="menuPopup" onClick={handleClose}>
+                            <DeleteIcon
+                              className="menuPopupIcon"
+                              fontSize="small"
+                            />
+                            イベント削除
+                          </MenuItem>
+                        </MenuList>
+                      </Typography>
+                    </Popover>
+                  </div>
+                </div>
+              </>
+            })}
+          </> : "loading"}
+         
         </div>
         <div className='eventAdd'>
           <div className='eventAddIcon'>

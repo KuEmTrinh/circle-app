@@ -7,14 +7,14 @@
 }
 
 .eventItem{
-    margin-bottom: 20px;
+    margin-bottom: 19px;
     padding: 15px 10px;
     border: 1px dotted #C13450;
     border-radius: 20px;
     position: relative;
 }
 .eventName{
-    font-size: 18px;
+    font-size: 20px;
     padding-left: 10px;
     margin-bottom: 13px;
     font-weight: bolder;
@@ -46,4 +46,9 @@
     align-items: center;
     height: 100%;
   
+}
+.eventDetailImfor{
+    margin:5px;
+    font-weight: 600;
+    font-size: 16px;
 }
