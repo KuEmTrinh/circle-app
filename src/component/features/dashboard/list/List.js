@@ -10,6 +10,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./List.css";
 import { db } from "../../../../app/firebase";
+import { firebase } from "../../../../app/firebase";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
 import { arrayUnion } from "firebase/firestore";
@@ -34,6 +35,7 @@ function CircleItemComponent({ circle }) {
       userName: circle.registerUsername,
       userId: circle.registerUid,
       userPhotoURL: circle.registerUserPhotoURL,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       status: true,
     });
     db.collection("user")

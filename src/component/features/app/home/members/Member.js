@@ -4,6 +4,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Button from "@mui/material/Button";
 import { db } from "../../../../../app/firebase";
+import { arrayUnion } from "firebase/firestore";
 import "./Members.css";
 function MemberListComponent({ memberList }) {
   const [circleMembers, setCircleMembers] = useState();
@@ -48,7 +49,9 @@ function MemberCardComponent({ member }) {
         <p className="memberCardUsername">{member.userName}</p>
         <p className="memberCardUsercode">{member.userNumber}</p>
         <div className="memberCardTag">
-          <p className="memberCardUserrole">{member.role == "circleAdmin" ? '会長': '会員'}</p>
+          <p className="memberCardUserrole">
+            {member.role == "circleAdmin" ? "会長" : "会員"}
+          </p>
         </div>
       </div>
     </div>
@@ -109,6 +112,15 @@ function MemberJoinComponent({ registerMember, circleId }) {
       });
     return query;
   };
+  const addCircleIdForUser = () => {
+    const query = db
+      .collection("user")
+      .doc(registerMember.userId)
+      .update({
+        circleList: arrayUnion(circleId),
+      });
+    return query;
+  };
   return (
     <div className="circleJoinMemberList">
       <div className="wantToJoinUser">
@@ -140,6 +152,7 @@ function MemberJoinComponent({ registerMember, circleId }) {
           variant="contained"
           onClick={() => {
             registerMemberAccept();
+            addCircleIdForUser();
           }}
         >
           <CheckCircleIcon />
