@@ -20,6 +20,7 @@ export default function EditCircle({ circle }) {
     greetingText:circle.greetingText,
     place:circle.place,
     introductionText:circle.introductionText,
+    schedule:circle.schedule
     
   });
   const handleChange = (e) => {
