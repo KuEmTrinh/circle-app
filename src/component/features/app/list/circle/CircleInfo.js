@@ -55,45 +55,13 @@ function CircleTimeLine() {
     </Timeline>
   );
 }
-export default function CircleInfo({ circleId }) {
-  const [dataCircleInfor, setDataCircleInfor] = useState({});
-  const [memberOfCircle, setMemberOfCircle] = useState([]);
-  useEffect(() => {
-    circleInforFromFirebase();
-    memberListOfCircleFromFirebase();
-  }, []);
-  const circleInforFromFirebase = async () =>
-    db
-      .collection("circle")
-      .doc(circleId)
-      .get()
-      .then((doc) => {
-        const dataInfor = {
-          name: doc.data().name,
-          type: doc.data().type,
-          imgUrl: doc.data().imgUrl,
-        };
-        setDataCircleInfor(dataInfor);
-      });
-  const memberListOfCircleFromFirebase = async () => {
-    const memberData = [];
-    db.collection("circle")
-      .doc(circleId)
-      .collection("member")
-      .where("status", "==", true)
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.docs.map((doc) => {
-          memberData.push(doc.data());
-        });
-      });
-    setMemberOfCircle(memberData);
-  };
+export default function CircleInfo({ circleData, memberData }) {
   return (
     <div className="circleDeatailsBox">
-      <h1 className="circleName">{dataCircleInfor.name}</h1>
+      <h1 className="circleName">{circleData.name}</h1>
       <div className="circleImageBox">
         <ul>
-          <img className="circleImage" src={dataCircleInfor.imgUrl}></img>
+          <img className="circleImage" src={circleData.imgUrl}></img>
         </ul>
       </div>
       <div className="circleMemberBox">
@@ -101,9 +69,9 @@ export default function CircleInfo({ circleId }) {
           {<FiberManualRecordIcon fontSize="small" />}
           <p>サークル会員</p>
         </div>
-        {memberOfCircle ? (
+        {memberData ? (
           <div className="circleMemberList">
-            {memberOfCircle.map((member) => {
+            {memberData.map((member) => {
               return (
                 <div className="circleMemberItem">
                   <Avatar src={member.userPhotoURL} />
