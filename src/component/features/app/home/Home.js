@@ -59,6 +59,11 @@ function MyCircleItem({ circle }) {
     handleClickOpenDialog();
   };
 
+const getDataOfEditCircle=(data)=>{
+  console.log(data)
+}
+
+  // Render
   return (
     <>
       <Dialog
@@ -85,7 +90,7 @@ function MyCircleItem({ circle }) {
             </Button>
           </Toolbar>
         </AppBar>
-        <EditCircle circle={circle}></EditCircle>
+        <EditCircle getData={getDataOfEditCircle} circle={circle}></EditCircle>
       </Dialog>
       <div className="myCircleItem">
         <Card sx={{ minWidth: 200 }}>

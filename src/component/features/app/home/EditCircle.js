@@ -1,52 +1,47 @@
 import React, { useState, useEffect } from "react";
 import "./EditCircle.css";
 import TextField from "@mui/material/TextField";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import ButtonComponent from "../../../ui/ButtonComponent";
+// import FileUploadIcon from "@mui/icons-material/FileUpload";
+// import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+// import ButtonComponent from "../../../ui/ButtonComponent";
+// import { FormControl, MenuItem, Select } from "@mui/material";
+// import { InputLabel } from "@mui/material";
 
-
-export default function EditCircle({ circle }) {
+export default function EditCircle({ circle },props) {
   // console.log(circle);
   const [percent, setPercent] = useState(0);
   const [file, setFile] = useState("");
   const [preview, setPreview] = useState();
+  const [circleType, setCircleType] = useState("");
   const [editCircleInfo, setEditCircleInfo] = useState({
-    type: circle.type,
     name: circle.name,
     members: circle.members,
     money: circle.money,
     motivation: circle.motivation,
-    greetingText:circle.greetingText,
-    place:circle.place,
-    introductionText:circle.introductionText,
-    schedule:circle.schedule
-    
+    greetingText: circle.greetingText,
+    place: circle.place,
+    introductionText: circle.introductionText,
+    // schedule:circle.schedule
   });
   const handleChange = (e) => {
     setEditCircleInfo({
       ...editCircleInfo,
       [e.target.name]: e.target.value,
     });
+    sendEditCircleInfor();
   };
-  console.log(editCircleInfo)
+  const sendEditCircleInfor = (editCircleInfo) => {
+    props.getData(editCircleInfo);
+  };
+
+  // console.log(editCircleInfo);
   // image upload code
- 
+
   // return
   return (
     <div className="editCircelPage">
       <div className="circleTitle">サークル編集</div>
       <div className="editCircleBox">
-        <div className="editCircleItem">
-          <TextField
-            className="editCircleItemInput"
-            id="outlined-name"
-            name="type"
-            defaultValue={editCircleInfo.type}
-            label="種類"
-            onChange={handleChange}
-          />
-        </div>
         <div className="editCircleItem">
           <TextField
             className="editCircleItemInput"
