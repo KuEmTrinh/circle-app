@@ -34,7 +34,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function MyCircleItem({ circle }) {
   ///
+  let userInfo = useSelector((state) => state.login.data);
   const [openDialog, setOpenDialog] = useState(false);
+  const [editCircleInfo, setEditCircleInfo] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -44,7 +49,6 @@ function MyCircleItem({ circle }) {
     setOpenDialog(false);
   };
   ///
-  const [anchorEl, setAnchorEl] = useState(null);
   const handleClickMoreHorizIcon = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -52,17 +56,18 @@ function MyCircleItem({ circle }) {
     setAnchorEl(null);
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
   const openCircleEditDialog = () => {
     handleClickOpenDialog();
   };
 
-const getDataOfEditCircle=(data)=>{
-  console.log(data)
-}
-
+  const getDataOfEditCircle = (data) => {
+    console.log("data:" + { data });
+    setEditCircleInfo(data);
+  };
+  const sendEditCircleInfo = () => {
+    const query = db.collection("circle").doc(circle.id).update(editCircleInfo);
+    return query;
+  };
   // Render
   return (
     <>
@@ -85,12 +90,22 @@ const getDataOfEditCircle=(data)=>{
             <Typography sx={{ ml: 1, flex: 1 }} variant="h7" component="div">
               サークル編集
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleCloseDialog}>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={() => {
+                handleCloseDialog();
+                sendEditCircleInfo();
+              }}
+            >
               保存
             </Button>
           </Toolbar>
         </AppBar>
-        <EditCircle getData={getDataOfEditCircle} circle={circle}></EditCircle>
+        <EditCircle
+          getDataFromChild={getDataOfEditCircle}
+          circle={circle}
+        ></EditCircle>
       </Dialog>
       <div className="myCircleItem">
         <Card sx={{ minWidth: 200 }}>
@@ -106,16 +121,19 @@ const getDataOfEditCircle=(data)=>{
             subheader={circle.registerUsername}
             action={
               <>
-                <IconButton
-                  aria-label="settings"
-                  aria-describedby={id}
-                  variant="contained"
-                  onClick={(e) => {
-                    handleClickMoreHorizIcon(e);
-                  }}
-                >
-                  <MoreHorizIcon />
-                </IconButton>
+                {userInfo.email === circle.registerUserEmail && (
+                  <IconButton
+                    aria-label="settings"
+                    aria-describedby={id}
+                    variant="contained"
+                    onClick={(e) => {
+                      handleClickMoreHorizIcon(e);
+                    }}
+                  >
+                    <MoreHorizIcon />
+                  </IconButton>
+                )}
+
                 <Popover
                   id={id}
                   open={open}

@@ -7,20 +7,20 @@ import TextField from "@mui/material/TextField";
 // import { FormControl, MenuItem, Select } from "@mui/material";
 // import { InputLabel } from "@mui/material";
 
-export default function EditCircle({ circle },props) {
+export default function EditCircle( props) {
   // console.log(circle);
   const [percent, setPercent] = useState(0);
   const [file, setFile] = useState("");
   const [preview, setPreview] = useState();
   const [circleType, setCircleType] = useState("");
   const [editCircleInfo, setEditCircleInfo] = useState({
-    name: circle.name,
-    members: circle.members,
-    money: circle.money,
-    motivation: circle.motivation,
-    greetingText: circle.greetingText,
-    place: circle.place,
-    introductionText: circle.introductionText,
+    name: props.circle.name,
+    members: props.circle.members,
+    money: props.circle.money,
+    motivation: props.circle.motivation,
+    greetingText: props.circle.greetingText||".",
+    place: props.circle.place||".",
+    introductionText: props.circle.introductionText||".",
     // schedule:circle.schedule
   });
   const handleChange = (e) => {
@@ -28,14 +28,17 @@ export default function EditCircle({ circle },props) {
       ...editCircleInfo,
       [e.target.name]: e.target.value,
     });
-    sendEditCircleInfor();
+   
   };
+  useEffect(() => {
+    sendEditCircleInfor(editCircleInfo);
+  }, [editCircleInfo]);
+  console.log(editCircleInfo)
   const sendEditCircleInfor = (editCircleInfo) => {
-    props.getData(editCircleInfo);
+    props.getDataFromChild(editCircleInfo);
   };
 
-  // console.log(editCircleInfo);
-  // image upload code
+
 
   // return
   return (
@@ -78,7 +81,7 @@ export default function EditCircle({ circle },props) {
             id="outlined-name"
             label="挨拶"
             name="greetingText"
-            defaultValue={editCircleInfo.greetingText}
+            defaultValue={editCircleInfo.greetingText?editCircleInfo.greetingText:" "}
             onChange={handleChange}
           />
         </div>
@@ -88,7 +91,7 @@ export default function EditCircle({ circle },props) {
             id="outlined-name"
             label="場所"
             name="place"
-            defaultValue={editCircleInfo.place}
+            defaultValue={editCircleInfo.place?editCircleInfo.place:" "}
             onChange={handleChange}
           />
         </div>
@@ -100,7 +103,7 @@ export default function EditCircle({ circle },props) {
             name="introductionText"
             rows={4}
             multiline
-            defaultValue={editCircleInfo.introductionText}
+            defaultValue={editCircleInfo.introductionText? editCircleInfo.introductionText:" "}
             onChange={handleChange}
           />
         </div>

@@ -67,7 +67,7 @@ export default function Event() {
         })
         setEvents(data)
       })
-    console.log(events)
+    
     return query;
   }
   useEffect(() => {

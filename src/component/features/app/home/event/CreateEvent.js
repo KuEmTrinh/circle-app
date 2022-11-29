@@ -24,7 +24,7 @@ export default function CreateEvent(props) {
        });
        sendNewEventInfor();
 
-        
+       
     }
     const sendNewEventInfor=()=>{
         props.parentCallback(createNewEventInfor);
