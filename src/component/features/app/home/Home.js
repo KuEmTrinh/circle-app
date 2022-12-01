@@ -28,6 +28,9 @@ import Toolbar from "@mui/material/Toolbar";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import EditCircle from "./EditCircle";
+import Modal from "../../../ui/Modal";
+import ButtonComponent from "../../../ui/ButtonComponent";
+import { arrayRemove } from "firebase/firestore";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -36,7 +39,9 @@ function MyCircleItem({ circle }) {
   ///
   let userInfo = useSelector((state) => state.login.data);
   const [openDialog, setOpenDialog] = useState(false);
+  const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
   const [editCircleInfo, setEditCircleInfo] = useState("");
+  const [memberList, setMemberList] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -68,7 +73,55 @@ function MyCircleItem({ circle }) {
     const query = db.collection("circle").doc(circle.id).update(editCircleInfo);
     return query;
   };
-  // Render
+  // Get all member in Circle
+  const getAllMemberOfCircle = () => {
+    const query = db
+      .collection("circle")
+      .doc(circle.id)
+      .collection("member")
+      .onSnapshot((querySnapshot) => {
+        const data = [];
+        querySnapshot.docs.map((doc) => {
+          let item = doc.data();
+          item.id = doc.id;
+          data.push(item);
+        });
+        setMemberList(data);
+      });
+
+    return query;
+  };
+
+  // Function outCircle
+  const deleteCircleInCircleListOfUser = () => {
+    const query = db
+      .collection("user")
+      .doc(userInfo.uid)
+      .update({
+        circleList: arrayRemove(circle.id),
+      })
+    return query;
+  };
+  const deleteMemberInMemberOfCircle=()=>{
+    const query =db
+    .collection("circle")
+    .doc(circle.id)
+    .collection("member")
+    .where("userId","==",userInfo.uid)
+    .onSnapshot((querySnapshot)=>{
+      querySnapshot.forEach((doc)=>{
+        doc.ref.delete();
+      })
+    })
+    console.log("Delete thanh cong")
+    return query
+  }
+  const outCircle = async () => {
+    deleteCircleInCircleListOfUser();
+    deleteMemberInMemberOfCircle();
+  };
+
+  // ============RENDER===============
   return (
     <>
       <Dialog
@@ -107,6 +160,35 @@ function MyCircleItem({ circle }) {
           circle={circle}
         ></EditCircle>
       </Dialog>
+      <Modal
+        show={circleDetailsToggle}
+        onClose={() => {
+          setCircleDetailsToggle(false);
+        }}
+      >
+        <p className="subTitle">サークル退部確認</p>
+        <p style={{ "margin-bottom": "15px", "font-weight": "bold" }}>
+          {circle.name}を退部しますか?
+        </p>
+        <div className="center sp-ar">
+          <ButtonComponent
+            mode="cancel"
+            onClick={() => {
+              setCircleDetailsToggle(false);
+            }}
+          >
+            キャンセル
+          </ButtonComponent>
+          <ButtonComponent
+            onClick={() => {
+              outCircle();
+              setCircleDetailsToggle(false);
+            }}
+          >
+            退部
+          </ButtonComponent>
+        </div>
+      </Modal>
       <div className="myCircleItem">
         <Card sx={{ minWidth: 200 }}>
           <CardHeader
@@ -121,18 +203,18 @@ function MyCircleItem({ circle }) {
             subheader={circle.registerUsername}
             action={
               <>
-                {userInfo.email === circle.registerUserEmail && (
-                  <IconButton
-                    aria-label="settings"
-                    aria-describedby={id}
-                    variant="contained"
-                    onClick={(e) => {
-                      handleClickMoreHorizIcon(e);
-                    }}
-                  >
-                    <MoreHorizIcon />
-                  </IconButton>
-                )}
+                <IconButton
+                  aria-label="settings"
+                  aria-describedby={id}
+                  variant="contained"
+                  onClick={(e) => {
+                    handleClickMoreHorizIcon(e);
+                  }}
+                >
+                  <MoreHorizIcon />
+                </IconButton>
+                {/* {userInfo.email === circle.registerUserEmail && (
+                )} */}
 
                 <Popover
                   id={id}
@@ -155,24 +237,32 @@ function MyCircleItem({ circle }) {
                       id="composition-menu"
                       aria-labelledby="composition-button"
                     >
+                      {userInfo.email === circle.registerUserEmail && (
+                        <MenuItem
+                          className="menuPopup"
+                          onClick={() => {
+                            openCircleEditDialog();
+                          }}
+                        >
+                          <ModeEditIcon
+                            className="menuPopupIcon"
+                            fontSize="small"
+                          />
+                          ホーム編集
+                        </MenuItem>
+                      )}
                       <MenuItem
                         className="menuPopup"
                         onClick={() => {
-                          openCircleEditDialog();
+                          setCircleDetailsToggle(true);
+                          handleClose();
                         }}
                       >
-                        <ModeEditIcon
-                          className="menuPopupIcon"
-                          fontSize="small"
-                        />
-                        ホーム編集
-                      </MenuItem>
-                      <MenuItem className="menuPopup" onClick={handleClose}>
                         <DeleteIcon
                           className="menuPopupIcon"
                           fontSize="small"
                         />
-                        サークル削除
+                        サークル退部
                       </MenuItem>
                     </MenuList>
                   </Typography>
@@ -206,7 +296,6 @@ function MyCircleItem({ circle }) {
 export default function Home() {
   // get myCircleList
   let circleJoinedList = useSelector((state) => state.login.circleList);
-  // console.log(circleJoinedList);
   const [circleList, setCircleList] = useState();
   useEffect(() => {
     if (circleJoinedList.length > 0) {
@@ -222,8 +311,7 @@ export default function Home() {
           "in",
           circleJoinedList
         )
-        .get()
-        .then((querySnapshot) => {
+        .onSnapshot((querySnapshot) => {
           const data = [];
           querySnapshot.docs.map((doc) => {
             let item = doc.data();
