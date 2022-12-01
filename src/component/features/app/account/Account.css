@@ -10,6 +10,9 @@
 }
 .creatNewCircleModalInputBox {
   margin-top: 20px;
+  margin-bottom: 10px;
+  /* height: 600px; */
+  overflow: auto;
 }
 .createNewCircleTextField {
   margin-top: 5px;
@@ -42,16 +45,16 @@
   padding: 0.4rem 1rem;
 }
 .inputSetting {
-    display: none;
+  display: none;
 }
 .align-center {
-    align-items: center;
+  align-items: center;
 }
 .flex {
-    display: flex;
+  display: flex;
 }
 .inputBox {
-    padding: 1rem 0;
+  padding: 1rem 0;
 }
 .circleImagePreview img {
   width: 100%;
@@ -59,14 +62,17 @@
   object-fit: cover;
   border-radius: 5px;
 }
-.imageInputTitle{
+.imageInputTitle {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.imageInputTitle p{
+.imageInputTitle p {
   font-weight: bold;
   font-size: 14px;
   margin-left: 3px;
+}
+.chooseFileButoon{
+  margin-top: 20px;
 }
