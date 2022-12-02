@@ -50,6 +50,7 @@ export default function CircleMenu({ circleId }) {
           name: doc.data().name,
           type: doc.data().type,
           imgUrl: doc.data().imgUrl,
+          
         };
         setDataCircleInfor(dataInfor);
       });
@@ -103,7 +104,7 @@ export default function CircleMenu({ circleId }) {
             label="メンバー"
           />
         </Tabs>
-        <TabPanel className="tabPanel" value={value} index={0}>
+        <TabPanel className="tabPanelDataCircleInfor" value={value} index={0}>
           {dataCircleInfor ? (
             <>
               <CircleInfo

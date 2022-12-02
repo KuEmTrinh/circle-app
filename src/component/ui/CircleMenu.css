@@ -10,8 +10,9 @@
   font-size: 12px !important;
   padding: 5px !important;
 }
-.tabPanel {
-  height: 100%;
+.tabPanelDataCircleInfor {
+  height: 80%;
+  /* overflow: scroll; */
 }
 .circleInfoBox {
   height: calc(100vh - 10rem);
