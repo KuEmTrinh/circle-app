@@ -20,10 +20,8 @@ import "./Event.css"
 import EditEvent from "./EditEvent"
 import CreateEvent from './CreateEvent';
 import { useParams } from 'react-router-dom';
-import { createEvent } from '@testing-library/react';
 import { db } from '../../../../../app/firebase';
-import { QuerySnapshot } from 'firebase/firestore';
-
+import "./Event.css";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
