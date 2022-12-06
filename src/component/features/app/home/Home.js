@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./Home.css";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
@@ -36,6 +36,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function MyCircleItem({ circle }) {
+  const timeLineRef = useRef([]);
   ///
   let userInfo = useSelector((state) => state.login.data);
   const [openDialog, setOpenDialog] = useState(false);
@@ -70,7 +71,13 @@ function MyCircleItem({ circle }) {
     setEditCircleInfo(data);
   };
   const sendEditCircleInfo = () => {
-    const query = db.collection("circle").doc(circle.id).update(editCircleInfo);
+    let newCircleInfomation = { ...editCircleInfo };
+    newCircleInfomation.timeLine = timeLineRef.current;
+    // console.log(newCircleInfomation);
+    const query = db
+      .collection("circle")
+      .doc(circle.id)
+      .update(newCircleInfomation);
     return query;
   };
   // Get all member in Circle
@@ -99,23 +106,23 @@ function MyCircleItem({ circle }) {
       .doc(userInfo.uid)
       .update({
         circleList: arrayRemove(circle.id),
-      })
+      });
     return query;
   };
-  const deleteMemberInMemberOfCircle=()=>{
-    const query =db
-    .collection("circle")
-    .doc(circle.id)
-    .collection("member")
-    .where("userId","==",userInfo.uid)
-    .onSnapshot((querySnapshot)=>{
-      querySnapshot.forEach((doc)=>{
-        doc.ref.delete();
-      })
-    })
-    console.log("Delete thanh cong")
-    return query
-  }
+  const deleteMemberInMemberOfCircle = () => {
+    const query = db
+      .collection("circle")
+      .doc(circle.id)
+      .collection("member")
+      .where("userId", "==", userInfo.uid)
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref.delete();
+        });
+      });
+    console.log("Delete thanh cong");
+    return query;
+  };
   const outCircle = async () => {
     deleteCircleInCircleListOfUser();
     deleteMemberInMemberOfCircle();
@@ -158,6 +165,7 @@ function MyCircleItem({ circle }) {
         <EditCircle
           getDataFromChild={getDataOfEditCircle}
           circle={circle}
+          timeLineRef={timeLineRef}
         ></EditCircle>
       </Dialog>
       <Modal

@@ -9,49 +9,29 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
-function CircleTimeLine() {
+function CircleTimeLine({ timeLine }) {
   return (
     <Timeline position="alternate">
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">
-          09:30 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>Eat</TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">
-          10:00 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>Code</TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">
-          12:00 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>Sleep</TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineOppositeContent color="text.secondary">
-          9:00 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot />
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>Repeat</TimelineContent>
-      </TimelineItem>
+      {timeLine ? (
+        <>
+          {timeLine.map((el) => {
+            return (
+              <TimelineItem>
+                <TimelineOppositeContent color="text.secondary">
+                  {el.time}
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>{el.content}</TimelineContent>
+              </TimelineItem>
+            );
+          })}
+        </>
+      ) : (
+        ""
+      )}
     </Timeline>
   );
 }
@@ -108,9 +88,7 @@ export default function CircleInfo({ circleData, memberData }) {
           <p>サークル紹介</p>
         </div>
         <div className="circleIntro">
-          <p>
-           {circleData.introductionText}
-          </p>
+          <p>{circleData.introductionText}</p>
         </div>
       </div>
       <div className="circleScheduleBox">
@@ -119,7 +97,7 @@ export default function CircleInfo({ circleData, memberData }) {
           <p>サークルスケジュール</p>
         </div>
         <div className="circleSchedule">
-          <CircleTimeLine></CircleTimeLine>
+          <CircleTimeLine timeLine={circleData.timeLine}></CircleTimeLine>
         </div>
       </div>
     </div>
