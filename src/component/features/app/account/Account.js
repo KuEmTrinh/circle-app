@@ -26,6 +26,7 @@ function NewCircleComponent() {
   const [percent, setPercent] = useState(0);
   const [resultBox, setResultBox] = useState(false);
   const [file, setFile] = useState("");
+  const [fileMembers,setFileMember]=useState("")
   const [preview, setPreview] = useState();
   const [circleType, setCircleType] = useState("");
   const [creatNewCircleInfor, setCreateNewCircleInfor] = useState({
@@ -35,9 +36,11 @@ function NewCircleComponent() {
     registerUserPhotoURL: userInfo.photoURL,
     name: "",
     members: 0,
+    terms: "",
     money: 0,
     motivation: "",
     status: false,
+    fileMembers:fileMembers
   });
 
   useEffect(() => {
@@ -89,6 +92,7 @@ function NewCircleComponent() {
       money: 0,
       motivation: "",
       status: false,
+      fileMembers:fileMembers
     });
     await setCreateCircleToggle(false);
     await setConfirmToggle(false);
@@ -124,7 +128,7 @@ function NewCircleComponent() {
         },
         (err) => console.log(err),
         () => {
-          // download url
+          // downbload url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             confirmCreateCircle(url);
           });
@@ -132,6 +136,11 @@ function NewCircleComponent() {
       );
     }
   };
+
+  const handleOnChange = (e) => {
+    setFileMember(e.target.files[0])
+  };
+
   return (
     <>
       <Modal
@@ -183,33 +192,37 @@ function NewCircleComponent() {
           </div>
           <TextField
             className="createNewCircleTextField"
-            label="名前"
+            label="名称"
             inputProps={{ maxLength: 25 }}
             name="name"
             onChange={handleChange}
           ></TextField>
           <TextField
             className="createNewCircleTextField"
-            label="人数"
-            type="number"
-            name="members"
-            onChange={handleChange}
-          ></TextField>
-          <TextField
-            className="createNewCircleTextField"
-            label="会費"
-            type="number"
-            name="money"
-            onChange={handleChange}
-          ></TextField>
-          <TextField
-            className="createNewCircleTextField"
-            label="志望動機"
+            label="設立の目的"
             multiline
             rows={4}
             name="motivation"
             onChange={handleChange}
           ></TextField>
+          <TextField
+            className="createNewCircleTextField"
+            label="規約"
+            name="terms"
+            onChange={handleChange}
+          ></TextField>
+          <div>
+            <a
+              href="https://www.kyusan-u.ac.jp/campus/life/circle/document/files/17_%E5%BD%B9%E5%93%A1%E5%90%8D%E7%B0%BF.doc"
+              download="proposed_file_name"
+            >
+              Download 役員名簿.doc
+            </a>
+          </div>
+          <div className="chooseFileButoon">
+
+          <input type="file" name="fileMembers" onChange={handleChange}/>
+          </div>
         </div>
         <div className="creatNewCircleModalButtonBox">
           <ButtonComponent
@@ -248,6 +261,7 @@ function NewCircleComponent() {
       >
         <Button size="medium">Create new Circle</Button>
       </div>
+      {console.log(fileMembers)}
     </>
   );
 }

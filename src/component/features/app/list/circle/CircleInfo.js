@@ -84,13 +84,22 @@ export default function CircleInfo({ circleData, memberData }) {
           ""
         )}
       </div>
+      <div className="circleMessBox">
+        <div className="circleTitleBox">
+          {<FiberManualRecordIcon fontSize="small" />}
+          <p>サークルのメッセージ</p>
+        </div>
+        <div className="circleMess">
+          <p>{circleData.greetingText}</p>
+        </div>
+      </div>
       <div className="circlePlaceBox">
         <div className="circleTitleBox">
           {<FiberManualRecordIcon fontSize="small" />}
           <p>サークル場所</p>
         </div>
         <div className="circlePlace">
-          <p>中央会館８階部室</p>
+          <p>{circleData.place}</p>
         </div>
       </div>
       <div className="circleIntroBox">
@@ -100,10 +109,7 @@ export default function CircleInfo({ circleData, memberData }) {
         </div>
         <div className="circleIntro">
           <p>
-            新入生の皆さんご入学おめでとうございます！
-            私たち代議員会事務局は各学年各学科1名、各サークルに1名いる代議員をまとめています。簡単に言えば生徒会のようなものです。もちろん学生たちの間で行うので気楽です!
-            名前からして堅苦しいイメージがあると思いますが、実際はそんなことはなく、1人が困った時はみんなで解決策を考えます。One
-            for all All for oneです。ぜひ、部室に遊びに来てみてください。
+           {circleData.introductionText}
           </p>
         </div>
       </div>

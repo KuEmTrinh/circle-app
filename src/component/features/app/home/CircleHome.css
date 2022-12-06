@@ -1,6 +1,6 @@
 .circleHome{
-    height: 85%;
-    overflow: scroll;
+    max-height: 80%;
+    overflow: auto;
 }
 .homeTitle{
     padding-top: 150px;
