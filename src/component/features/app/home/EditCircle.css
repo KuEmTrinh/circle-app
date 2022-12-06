@@ -1,0 +1,50 @@
+.editCircelPage{
+    margin: 20px;
+}
+.circleTitle{
+    max-width: 100vw;
+    color: #c13450;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+ 
+}
+.editCircleBox{
+    margin-top: 20px;
+}
+.editCircleItem{
+
+    margin-bottom: 15px;
+}
+.editCircleItem p{
+    margin-bottom: 20px;
+}
+.editCircleItemInput{
+    width: 100%;
+}
+.totalMemberText{
+    margin-bottom: 20px;
+}
+.editTimeline{
+    display: flex;
+    margin-top: 10px;
+}
+.editTimeInTimeline{
+    flex: 1;
+}
+.editEventInTimeline{
+    flex: 2;
+}
+
+.editEventInTimeline,.editTimeInTimeline{
+    /* width: 30%; */
+}
+.addTimelineIconBox{
+    display: flex;
+    justify-content: center;
+}
+.addTimelineIcon{
+    color: #c13450;
+}
