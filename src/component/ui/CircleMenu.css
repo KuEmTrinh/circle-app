@@ -5,17 +5,23 @@
   width: 100%;
   /* width: 370px; */
 }
+
 .circleMenuList {
   height: 100%;
+  width: 370px;
+  margin: auto;
 }
+
 .circleMenuItem {
   font-size: 12px !important;
   padding: 5px !important;
 }
+
 .tabPanelDataCircleInfor {
   height: 80%;
   /* overflow: scroll; */
 }
+
 .circleInfoBox {
   height: calc(100vh - 10rem);
   overflow: auto;

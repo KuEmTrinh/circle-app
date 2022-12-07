@@ -81,6 +81,7 @@ export default function CircleMenu({ circleId }) {
           value={value}
           onChange={handleChange}
           aria-label="icon position tabs example"
+          justifyContent="center"
         >
           <Tab
             className="circleMenuItem"
