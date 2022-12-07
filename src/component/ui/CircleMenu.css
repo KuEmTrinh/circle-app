@@ -1,7 +1,8 @@
 .circelMenu {
   margin: 10px 10px;
   position: fixed;
-  height: 60px;
+  /* height: 90vh; */
+  width: 100%;
   /* width: 370px; */
 }
 .circleMenuList {
