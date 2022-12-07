@@ -20,7 +20,7 @@ function CircleListComponent({ circleType }) {
   const fetchCircleData = () => {
     const query = db
       .collection("circle")
-      .where("status", "==", true)
+      .where("status", "==", 2)
       .where("circleType", "==", circleType)
       .onSnapshot((querySnapshot) => {
         const data = [];

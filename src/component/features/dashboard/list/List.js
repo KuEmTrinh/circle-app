@@ -28,7 +28,7 @@ function CircleItemComponent({ circle }) {
 
   const confirmCircle = (circle) => {
     db.collection("circle").doc(circle.id).update({
-      status: true,
+      status: 2,
     });
     db.collection("circle").doc(circle.id).collection("member").add({
       role: "circleAdmin",
@@ -36,7 +36,7 @@ function CircleItemComponent({ circle }) {
       userId: circle.registerUid,
       userPhotoURL: circle.registerUserPhotoURL,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      status: true,
+      status: 2,
     });
     db.collection("user")
       .doc(circle.registerUid)
@@ -125,8 +125,8 @@ export default function List() {
         item.id = doc.id;
         data.push(item);
       });
-      let registeringListData = data.filter((el) => el.status == false);
-      let registedcircleListData = data.filter((el) => el.status == true);
+      let registeringListData = data.filter((el) => el.status == 0);
+      let registedcircleListData = data.filter((el) => el.status == 2);
       setRegisteringList(registeringListData);
       setRegistedcircleList(registedcircleListData);
     });

@@ -39,7 +39,10 @@ function NewCircleComponent() {
     terms: "",
     money: 0,
     motivation: "",
-    status: false,
+    // 0　は申請中
+    // 1  は申請済み
+    // ２ は承認した
+    status: 0,
     fileMembers:fileMembers
   });
 
@@ -91,7 +94,7 @@ function NewCircleComponent() {
       members: 0,
       money: 0,
       motivation: "",
-      status: false,
+      status: 0,
       fileMembers:fileMembers
     });
     await setCreateCircleToggle(false);
