@@ -30,6 +30,7 @@ import Slide from "@mui/material/Slide";
 import EditCircle from "./EditCircle";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
+import "./EditCircle.css";
 import { arrayRemove } from "firebase/firestore";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
