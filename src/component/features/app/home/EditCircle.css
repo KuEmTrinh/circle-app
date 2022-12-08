@@ -18,6 +18,33 @@
 
     margin-bottom: 15px;
 }
+.editCircleItem p{
+    margin-bottom: 20px;
+}
 .editCircleItemInput{
     width: 100%;
+}
+.totalMemberText{
+    margin-bottom: 20px;
+}
+.editTimeline{
+    display: flex;
+    margin-top: 10px;
+}
+.editTimeInTimeline{
+    flex: 1;
+}
+.editEventInTimeline{
+    flex: 2;
+}
+
+.editEventInTimeline,.editTimeInTimeline{
+    /* width: 30%; */
+}
+.addTimelineIconBox{
+    display: flex;
+    justify-content: center;
+}
+.addTimelineIcon{
+    color: #c13450;
 }

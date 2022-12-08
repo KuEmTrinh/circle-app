@@ -1,0 +1,54 @@
+.eventPage{
+    margin-top: 20px;
+    
+    height: 485px;
+    width: 100%;
+    overflow: scroll;
+}
+
+.eventItem{
+    margin-bottom: 19px;
+    padding: 15px 10px;
+    border: 1px dotted #C13450;
+    border-radius: 20px;
+    position: relative;
+}
+.eventName{
+    font-size: 20px;
+    padding-left: 10px;
+    margin-bottom: 13px;
+    font-weight: bolder;
+}
+.eventImage img{
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+.eventSetting{
+    position:absolute;
+    top: 10px;
+    right: 15px;
+}
+.eventAdd{
+    position:fixed;
+    bottom: 100px;
+    right: 50%;
+    transform: translateX(25%);
+    width: 50px;
+    height: 50px;
+    background-color: #C13450;
+    border-radius: 10px;
+}
+.eventAddIcon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  
+}
+.eventDetailImfor{
+    margin:5px;
+    /* font-weight: 600; */
+    font-size: 15px;
+}
