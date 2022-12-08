@@ -13,8 +13,14 @@ import { db } from "../../../../app/firebase";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
 import { arrayUnion } from "firebase/firestore";
-function CircleItemComponent({ circle }) {
+import { el } from "date-fns/locale";
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+function CircleItemComponent({ circle },props) {
   const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
+  const [registeringListToggle, setRegisteringListToggle] = useState(false);
+  const [registedcircleListToggle, setRegistedcircleListListToggle] = useState(false);
+  const [registercircleDeleateListToggle, setRegistercircleDeleateListToggle] = useState(false);
   const toDateTime = (secs) => {
     var time = new Date(1970, 1, 0, 9);
     time.setSeconds(secs);
@@ -25,8 +31,9 @@ function CircleItemComponent({ circle }) {
     return month + "月" + day + "日 " + hours + "時" + min + "分";
   };
 
+
   const confirmCircle = (circle) => {
-    
+
     db.collection("circle").doc(circle.id).update({
       status: true,
     });
@@ -35,6 +42,7 @@ function CircleItemComponent({ circle }) {
       userName: circle.registerUsername,
       userId: circle.registerUid,
       userPhotoURL: circle.registerUserPhotoURL,
+
     });
     db.collection("user")
       .doc(circle.registerUid)
@@ -45,22 +53,79 @@ function CircleItemComponent({ circle }) {
   return (
     <>
       <Modal
-        show={circleDetailsToggle}
+        show={registeringListToggle}
         onClose={() => {
-          setCircleDetailsToggle(false);
+          setRegisteringListToggle(false);
         }}
       >
         <p className="subTitle">情報を確認</p>
-        <p>ここはサークル確認情報を追加</p>
+        <p>サークル名：{circle.name}</p>
+        <p>申請者：{circle.registerUsername}</p>
+        <p>ID：{circle.registerUid}</p>
+        <p>説明:{circle.motivation}</p>
+
+
         <div className="center sp-ar">
-          <ButtonComponent mode="cancel">キャンセル</ButtonComponent>
-          <ButtonComponent
+          <div className="register" >
+            <ButtonComponent mode="cancel"
+              onClick={() => {
+                setRegisteringListToggle(false);
+              }}
+            >
+              戻る
+            </ButtonComponent>
+
+            <ButtonComponent mode="ok"
+              onClick={() => {
+                confirmCircle(circle);
+                setCircleDetailsToggle(false);
+              }}
+            >
+              許可
+            </ButtonComponent>
+
+            <ButtonComponent mode="no"
+              onClick={() => {
+                setCircleDetailsToggle(false);
+              }}
+            >
+              拒否
+            </ButtonComponent>
+
+            <ButtonComponent mode="DleateFlag"
+              onClick={() => {
+                confirmCircle(circle);
+                setRegistercircleDeleateListToggle(false);
+              }}
+            >
+              削除
+            </ButtonComponent>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        show={registedcircleListToggle}
+        onClose={() => {
+          setRegistedcircleListListToggle(false);
+        }}
+      >
+
+        <div className="center sp-ar">
+          <ButtonComponent mode="cancel"
+            onClick={() => {
+              setRegistedcircleListListToggle(false);
+            }}
+          >
+            戻る
+          </ButtonComponent>
+
+          <ButtonComponent mode="DleateFlag"
             onClick={() => {
               confirmCircle(circle);
               setCircleDetailsToggle(false);
             }}
           >
-            同意
+            削除
           </ButtonComponent>
         </div>
       </Modal>
@@ -68,13 +133,15 @@ function CircleItemComponent({ circle }) {
         key={circle.id}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         onClick={() => {
-          setCircleDetailsToggle(true);
+          
+          setRegisteringListToggle(true);
         }}
       >
-        <TableCell align="left">{circle.name}</TableCell>
-        <TableCell align="right">{circle.registerUsername}</TableCell>
-        <TableCell align="right">{circle.type}</TableCell>
-        <TableCell align="right">{toDateTime(circle.createdAt)}</TableCell>
+        
+        <TableCell align="center">{circle.name}</TableCell>
+        <TableCell align="center">{circle.registerUsername}</TableCell>
+        <TableCell align="center">{circle.type}</TableCell>
+        <TableCell align="center">{toDateTime(circle.createdAt)}</TableCell>
       </TableRow>
     </>
   );
@@ -89,10 +156,10 @@ function CircleListComponent({ circleList }) {
           <Table sx={{ minWidth: "100%" }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">サークル名</TableCell>
-                <TableCell align="right">申請者</TableCell>
-                <TableCell align="right">タイプ</TableCell>
-                <TableCell align="right">日時</TableCell>
+                <TableCell align="center">サークル名</TableCell>
+                <TableCell align="center">申請者</TableCell>
+                <TableCell align="center">タイプ</TableCell>
+                <TableCell align="center">日時</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -108,10 +175,29 @@ function CircleListComponent({ circleList }) {
     </div>
   );
 }
+function TabPanel() {
+  const { children, value, index, ...other } = props;
 
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 export default function List() {
   const [registeringList, setRegisteringList] = useState();
   const [registedcircleList, setRegistedcircleList] = useState();
+  const [registercircleDeleateList, setRegistercircleDeleateList] = useState();
   useEffect(() => {
     fetchCircleData();
   }, []);
@@ -125,8 +211,10 @@ export default function List() {
       });
       let registeringListData = data.filter((el) => el.status == false);
       let registedcircleListData = data.filter((el) => el.status == true);
+      let registercircleDeleateListData = data.filter((el) => el.status == false);
       setRegisteringList(registeringListData);
       setRegistedcircleList(registedcircleListData);
+      setRegistercircleDeleateList(registercircleDeleateListData);
     });
   };
   const [value, setValue] = React.useState(0);
@@ -144,11 +232,30 @@ export default function List() {
         >
           <Tab label="申請中" />
           <Tab label="申請済み" />
+          <Tab label="削除フラグ付き" />
         </Tabs>
       </div>
-      <CircleListComponent
+      <TabPanel value={value} index={0}>
+        <CircleListComponent
+          mode="registeringList"
+          circleList={registeringList}
+        > </CircleListComponent>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <CircleListComponent
+          mode="registedcircleList"
+          circleList={registedcircleList}
+        ></CircleListComponent>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <CircleListComponent
+          mode="registercircleDeleateList"
+          circleList={registercircleDeleateList}
+        ></CircleListComponent>
+      </TabPanel>
+      {/* <CircleListComponent
         circleList={value == 0 ? registeringList : registedcircleList}
-      ></CircleListComponent>
+      ></CircleListComponent> */}
     </>
   );
 }

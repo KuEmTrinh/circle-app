@@ -1,3 +1,10 @@
 .circleRegisterList{
     padding: 10px;
+    height: 700px;
+    overflow: auto;
+}
+.circleRegisterDetilList{
+    padding: 10px;
+    height: 500px;
+    overflow: auto;
 }
