@@ -12,11 +12,10 @@ import { useSelector } from "react-redux";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import imageCompression from "browser-image-compression";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 function NewCircleComponent() {
   let userInfo = useSelector((state) => state.login.data);
   const confirmModal = () => {
@@ -27,7 +26,7 @@ function NewCircleComponent() {
   const [percent, setPercent] = useState(0);
   const [resultBox, setResultBox] = useState(false);
   const [file, setFile] = useState("");
-  const [fileMembers, setFileMember] = useState("")
+  const [fileMembers, setFileMember] = useState("");
   const [preview, setPreview] = useState();
   const [circleType, setCircleType] = useState("");
   const [creatNewCircleInfor, setCreateNewCircleInfor] = useState({
@@ -41,7 +40,7 @@ function NewCircleComponent() {
     money: 0,
     motivation: "",
     status: false,
-    fileMembers: fileMembers
+    fileMembers: fileMembers,
   });
 
   useEffect(() => {
@@ -93,7 +92,7 @@ function NewCircleComponent() {
       money: 0,
       motivation: "",
       status: false,
-      fileMembers: fileMembers
+      fileMembers: fileMembers,
     });
     await setCreateCircleToggle(false);
     await setConfirmToggle(false);
@@ -139,7 +138,7 @@ function NewCircleComponent() {
   };
 
   const handleOnChange = (e) => {
-    setFileMember(e.target.files[0])
+    setFileMember(e.target.files[0]);
   };
 
   return (
@@ -221,7 +220,6 @@ function NewCircleComponent() {
             </a>
           </div>
           <div className="chooseFileButoon">
-
             <input type="file" name="fileMembers" onChange={handleChange} />
           </div>
         </div>
@@ -267,77 +265,132 @@ function NewCircleComponent() {
   );
 }
 function UserEdit() {
-  
-  const handleChange=()=>{
-    
-  }
+  let userInfo = useSelector((state) => state.login.data);
+  const userId = userInfo.uid;
+  const [toggle, setToggle] = useState(false);
+  const [name, setName] = useState(userInfo.name);
+  const [userCode, setUserCode] = useState(userInfo.userCode);
+  const [userFaculty, setUserFaculty] = useState(userInfo.userFaculty);
+  const [sex, setSex] = useState(userInfo.sex);
+  const [userPhone, setUserPhone] = useState(userInfo.userPhone);
+
+  const userInfoConfirm = () => {
+    const query = db.collection("user").doc(userId).update({
+      name: name,
+      userCode: userCode,
+      userFaculty: userFaculty,
+      sex: sex,
+      userPhone: userPhone,
+    });
+    return query;
+  };
 
   return (
     <>
-      
-      
-      <div className='createNewAccount'>
-        <TitleText>アカウント登録</TitleText>
-        <div className="creatNewAccountInputBox">
-          <TextField
-            className="createNewAccountTextField"
-            label="学籍番号"
-            inputProps={{ maxLength: 25 }}
-            name="name"
-            onChange={handleChange}
+      <ButtonComponent
+        onClick={() => {
+          setToggle(true);
+        }}
+      >
+        アカウント登録
+      </ButtonComponent>
+      <Modal
+        show={toggle}
+        onClose={() => {
+          setToggle(false);
+        }}
+      >
+        <div className="createNewAccount">
+          <TitleText>アカウント登録</TitleText>
+          <div className="creatNewAccountInputBox">
+            <div className="mt-1"></div>
+            <TextField
+              className="createNewAccountTextField"
+              label="学籍番号"
+              inputProps={{ maxLength: 25 }}
+              name="name"
+              fullWidth
+              value={userCode}
+              onChange={(e) => {
+                setUserCode(e.target.value);
+              }}
+            ></TextField>
+            <div className="mt-1"></div>
 
-          ></TextField>
-          <TextField
-            className="createNewAccountTextField"
-            label="名前"
-            inputProps={{ maxLength: 25 }}
-            name="time"
-            onChange={handleChange}
-          ></TextField>
-          <TextField
-            className="createNewAccountTextField"
-            label="学部・学科"
-            inputProps={{ maxLength: 25 }}
-            name="place"
-            onChange={handleChange}
-          ></TextField>
-          <TextField
-            className="createNewAccountTextField"
-            label="性別"
-            inputProps={{ maxLength: 25 }}
-            name="money"
-            onChange={handleChange}
-          ></TextField>
-          <TextField
-            className="createNewAccountTextField"
-            label="電話番号"
-            inputProps={{ maxLength: 25 }}
-            name="maxMembers"
-            onChange={handleChange}
-          ></TextField>
-          <TextField
-            className="createNewAccountTextField"
-            label="メールアドレス"
-            inputProps={{ maxLength: 25 }}
-            name="content"
-            onChange={handleChange}
-          ></TextField>
+            <TextField
+              className="createNewAccountTextField"
+              label="名前"
+              inputProps={{ maxLength: 25 }}
+              name="time"
+              fullWidth
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            ></TextField>
+            <div className="mt-1"></div>
+
+            <TextField
+              className="createNewAccountTextField"
+              label="学部・学科"
+              inputProps={{ maxLength: 25 }}
+              name="place"
+              fullWidth
+              value={userFaculty}
+              onChange={(e) => {
+                setUserFaculty(e.target.value);
+              }}
+            ></TextField>
+            <div className="mt-1"></div>
+
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={sex}
+                label="性別"
+                onChange={(event) => {
+                  setSex(event.target.value);
+                }}
+              >
+                <MenuItem value={1}>男</MenuItem>
+                <MenuItem value={2}>女</MenuItem>
+              </Select>
+            </FormControl>
+            <div className="mt-1"></div>
+
+            <TextField
+              className="createNewAccountTextField"
+              label="電話番号"
+              inputProps={{ maxLength: 25 }}
+              fullWidth
+              value={userPhone}
+              onChange={(e) => {
+                setUserPhone(e.target.value);
+              }}
+            ></TextField>
+            <div className="mt-1 center">
+              <ButtonComponent
+                onClick={async () => {
+                  await userInfoConfirm();
+                  await setToggle(false);
+                }}
+              >
+                登録
+              </ButtonComponent>
+            </div>
+          </div>
         </div>
-
-      </div>
+      </Modal>
     </>
-  )
+  );
 }
 export default function Account() {
-
   return (
     <>
       <NewCircleComponent></NewCircleComponent>
       <UserEdit></UserEdit>
     </>
-
-  )
-
-
-
+  );
 }
