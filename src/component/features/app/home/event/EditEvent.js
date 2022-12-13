@@ -3,15 +3,15 @@ import TitleText from "../../../../ui/TitleText";
 import { TextField } from "@mui/material";
 export default function EditEvent({ editEvent, parentCallback }) {
   const [createNewEventInfor, setCreateNewEventInfor] = useState(editEvent);
-  const handleChange = (e) => {
-    setCreateNewEventInfor({
+  const handleChange = async (e) => {
+    await setCreateNewEventInfor({
       ...createNewEventInfor,
       [e.target.name]: e.target.value,
     });
-    sendNewEventInfor();
-  };
-  const sendNewEventInfor = () => {
-    parentCallback(createNewEventInfor);
+    await parentCallback({
+      ...createNewEventInfor,
+      [e.target.name]: e.target.value,
+    });
   };
   return (
     <div className="createNewEvent">

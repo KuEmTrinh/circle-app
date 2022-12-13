@@ -74,7 +74,6 @@ function MyCircleItem({ circle }) {
   const sendEditCircleInfo = () => {
     let newCircleInfomation = { ...editCircleInfo };
     newCircleInfomation.timeLine = timeLineRef.current;
-    // console.log(newCircleInfomation);
     const query = db
       .collection("circle")
       .doc(circle.id)
