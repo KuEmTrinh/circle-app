@@ -16,6 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+
 function NewCircleComponent() {
   let userInfo = useSelector((state) => state.login.data);
   const confirmModal = () => {
@@ -26,7 +27,7 @@ function NewCircleComponent() {
   const [percent, setPercent] = useState(0);
   const [resultBox, setResultBox] = useState(false);
   const [file, setFile] = useState("");
-  const [fileMembers,setFileMember]=useState("")
+  const [fileMembers, setFileMember] = useState("")
   const [preview, setPreview] = useState();
   const [circleType, setCircleType] = useState("");
   const [creatNewCircleInfor, setCreateNewCircleInfor] = useState({
@@ -40,7 +41,7 @@ function NewCircleComponent() {
     money: 0,
     motivation: "",
     status: false,
-    fileMembers:fileMembers
+    fileMembers: fileMembers
   });
 
   useEffect(() => {
@@ -92,7 +93,7 @@ function NewCircleComponent() {
       money: 0,
       motivation: "",
       status: false,
-      fileMembers:fileMembers
+      fileMembers: fileMembers
     });
     await setCreateCircleToggle(false);
     await setConfirmToggle(false);
@@ -221,7 +222,7 @@ function NewCircleComponent() {
           </div>
           <div className="chooseFileButoon">
 
-          <input type="file" name="fileMembers" onChange={handleChange}/>
+            <input type="file" name="fileMembers" onChange={handleChange} />
           </div>
         </div>
         <div className="creatNewCircleModalButtonBox">
@@ -265,11 +266,78 @@ function NewCircleComponent() {
     </>
   );
 }
+function UserEdit() {
+  
+  const handleChange=()=>{
+    
+  }
 
+  return (
+    <>
+      
+      
+      <div className='createNewAccount'>
+        <TitleText>アカウント登録</TitleText>
+        <div className="creatNewAccountInputBox">
+          <TextField
+            className="createNewAccountTextField"
+            label="学籍番号"
+            inputProps={{ maxLength: 25 }}
+            name="name"
+            onChange={handleChange}
+
+          ></TextField>
+          <TextField
+            className="createNewAccountTextField"
+            label="名前"
+            inputProps={{ maxLength: 25 }}
+            name="time"
+            onChange={handleChange}
+          ></TextField>
+          <TextField
+            className="createNewAccountTextField"
+            label="学部・学科"
+            inputProps={{ maxLength: 25 }}
+            name="place"
+            onChange={handleChange}
+          ></TextField>
+          <TextField
+            className="createNewAccountTextField"
+            label="性別"
+            inputProps={{ maxLength: 25 }}
+            name="money"
+            onChange={handleChange}
+          ></TextField>
+          <TextField
+            className="createNewAccountTextField"
+            label="電話番号"
+            inputProps={{ maxLength: 25 }}
+            name="maxMembers"
+            onChange={handleChange}
+          ></TextField>
+          <TextField
+            className="createNewAccountTextField"
+            label="メールアドレス"
+            inputProps={{ maxLength: 25 }}
+            name="content"
+            onChange={handleChange}
+          ></TextField>
+        </div>
+
+      </div>
+    </>
+  )
+}
 export default function Account() {
+
   return (
     <>
       <NewCircleComponent></NewCircleComponent>
+      <UserEdit></UserEdit>
     </>
-  );
+
+  )
+
+
+
 }
