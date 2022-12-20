@@ -8,8 +8,9 @@ import { useSelector } from "react-redux";
 import Account from "../account/Account";
 import Chat from "../home/chat/Chat";
 import MainDashboard from "../../dashboard/main/MainDashboard";
-import Circle from "./../list/circle/Circle"
+import Circle from "./../list/circle/Circle";
 import CircleHome from "../home/CircleHome";
+import Notifi from "../notifi/Notifi";
 function NeedLogin() {
   return (
     <>
@@ -29,7 +30,7 @@ export default function Main() {
       <Routes>
         <Route path="/">
           <Route path="list" element={<List />} />
-          <Route path="list/:circleId/circle_details" element={<Circle/>}/>
+          <Route path="list/:circleId/circle_details" element={<Circle />} />
           {loginStatus ? (
             <>
               <Route
@@ -37,8 +38,12 @@ export default function Main() {
                 element={isSystemAdmin ? <MainDashboard /> : <Home />}
               />
               <Route path="account" element={<Account />} />
+              <Route path="notifi" element={<Notifi />} />
               <Route path="chat/:circleId" element={<Chat />} />
-              <Route path=":circleId/circle_home" element={<CircleHome />} />
+              <Route
+                path=":circleId/:circleName/circle_home"
+                element={<CircleHome />}
+              />
             </>
           ) : (
             <Route path="*" element={<NeedLogin />} />

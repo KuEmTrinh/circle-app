@@ -1,0 +1,54 @@
+.notificationBox {
+  width: 100%;
+  padding: 0.7rem;
+}
+
+.notificationBoxTitle {
+  font-weight: bold;
+  font-size: 16px;
+}
+.notificationItem {
+  display: flex;
+  align-items: center;
+}
+.notificationItemContentBox {
+  width: 100%;
+  padding: 1.2rem 0;
+  border: 1px solid #dcdcdc;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-left-width: 0px;
+}
+.notificationItemContent {
+  font-size: 16px;
+  color: #2a2a2a;
+}
+.notificationItemTime {
+  font-size: 12px;
+  color: #6c6c6c;
+  padding-top: 0.7rem;
+}
+
+.bluePoint::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #2172f2;
+  display: inline-block;
+}
+.bluePoint {
+  margin: 0 0.7rem;
+}
+
+.greyPoint::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #6c6c6c;
+  display: inline-block;
+}
+.greyPoint {
+  margin: 0 0.7rem;
+}

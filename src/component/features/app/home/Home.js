@@ -81,23 +81,23 @@ function MyCircleItem({ circle }) {
     return query;
   };
   // Get all member in Circle
-  const getAllMemberOfCircle = () => {
-    const query = db
-      .collection("circle")
-      .doc(circle.id)
-      .collection("member")
-      .onSnapshot((querySnapshot) => {
-        const data = [];
-        querySnapshot.docs.map((doc) => {
-          let item = doc.data();
-          item.id = doc.id;
-          data.push(item);
-        });
-        setMemberList(data);
-      });
+  // const getAllMemberOfCircle = () => {
+  //   const query = db
+  //     .collection("circle")
+  //     .doc(circle.id)
+  //     .collection("member")
+  //     .onSnapshot((querySnapshot) => {
+  //       const data = [];
+  //       querySnapshot.docs.map((doc) => {
+  //         let item = doc.data();
+  //         item.id = doc.id;
+  //         data.push(item);
+  //       });
+  //       setMemberList(data);
+  //     });
 
-    return query;
-  };
+  //   return query;
+  // };
 
   // Function outCircle
   const deleteCircleInCircleListOfUser = () => {
@@ -279,7 +279,7 @@ function MyCircleItem({ circle }) {
             }
           />
 
-          <Link to={circle.id + "/circle_home"}>
+          <Link to={circle.id + "/" + circle.name + "/circle_home"}>
             <CardMedia
               component="img"
               height="100"
@@ -307,31 +307,52 @@ export default function Home() {
   const [circleList, setCircleList] = useState();
   useEffect(() => {
     if (circleJoinedList.length > 0) {
-      fetchCircleData(circleJoinedList);
+      // fetchCircleData(circleJoinedList);
+      getData(circleJoinedList);
     }
   }, [circleJoinedList]);
-  const fetchCircleData = (circleJoinedList) => {
-    if (circleJoinedList) {
-      const query = db
-        .collection("circle")
-        .where(
-          firebase.firestore.FieldPath.documentId(),
-          "in",
-          circleJoinedList
-        )
-        .onSnapshot((querySnapshot) => {
-          const data = [];
-          querySnapshot.docs.map((doc) => {
-            let item = doc.data();
-            item.id = doc.id;
-            data.push(item);
-          });
-          console.log(data);
-          setCircleList(data);
-        });
-      return query;
+  // const fetchCircleData = (circleJoinedList) => {
+  //   if (circleJoinedList) {
+  //     const query = db
+  //       .collection("circle")
+  //       .where(
+  //         firebase.firestore.FieldPath.documentId(),
+  //         "in",
+  //         circleJoinedList
+  //       )
+  //       .onSnapshot((querySnapshot) => {
+  //         const data = [];
+  //         querySnapshot.docs.map((doc) => {
+  //           let item = doc.data();
+  //           item.id = doc.id;
+  //           data.push(item);
+  //         });
+  //         console.log(data);
+  //         setCircleList(data);
+  //       });
+  //     return query;
+  //   }
+  // };
+  async function getData(circleJoinedList) {
+    const chunkSize = 10;
+    const chunks = [];
+    for (let i = 0; i < circleJoinedList.length; i += chunkSize) {
+      chunks.push(circleJoinedList.slice(i, i + chunkSize));
     }
-  };
+  
+    const snapshots = await Promise.all(chunks.map(chunk => {
+      return db.collection('circle').where(firebase.firestore.FieldPath.documentId(), 'in', chunk).get();
+    }));
+  
+    const data = [];
+    snapshots.flatMap(snapshot => snapshot.docs).forEach(doc => {
+      let item = doc.data();
+      item.id = doc.id;
+      data.push(item);
+    });
+    console.log(data);
+    setCircleList(data);
+  }
   return (
     <>
       <div className="myCircleList">
@@ -342,7 +363,7 @@ export default function Home() {
             })}
           </>
         ) : (
-          ""
+          "Loading"
         )}
       </div>
     </>

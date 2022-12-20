@@ -36,7 +36,7 @@ function ContentComponent({ dispatch }) {
       <div className="headerUserInformation">
         <img className="headerUserImage" alt="" src={userInfo.photoURL} />
         <div className="headerUserName">
-          <p>{userInfo.name}</p>
+          <p>{userInfo.name ? userInfo.name : userInfo.displayName}</p>
         </div>
       </div>
       <div
@@ -120,6 +120,7 @@ export default function Header() {
       .get()
       .then((doc) => {
         if (doc.exists) {
+          console.log(user);
           dispatch(saveLoginInfo(doc.data()));
         }
       });
