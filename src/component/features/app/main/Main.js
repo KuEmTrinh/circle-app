@@ -20,7 +20,7 @@ function NeedLogin() {
 
 export default function Main() {
   let userRole = useSelector((state) => state.login.data.role);
-  let isSystemAdmin = userRole.includes("systemAdmin");
+  let isSystemAdmin = userRole?.includes("systemAdmin");
   //   const [user, setUser] = useState(false);
   const loginStatus = useSelector((state) => state.login.login);
   return (
