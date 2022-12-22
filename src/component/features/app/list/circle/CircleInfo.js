@@ -36,7 +36,6 @@ function CircleTimeLine({ timeLine }) {
   );
 }
 export default function CircleInfo({ circleData, memberData }) {
-  console.log(circleData)
   return (
     <div className="circleDeatailsBox">
       <h1 className="circleName">{circleData.name}</h1>
