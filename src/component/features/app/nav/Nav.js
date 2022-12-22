@@ -49,7 +49,7 @@ export default function Nav() {
         <div className="navBarIcon">
           {selected == "notification" ? <ActiveLink /> : ""}
           <Link
-            to="/notification"
+            to="/notifi"
             onClick={() => {
               setSelected("notification");
             }}

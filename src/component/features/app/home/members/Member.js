@@ -4,7 +4,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Button from "@mui/material/Button";
 import { db } from "../../../../../app/firebase";
+import { firebase } from "../../../../../app/firebase";
 import { arrayUnion } from "firebase/firestore";
+import { useSelector } from "react-redux";
 import "./Members.css";
 function MemberListComponent({ memberList }) {
   const [circleMembers, setCircleMembers] = useState();
@@ -92,6 +94,7 @@ function MemberJoinListComponent({ memberList, circleId }) {
 }
 
 function MemberJoinComponent({ registerMember, circleId }) {
+  let circleName = useSelector((state) => state.circle.name);
   const registerMemberCancel = () => {
     const query = db
       .collection("circle")
@@ -121,6 +124,18 @@ function MemberJoinComponent({ registerMember, circleId }) {
       });
     return query;
   };
+  const createNotification = (message) => {
+    const query = db
+      .collection("user")
+      .doc(registerMember.userId)
+      .collection("notification")
+      .add({
+        message: circleName + "に" + message,
+        read: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    return query;
+  };
   return (
     <div className="circleJoinMemberList">
       <div className="wantToJoinUser">
@@ -142,6 +157,7 @@ function MemberJoinComponent({ registerMember, circleId }) {
             variant="outlined"
             onClick={() => {
               registerMemberCancel();
+              createNotification("参加できませんでした");
             }}
           >
             <CancelIcon />
@@ -153,6 +169,7 @@ function MemberJoinComponent({ registerMember, circleId }) {
           onClick={() => {
             registerMemberAccept();
             addCircleIdForUser();
+            createNotification("参加出来ました");
           }}
         >
           <CheckCircleIcon />

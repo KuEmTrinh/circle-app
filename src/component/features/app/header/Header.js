@@ -11,7 +11,7 @@ import {
   saveLoginInfo,
   deleteUserInfo,
   saveUserRole,
-  saveCircleList
+  saveCircleList,
 } from "../../../slice/loginSlice";
 
 function ContentComponent({ dispatch }) {
@@ -36,7 +36,7 @@ function ContentComponent({ dispatch }) {
       <div className="headerUserInformation">
         <img className="headerUserImage" alt="" src={userInfo.photoURL} />
         <div className="headerUserName">
-          <p>{userInfo.displayName}</p>
+          <p>{userInfo.name ? userInfo.name : userInfo.displayName}</p>
         </div>
       </div>
       <div
@@ -74,7 +74,7 @@ function LoginComponent() {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          console.log("User da ton tai");
+          dispatch(saveLoginInfo(doc.data()));
         } else {
           setUserInfomationOnDatabase(user);
         }
@@ -114,13 +114,23 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const getUserInfomation = async (user) => {
+    db.collection("user")
+      .doc(user.uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log(user);
+          dispatch(saveLoginInfo(doc.data()));
+        }
+      });
+  };
+
   const checkLogin = async () => {
     try {
       await firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          // const userInfomation = JSON.stringify(user);
-          dispatch(saveLoginInfo(user));
-          getUserInfomationForReduxStore(user.uid);
+          getUserInfomation(user);
           return setIsLogin(true);
         } else {
           return setIsLogin(false);
@@ -133,13 +143,14 @@ export default function Header() {
   };
 
   const getUserInfomationForReduxStore = async (uid) => {
-    await db.collection("user")
+    await db
+      .collection("user")
       .doc(uid)
       .get()
       .then((snapshot) => {
         dispatch(saveUserRole(snapshot.data().role));
         let list = snapshot.data().circleList;
-        if(list.length > 0){
+        if (list.length > 0) {
           dispatch(saveCircleList(list));
         }
       });

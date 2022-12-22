@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./Home.css";
 import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
@@ -36,6 +36,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function MyCircleItem({ circle }) {
+  const timeLineRef = useRef([]);
   ///
   let userInfo = useSelector((state) => state.login.data);
   const [openDialog, setOpenDialog] = useState(false);
@@ -70,27 +71,33 @@ function MyCircleItem({ circle }) {
     setEditCircleInfo(data);
   };
   const sendEditCircleInfo = () => {
-    const query = db.collection("circle").doc(circle.id).update(editCircleInfo);
-    return query;
-  };
-  // Get all member in Circle
-  const getAllMemberOfCircle = () => {
+    let newCircleInfomation = { ...editCircleInfo };
+    newCircleInfomation.timeLine = timeLineRef.current;
+    // console.log(newCircleInfomation);
     const query = db
       .collection("circle")
       .doc(circle.id)
-      .collection("member")
-      .onSnapshot((querySnapshot) => {
-        const data = [];
-        querySnapshot.docs.map((doc) => {
-          let item = doc.data();
-          item.id = doc.id;
-          data.push(item);
-        });
-        setMemberList(data);
-      });
-
+      .update(newCircleInfomation);
     return query;
   };
+  // Get all member in Circle
+  // const getAllMemberOfCircle = () => {
+  //   const query = db
+  //     .collection("circle")
+  //     .doc(circle.id)
+  //     .collection("member")
+  //     .onSnapshot((querySnapshot) => {
+  //       const data = [];
+  //       querySnapshot.docs.map((doc) => {
+  //         let item = doc.data();
+  //         item.id = doc.id;
+  //         data.push(item);
+  //       });
+  //       setMemberList(data);
+  //     });
+
+  //   return query;
+  // };
 
   // Function outCircle
   const deleteCircleInCircleListOfUser = () => {
@@ -99,23 +106,23 @@ function MyCircleItem({ circle }) {
       .doc(userInfo.uid)
       .update({
         circleList: arrayRemove(circle.id),
-      })
+      });
     return query;
   };
-  const deleteMemberInMemberOfCircle=()=>{
-    const query =db
-    .collection("circle")
-    .doc(circle.id)
-    .collection("member")
-    .where("userId","==",userInfo.uid)
-    .onSnapshot((querySnapshot)=>{
-      querySnapshot.forEach((doc)=>{
-        doc.ref.delete();
-      })
-    })
-    console.log("Delete thanh cong")
-    return query
-  }
+  const deleteMemberInMemberOfCircle = () => {
+    const query = db
+      .collection("circle")
+      .doc(circle.id)
+      .collection("member")
+      .where("userId", "==", userInfo.uid)
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref.delete();
+        });
+      });
+    console.log("Delete thanh cong");
+    return query;
+  };
   const outCircle = async () => {
     deleteCircleInCircleListOfUser();
     deleteMemberInMemberOfCircle();
@@ -158,6 +165,7 @@ function MyCircleItem({ circle }) {
         <EditCircle
           getDataFromChild={getDataOfEditCircle}
           circle={circle}
+          timeLineRef={timeLineRef}
         ></EditCircle>
       </Dialog>
       <Modal
@@ -271,7 +279,7 @@ function MyCircleItem({ circle }) {
             }
           />
 
-          <Link to={circle.id + "/circle_home"}>
+          <Link to={circle.id + "/" + circle.name + "/circle_home"}>
             <CardMedia
               component="img"
               height="100"
@@ -295,35 +303,56 @@ function MyCircleItem({ circle }) {
 
 export default function Home() {
   // get myCircleList
-  let circleJoinedList = useSelector((state) => state.login.circleList);
+  let circleJoinedList = useSelector((state) => state.login.data.circleList);
   const [circleList, setCircleList] = useState();
   useEffect(() => {
     if (circleJoinedList.length > 0) {
-      fetchCircleData(circleJoinedList);
+      // fetchCircleData(circleJoinedList);
+      getData(circleJoinedList);
     }
   }, [circleJoinedList]);
-  const fetchCircleData = (circleJoinedList) => {
-    if (circleJoinedList) {
-      const query = db
-        .collection("circle")
-        .where(
-          firebase.firestore.FieldPath.documentId(),
-          "in",
-          circleJoinedList
-        )
-        .onSnapshot((querySnapshot) => {
-          const data = [];
-          querySnapshot.docs.map((doc) => {
-            let item = doc.data();
-            item.id = doc.id;
-            data.push(item);
-          });
-          // console.log(data);
-          setCircleList(data);
-        });
-      return query;
+  // const fetchCircleData = (circleJoinedList) => {
+  //   if (circleJoinedList) {
+  //     const query = db
+  //       .collection("circle")
+  //       .where(
+  //         firebase.firestore.FieldPath.documentId(),
+  //         "in",
+  //         circleJoinedList
+  //       )
+  //       .onSnapshot((querySnapshot) => {
+  //         const data = [];
+  //         querySnapshot.docs.map((doc) => {
+  //           let item = doc.data();
+  //           item.id = doc.id;
+  //           data.push(item);
+  //         });
+  //         console.log(data);
+  //         setCircleList(data);
+  //       });
+  //     return query;
+  //   }
+  // };
+  async function getData(circleJoinedList) {
+    const chunkSize = 10;
+    const chunks = [];
+    for (let i = 0; i < circleJoinedList.length; i += chunkSize) {
+      chunks.push(circleJoinedList.slice(i, i + chunkSize));
     }
-  };
+  
+    const snapshots = await Promise.all(chunks.map(chunk => {
+      return db.collection('circle').where(firebase.firestore.FieldPath.documentId(), 'in', chunk).get();
+    }));
+  
+    const data = [];
+    snapshots.flatMap(snapshot => snapshot.docs).forEach(doc => {
+      let item = doc.data();
+      item.id = doc.id;
+      data.push(item);
+    });
+    console.log(data);
+    setCircleList(data);
+  }
   return (
     <>
       <div className="myCircleList">
@@ -334,7 +363,7 @@ export default function Home() {
             })}
           </>
         ) : (
-          ""
+          "Loading"
         )}
       </div>
     </>

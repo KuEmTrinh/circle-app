@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CircleMenu from "../../../ui/CircleMenu";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ButtonComponent from "../../../ui/ButtonComponent";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import "./CircleHome.css";
+import { useDispatch } from "react-redux";
+import { saveCircleInfo } from "../../../slice/circleSlice";
 export default function CircleHome() {
-  let { circleId } = useParams();
+  let { circleId, circleName } = useParams();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    saveCircleInfomation();
+  }, []);
+
+  const saveCircleInfomation = async () => {
+    let sendItem = await {
+      id: circleId,
+      name: circleName,
+    };
+    dispatch(saveCircleInfo(sendItem));
+  };
   return (
     <>
       <Link to="/">
