@@ -149,11 +149,7 @@ function CircleHomePage({ circleId }) {
       .doc(circleId)
       .get()
       .then((doc) => {
-        const dataInfor = {
-          name: doc.data().name,
-          type: doc.data().type,
-          imgUrl: doc.data().imgUrl,
-        };
+        const dataInfor = doc.data();
         setDataCircleInfor(dataInfor);
       });
   const memberListOfCircleFromFirebase = async () => {
