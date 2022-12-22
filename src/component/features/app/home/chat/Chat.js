@@ -18,7 +18,7 @@ function ChatRoomInputBox({ circleId }) {
     await setChatMessage("");
     await db.collection("circle").doc(circleId).collection("chat").add({
       message: currentMessage,
-      userName: user.displayName,
+      userName: user.name,
       userPhoto: user.photoURL,
       userId: user.uid,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),

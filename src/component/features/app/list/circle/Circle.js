@@ -14,13 +14,11 @@ import CircleInfo from "./CircleInfo";
 
 function CircleJoinComponent({ circleId, circleName }) {
   const [circleJoinToggle, setCircleJoinToggle] = useState(false);
-  const [circleJoinUsername, setCircleJoinUsername] = useState("");
-  const [circleJoinUsernumber, setCircleJoinUsernumber] = useState("");
   const [circleJoinUseraddress, setCircleJoinUseraddress] = useState("");
   const [circleJoinUserguarantor, setCircleJoinUserguarantor] = useState("");
   const [circleJoinMotivation, setCircleJoinMotivation] = useState("");
   let userInfo = useSelector((state) => state.login.data);
-  console.log(userInfo);
+  // console.log(userInfo);
   //function
   const circleJoinConfirm = async () => {
     const query = db
@@ -31,16 +29,14 @@ function CircleJoinComponent({ circleId, circleName }) {
         role: "user",
         userId: userInfo.uid,
         userPhotoURL: userInfo.photoURL,
-        userName: circleJoinUsername,
-        userNumber: circleJoinUsernumber,
+        userName: userInfo.name,
+        userNumber: userInfo.userCode,
         userAddress: circleJoinUseraddress,
         userGuarantor: circleJoinUserguarantor,
         userMotivation: circleJoinMotivation,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         status: false,
       });
-    setCircleJoinUsername("");
-    setCircleJoinUsernumber("");
     setCircleJoinUseraddress("");
     setCircleJoinUserguarantor("");
     setCircleJoinMotivation("");
@@ -64,24 +60,16 @@ function CircleJoinComponent({ circleId, circleName }) {
           inputProps={{ maxLength: 25 }}
         ></TextField>
         <TextField
-          required
+          disabled
           className="createNewCircleTextField"
-          label="名前"
+          label={userInfo.name}
           inputProps={{ maxLength: 25 }}
-          value={circleJoinUsername}
-          onChange={(e) => {
-            setCircleJoinUsername(e.target.value);
-          }}
         ></TextField>
         <TextField
-          required
+          disabled
           className="createNewCircleTextField"
-          label="学籍番号"
+          label={userInfo.userCode}
           inputProps={{ maxLength: 25 }}
-          value={circleJoinUsernumber}
-          onChange={(e) => {
-            setCircleJoinUsernumber(e.target.value);
-          }}
         ></TextField>
         <TextField
           required
