@@ -14,14 +14,24 @@ import CircleInfo from "./CircleInfo";
 
 function CircleJoinComponent({ circleId, circleName }) {
   const [circleJoinToggle, setCircleJoinToggle] = useState(false);
-  const [circleJoinUsername, setCircleJoinUsername] = useState("");
-  const [circleJoinUsernumber, setCircleJoinUsernumber] = useState("");
   const [circleJoinUseraddress, setCircleJoinUseraddress] = useState("");
   const [circleJoinUserguarantor, setCircleJoinUserguarantor] = useState("");
   const [circleJoinMotivation, setCircleJoinMotivation] = useState("");
+  const [isJoined, setIsJoined] = useState(false);
   let userInfo = useSelector((state) => state.login.data);
-  console.log(userInfo);
-  //function
+  // console.log(circleId);
+  // console.log(userInfo.circleList);
+  useEffect(() => {
+    checkIsJoined();
+  }, []);
+  const checkIsJoined = () => {
+    let joinedList = [...userInfo.circleList];
+    let check = null;
+    check = joinedList.find((element) => element == circleId);
+    if (check != null) {
+      setIsJoined(true);
+    }
+  };
   const circleJoinConfirm = async () => {
     const query = db
       .collection("circle")
@@ -31,16 +41,14 @@ function CircleJoinComponent({ circleId, circleName }) {
         role: "user",
         userId: userInfo.uid,
         userPhotoURL: userInfo.photoURL,
-        userName: circleJoinUsername,
-        userNumber: circleJoinUsernumber,
+        userName: userInfo.name,
+        userNumber: userInfo.userCode,
         userAddress: circleJoinUseraddress,
         userGuarantor: circleJoinUserguarantor,
         userMotivation: circleJoinMotivation,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         status: false,
       });
-    setCircleJoinUsername("");
-    setCircleJoinUsernumber("");
     setCircleJoinUseraddress("");
     setCircleJoinUserguarantor("");
     setCircleJoinMotivation("");
@@ -64,24 +72,16 @@ function CircleJoinComponent({ circleId, circleName }) {
           inputProps={{ maxLength: 25 }}
         ></TextField>
         <TextField
-          required
+          disabled
           className="createNewCircleTextField"
-          label="名前"
+          label={userInfo.name}
           inputProps={{ maxLength: 25 }}
-          value={circleJoinUsername}
-          onChange={(e) => {
-            setCircleJoinUsername(e.target.value);
-          }}
         ></TextField>
         <TextField
-          required
+          disabled
           className="createNewCircleTextField"
-          label="学籍番号"
+          label={userInfo.userCode}
           inputProps={{ maxLength: 25 }}
-          value={circleJoinUsernumber}
-          onChange={(e) => {
-            setCircleJoinUsernumber(e.target.value);
-          }}
         ></TextField>
         <TextField
           required
@@ -122,16 +122,24 @@ function CircleJoinComponent({ circleId, circleName }) {
           </ButtonComponent>
         </div>
       </Modal>
-      <div className="circleJoinButton">
-        <ButtonComponent
-          size="large"
-          onClick={() => {
-            setCircleJoinToggle(true);
-          }}
-        >
-          参加
-        </ButtonComponent>
-      </div>
+      {isJoined ? (
+        <div className="circleJoinButton">
+          <ButtonComponent size="large" mode="cancel">
+            参加済み
+          </ButtonComponent>
+        </div>
+      ) : (
+        <div className="circleJoinButton">
+          <ButtonComponent
+            size="large"
+            onClick={() => {
+              setCircleJoinToggle(true);
+            }}
+          >
+            参加
+          </ButtonComponent>
+        </div>
+      )}
     </>
   );
 }
@@ -149,11 +157,7 @@ function CircleHomePage({ circleId }) {
       .doc(circleId)
       .get()
       .then((doc) => {
-        const dataInfor = {
-          name: doc.data().name,
-          type: doc.data().type,
-          imgUrl: doc.data().imgUrl,
-        };
+        const dataInfor = doc.data();
         setDataCircleInfor(dataInfor);
       });
   const memberListOfCircleFromFirebase = async () => {
