@@ -142,19 +142,19 @@ export default function Header() {
     }
   };
 
-  const getUserInfomationForReduxStore = async (uid) => {
-    await db
-      .collection("user")
-      .doc(uid)
-      .get()
-      .then((snapshot) => {
-        dispatch(saveUserRole(snapshot.data().role));
-        let list = snapshot.data().circleList;
-        if (list.length > 0) {
-          dispatch(saveCircleList(list));
-        }
-      });
-  };
+  // const getUserInfomationForReduxStore = async (uid) => {
+  //   await db
+  //     .collection("user")
+  //     .doc(uid)
+  //     .get()
+  //     .then((snapshot) => {
+  //       dispatch(saveUserRole(snapshot.data().role));
+  //       let list = snapshot.data().circleList;
+  //       if (list.length > 0) {
+  //         dispatch(saveCircleList(list));
+  //       }
+  //     });
+  // };
   useEffect(() => {
     checkLogin();
   }, []);
