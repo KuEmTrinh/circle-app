@@ -21,6 +21,9 @@ import EditEvent from "./EditEvent";
 import CreateEvent from "./CreateEvent";
 import { useParams } from "react-router-dom";
 import { db } from "../../../../../app/firebase";
+import Modal from "../../../../ui/Modal";
+import TitleText from "../../../../ui/TitleText";
+import ButtonComponent from "../../../../ui/ButtonComponent";
 import "./Event.css";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -29,7 +32,8 @@ export default function Event() {
   let { circleId } = useParams();
   const [openDialog, setOpenDialog] = useState(false);
   const [typeOfActive, setTypeOfActive] = useState(); // ["createEvent", "editEven"]
-
+  const [eventDeleteToggle, setEventDeleteToggle] = useState(false);
+  const [eventDeleteId, setEventDeleteId] = useState();
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -106,9 +110,42 @@ export default function Event() {
     return query;
   };
 
+  const deleteEventOpenToggle = (id) => {
+    setEventDeleteToggle(true);
+    setEventDeleteId(id);
+  };
+
+  const eventDeleteConfirm = async () => {
+    const query = await db
+      .collection("circle")
+      .doc(circleId)
+      .collection("event")
+      .doc(eventDeleteId)
+      .delete();
+    await setEventDeleteToggle(false);
+    return query;
+  };
+
   // RENDER
   return (
     <>
+      <Modal
+        show={eventDeleteToggle}
+        onClose={() => {
+          setEventDeleteToggle(false);
+        }}
+      >
+        <TitleText>本当に削除したいですか？</TitleText>
+        <div className="center">
+          <ButtonComponent
+            onClick={() => {
+              eventDeleteConfirm();
+            }}
+          >
+            はい
+          </ButtonComponent>
+        </div>
+      </Modal>
       <div className="eventPage">
         <div className="eventList">
           {events ? (
@@ -186,7 +223,7 @@ export default function Event() {
                               <MenuItem
                                 className="menuPopup"
                                 onClick={() => {
-                                  console.log(index);
+                                  deleteEventOpenToggle(event.id);
                                 }}
                               >
                                 <DeleteIcon
