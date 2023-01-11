@@ -37,11 +37,15 @@ function CircleJoinComponent({ circleId, circleName }) {
     }
   };
   const checkIsJoined = () => {
-    let joinedList = [...userInfo.circleList];
-    let check = null;
-    check = joinedList.find((element) => element == circleId);
-    if (check != null) {
-      setIsJoined(true);
+    if (userInfo.circleList != null) {
+      let joinedList = [...userInfo.circleList];
+      let check = null;
+      check = joinedList.find((element) => element == circleId);
+      if (check != null) {
+        setIsJoined(true);
+      }
+    } else {
+      return
     }
   };
   const circleJoinConfirm = async () => {
