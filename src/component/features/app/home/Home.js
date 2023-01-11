@@ -30,6 +30,7 @@ import Slide from "@mui/material/Slide";
 import EditCircle from "./EditCircle";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
+import "./EditCircle.css";
 import { arrayRemove } from "firebase/firestore";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -73,7 +74,6 @@ function MyCircleItem({ circle }) {
   const sendEditCircleInfo = () => {
     let newCircleInfomation = { ...editCircleInfo };
     newCircleInfomation.timeLine = timeLineRef.current;
-    // console.log(newCircleInfomation);
     const query = db
       .collection("circle")
       .doc(circle.id)
@@ -306,44 +306,21 @@ export default function Home() {
   let circleJoinedList = useSelector((state) => state.login.data.circleList);
   const [circleList, setCircleList] = useState();
   useEffect(() => {
-    if (circleJoinedList.length > 0) {
-      // fetchCircleData(circleJoinedList);
+    if (circleJoinedList != null) {
       getData(circleJoinedList);
     }
   }, [circleJoinedList]);
-  // const fetchCircleData = (circleJoinedList) => {
-  //   if (circleJoinedList) {
-  //     const query = db
-  //       .collection("circle")
-  //       .where(
-  //         firebase.firestore.FieldPath.documentId(),
-  //         "in",
-  //         circleJoinedList
-  //       )
-  //       .onSnapshot((querySnapshot) => {
-  //         const data = [];
-  //         querySnapshot.docs.map((doc) => {
-  //           let item = doc.data();
-  //           item.id = doc.id;
-  //           data.push(item);
-  //         });
-  //         console.log(data);
-  //         setCircleList(data);
-  //       });
-  //     return query;
-  //   }
-  // };
   async function getData(circleJoinedList) {
     const chunkSize = 10;
     const chunks = [];
     for (let i = 0; i < circleJoinedList.length; i += chunkSize) {
       chunks.push(circleJoinedList.slice(i, i + chunkSize));
     }
-  
+
     const snapshots = await Promise.all(chunks.map(chunk => {
       return db.collection('circle').where(firebase.firestore.FieldPath.documentId(), 'in', chunk).get();
     }));
-  
+
     const data = [];
     snapshots.flatMap(snapshot => snapshot.docs).forEach(doc => {
       let item = doc.data();
@@ -363,7 +340,7 @@ export default function Home() {
             })}
           </>
         ) : (
-          "Loading"
+          "参加したサークルがありません。"
         )}
       </div>
     </>

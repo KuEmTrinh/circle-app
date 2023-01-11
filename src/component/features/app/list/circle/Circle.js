@@ -18,18 +18,34 @@ function CircleJoinComponent({ circleId, circleName }) {
   const [circleJoinUserguarantor, setCircleJoinUserguarantor] = useState("");
   const [circleJoinMotivation, setCircleJoinMotivation] = useState("");
   const [isJoined, setIsJoined] = useState(false);
+  const [checkInputValue, setCheckInputValue] = useState(false);
   let userInfo = useSelector((state) => state.login.data);
   // console.log(circleId);
   // console.log(userInfo.circleList);
   useEffect(() => {
     checkIsJoined();
   }, []);
+  const inputValueValidation = () => {
+    if (
+      circleJoinUseraddress.length > 6 &&
+      circleJoinUserguarantor != "" &&
+      circleJoinMotivation != ""
+    ) {
+      setCheckInputValue(true);
+    } else {
+      setCheckInputValue(false);
+    }
+  };
   const checkIsJoined = () => {
-    let joinedList = [...userInfo.circleList];
-    let check = null;
-    check = joinedList.find((element) => element == circleId);
-    if (check != null) {
-      setIsJoined(true);
+    if (userInfo.circleList != null) {
+      let joinedList = [...userInfo.circleList];
+      let check = null;
+      check = joinedList.find((element) => element == circleId);
+      if (check != null) {
+        setIsJoined(true);
+      }
+    } else {
+      return
     }
   };
   const circleJoinConfirm = async () => {
@@ -89,8 +105,9 @@ function CircleJoinComponent({ circleId, circleName }) {
           label="住所"
           inputProps={{ maxLength: 100 }}
           value={circleJoinUseraddress}
-          onChange={(e) => {
-            setCircleJoinUseraddress(e.target.value);
+          onChange={async (e) => {
+            await setCircleJoinUseraddress(e.target.value);
+            await inputValueValidation();
           }}
         ></TextField>
         <TextField
@@ -99,8 +116,9 @@ function CircleJoinComponent({ circleId, circleName }) {
           label="保証人氏名"
           inputProps={{ maxLength: 25 }}
           value={circleJoinUserguarantor}
-          onChange={(e) => {
-            setCircleJoinUserguarantor(e.target.value);
+          onChange={async (e) => {
+            await setCircleJoinUserguarantor(e.target.value);
+            await inputValueValidation();
           }}
         ></TextField>
         <TextField
@@ -108,18 +126,23 @@ function CircleJoinComponent({ circleId, circleName }) {
           label="志望動機"
           multiline
           rows={4}
-          onChange={(e) => {
-            setCircleJoinMotivation(e.target.value);
+          onChange={async (e) => {
+            await setCircleJoinMotivation(e.target.value);
+            await inputValueValidation();
           }}
         ></TextField>
         <div className="circleJoinCircleConfirm center">
-          <ButtonComponent
-            onClick={() => {
-              circleJoinConfirm();
-            }}
-          >
-            参加申請
-          </ButtonComponent>
+          {checkInputValue ? (
+            <ButtonComponent
+              onClick={() => {
+                circleJoinConfirm();
+              }}
+            >
+              参加申請
+            </ButtonComponent>
+          ) : (
+            <ButtonComponent mode="cancel">参加申請</ButtonComponent>
+          )}
         </div>
       </Modal>
       {isJoined ? (
