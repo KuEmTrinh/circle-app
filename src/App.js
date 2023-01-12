@@ -19,6 +19,9 @@ function App() {
         // This is green.A700 as hex.
         main: "#fff",
       },
+      deepGrey: {
+        main: "#B9BAC3"
+      }
     },
   });
   return (

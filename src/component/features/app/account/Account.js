@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../../ui/ButtonComponent";
+// import Button from "../../../ui/ButtonComponent";
 import Modal from "../../../ui/Modal";
 import TextField from "@mui/material/TextField";
 import "./Account.css";
@@ -16,8 +16,18 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-function NewCircleComponent() {
-  let userInfo = useSelector((state) => state.login.data);
+import PersonIcon from "@mui/icons-material/Person";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import BadgeIcon from "@mui/icons-material/Badge";
+import WcIcon from "@mui/icons-material/Wc";
+import SchoolIcon from "@mui/icons-material/School";
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import Button from "@mui/material/Button";
+import GroupsIcon from "@mui/icons-material/Groups";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+function NewCircleComponent({ userInfo }) {
+  // let userInfo = useSelector((state) => state.login.data);
   const confirmModal = () => {
     setConfirmToggle(true);
   };
@@ -252,20 +262,21 @@ function NewCircleComponent() {
           </ButtonComponent>
         </div>
       </Modal>
-      <div
-        className="center"
+      <Button
+        variant="outlined"
+        fullWidth
         onClick={() => {
           setCreateCircleToggle(true);
         }}
       >
-        <Button size="medium">Create new Circle</Button>
-      </div>
-      {console.log(fileMembers)}
+        新しサークル新規
+      </Button>
+      {/* {console.log(fileMembers)} */}
     </>
   );
 }
-function UserEdit() {
-  let userInfo = useSelector((state) => state.login.data);
+function UserEdit({ userInfo }) {
+  // let userInfo = useSelector((state) => state.login.data);
   const userId = userInfo.uid;
   const [toggle, setToggle] = useState(false);
   const [name, setName] = useState(userInfo.name);
@@ -287,13 +298,16 @@ function UserEdit() {
 
   return (
     <>
-      <ButtonComponent
+      <Button
+        variant="outlined"
+        fullWidth
         onClick={() => {
           setToggle(true);
         }}
       >
-        アカウント登録
-      </ButtonComponent>
+        アカウント情報管理
+      </Button>
+
       <Modal
         show={toggle}
         onClose={() => {
@@ -387,10 +401,99 @@ function UserEdit() {
   );
 }
 export default function Account() {
+  let userInfo = useSelector((state) => state.login.data);
   return (
-    <>
-      <NewCircleComponent></NewCircleComponent>
-      <UserEdit></UserEdit>
-    </>
+    <div className="userInfomationComponent">
+      <div className="userInfomationBox">
+        <div className="userInfomationIcon">
+          <div className="userInfomationItem">
+            <PersonIcon color="primary"></PersonIcon>
+          </div>
+          <p className="userInfomationTitle">アカウント情報</p>
+        </div>
+        <div className="userInfomationHeader">
+          <div className="userInfomationHeaderContent">
+            <p className="userInfomationName">{userInfo.name}</p>
+            <p className="userInfomationEmail">{userInfo.email}</p>
+          </div>
+          <div className="userInfomationHeaderAvatar">
+            <img src={userInfo.photoURL}></img>
+          </div>
+        </div>
+
+        <div className="userInfomationSection">
+          <div className="userInfomationSectionIcon">
+            <AccountCircleIcon color="deepGrey"></AccountCircleIcon>
+            <p className="userInfomationSectionName">権利</p>
+          </div>
+          <div className="userInfomationSectionContent">
+            <Stack direction="row" spacing={1}>
+              {userInfo.role.map((item) => {
+                return <Chip label={item} color="primary"/>;
+              })}
+            </Stack>
+          </div>
+        </div>
+        <div className="userInfomationSection">
+          <div className="userInfomationSectionIcon">
+            <BadgeIcon color="deepGrey"></BadgeIcon>
+            <p className="userInfomationSectionName">学籍番号</p>
+          </div>
+          <div className="userInfomationSectionContent">
+            <p>{userInfo.userCode ? userInfo.userCode : "未登録"}</p>
+          </div>
+        </div>
+        <div className="userInfomationSection">
+          <div className="userInfomationSectionIcon">
+            <WcIcon color="deepGrey"></WcIcon>
+            <p className="userInfomationSectionName">性別</p>
+          </div>
+          <div className="userInfomationSectionContent">
+            {userInfo.sex ? (
+              <>
+                <p>{userInfo.sex === 1 ? "男" : "女"}</p>
+              </>
+            ) : (
+              <p>未登録</p>
+            )}
+          </div>
+        </div>
+        <div className="userInfomationSection">
+          <div className="userInfomationSectionIcon">
+            <SchoolIcon color="deepGrey"></SchoolIcon>
+            <p className="userInfomationSectionName">学部・学科</p>
+          </div>
+          <div className="userInfomationSectionContent">
+            <p>{userInfo.userFaculty ? userInfo.userFaculty : "未登録"}</p>
+          </div>
+        </div>
+        <div className="userInfomationSection">
+          <div className="userInfomationSectionIcon">
+            <ContactPhoneIcon color="deepGrey"></ContactPhoneIcon>
+            <p className="userInfomationSectionName">電話番号</p>
+          </div>
+          <div className="userInfomationSectionContent">
+            <p>{userInfo.userPhone ? userInfo.userPhone : "000-000-000"}</p>
+          </div>
+        </div>
+        <UserEdit userInfo={userInfo}></UserEdit>
+        <div className="userInfomationIcon mt-1">
+          <div className="userInfomationItem">
+            <GroupsIcon color="primary"></GroupsIcon>
+          </div>
+          <p className="userInfomationTitle">サークル情報</p>
+        </div>
+        <div className="userInfomationSection">
+          <div className="userInfomationSectionIcon">
+            <GroupsIcon color="deepGrey"></GroupsIcon>
+            <p className="userInfomationSectionName">参加済み</p>
+          </div>
+          <div className="userInfomationSectionContent">
+            <p>{userInfo.circleList?.length}</p>
+          </div>
+        </div>
+        <NewCircleComponent userInfo={userInfo}></NewCircleComponent>
+      </div>
+    </div>
   );
 }
