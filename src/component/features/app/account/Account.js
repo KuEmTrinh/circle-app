@@ -402,6 +402,15 @@ function UserEdit({ userInfo }) {
 }
 export default function Account() {
   let userInfo = useSelector((state) => state.login.data);
+  const changeRoleName = (role) => {
+    if (role == "user") {
+      return "一般";
+    } else if (role == "systemAdmin") {
+      return "管理者";
+    } else {
+      return "未定"
+    }
+  };
   return (
     <div className="userInfomationComponent">
       <div className="userInfomationBox">
@@ -429,7 +438,7 @@ export default function Account() {
           <div className="userInfomationSectionContent">
             <Stack direction="row" spacing={1}>
               {userInfo.role.map((item) => {
-                return <Chip label={item} color="primary"/>;
+                return <Chip label={changeRoleName(item)} color="primary" />;
               })}
             </Stack>
           </div>
