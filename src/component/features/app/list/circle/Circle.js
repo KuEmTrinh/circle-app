@@ -20,8 +20,6 @@ function CircleJoinComponent({ circleId, circleName }) {
   const [isJoined, setIsJoined] = useState(false);
   const [checkInputValue, setCheckInputValue] = useState(false);
   let userInfo = useSelector((state) => state.login.data);
-  // console.log(circleId);
-  // console.log(userInfo.circleList);
   useEffect(() => {
     checkIsJoined();
   }, []);
@@ -45,7 +43,7 @@ function CircleJoinComponent({ circleId, circleName }) {
         setIsJoined(true);
       }
     } else {
-      return
+      return;
     }
   };
   const circleJoinConfirm = async () => {
@@ -145,23 +143,29 @@ function CircleJoinComponent({ circleId, circleName }) {
           )}
         </div>
       </Modal>
-      {isJoined ? (
-        <div className="circleJoinButton">
-          <ButtonComponent size="large" mode="cancel">
-            参加済み
-          </ButtonComponent>
-        </div>
+      {userInfo != "" ? (
+        <>
+          {isJoined ? (
+            <div className="circleJoinButton">
+              <ButtonComponent size="large" mode="cancel">
+                参加済み
+              </ButtonComponent>
+            </div>
+          ) : (
+            <div className="circleJoinButton">
+              <ButtonComponent
+                size="large"
+                onClick={() => {
+                  setCircleJoinToggle(true);
+                }}
+              >
+                参加
+              </ButtonComponent>
+            </div>
+          )}
+        </>
       ) : (
-        <div className="circleJoinButton">
-          <ButtonComponent
-            size="large"
-            onClick={() => {
-              setCircleJoinToggle(true);
-            }}
-          >
-            参加
-          </ButtonComponent>
-        </div>
+        ""
       )}
     </>
   );

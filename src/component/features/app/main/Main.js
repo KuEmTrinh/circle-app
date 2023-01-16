@@ -12,20 +12,9 @@ import Circle from "./../list/circle/Circle";
 import CircleHome from "../home/CircleHome";
 import Notifi from "../notifi/Notifi";
 import Update from "./Update";
-function NeedLogin() {
-  return (
-    <>
-      <p>You are should login</p>
-    </>
-  );
-}
-function NotFound() {
-  return (
-    <>
-      <p>Page not found</p>
-    </>
-  );
-}
+import NeedLogin from "./NeedLogin";
+import NotFound from "./NotFound";
+import "./Main.css";
 
 export default function Main() {
   let userRole = useSelector((state) => state.login.data.role);

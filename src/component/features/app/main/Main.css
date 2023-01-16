@@ -1,0 +1,17 @@
+.needLoginBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.needLoginContent {
+  min-width: 270px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: rgba(127, 127, 127, 0.157) 0px 3px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 2rem;
+}
+
