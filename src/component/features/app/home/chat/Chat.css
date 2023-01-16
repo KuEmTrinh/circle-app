@@ -82,9 +82,9 @@
   margin-right: calc(15px + 3rem);
 }
 .messagesBox {
-  width: 95%;
+  width: 100%;
   margin-top: 1rem;
-  height: calc(100vh - 290px);
+  height: calc(100vh - 320px);
   overflow-y: auto;
   /* overflow-x: hidden; */
 }

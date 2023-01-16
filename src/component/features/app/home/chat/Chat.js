@@ -29,7 +29,7 @@ function ChatRoomInputBox({ circleId }) {
       <div className="chatInputBox">
         <TextField
           id="outlined-multiline-flexible"
-          label="Chat Message"
+          label="メッセージ"
           multiline
           maxRows={4}
           className="chatInput"

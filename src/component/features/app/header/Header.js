@@ -10,8 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   saveLoginInfo,
   deleteUserInfo,
-  saveUserRole,
-  saveCircleList,
 } from "../../../slice/loginSlice";
 
 function ContentComponent({ dispatch }) {
@@ -64,6 +62,7 @@ function LoginComponent() {
         emailVerified: user.emailVerified,
         uid: user.uid,
         photoURL: user.photoURL,
+        registed: false,
         role: ["user"],
       });
   };
@@ -117,10 +116,8 @@ export default function Header() {
   const getUserInfomation = async (user) => {
     db.collection("user")
       .doc(user.uid)
-      .get()
-      .then((doc) => {
+      .onSnapshot((doc) => {
         if (doc.exists) {
-          console.log(user);
           dispatch(saveLoginInfo(doc.data()));
         }
       });

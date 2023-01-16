@@ -14,6 +14,8 @@ import { firebase } from "../../../../app/firebase";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
 import { arrayUnion } from "firebase/firestore";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 function CircleItemComponent({ circle }) {
   const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
   const toDateTime = (secs) => {
@@ -111,6 +113,26 @@ function CircleListComponent({ circleList }) {
   );
 }
 
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{}}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
 export default function List() {
   const [registeringList, setRegisteringList] = useState();
   const [registedcircleList, setRegistedcircleList] = useState();
@@ -146,11 +168,20 @@ export default function List() {
         >
           <Tab label="申請中" />
           <Tab label="申請済み" />
+          <Tab label="削除" />
         </Tabs>
       </div>
-      <CircleListComponent
-        circleList={value == 0 ? registeringList : registedcircleList}
-      ></CircleListComponent>
+      <TabPanel value={value} index={0}>
+        <CircleListComponent circleList={registeringList}></CircleListComponent>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <CircleListComponent
+          circleList={registedcircleList}
+        ></CircleListComponent>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        Item Three
+      </TabPanel>
     </>
   );
 }

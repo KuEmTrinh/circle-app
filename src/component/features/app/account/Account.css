@@ -73,6 +73,73 @@
   font-size: 14px;
   margin-left: 3px;
 }
-.chooseFileButoon{
+.chooseFileButoon {
   margin-top: 20px;
+}
+.userInfomationBox {
+  padding: 2rem;
+}
+.userInfomationIcon {
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+.userInfomationItem {
+  padding: 0.6rem;
+  border: 1px solid #d54b679c;
+  border-radius: 50%;
+}
+.userInfomationTitle {
+  font-weight: bold;
+  padding-left: 1rem;
+  color: #c13450;
+}
+.userInfomationHeader {
+  display: flex;
+  padding-bottom: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.userInfomationName {
+  font-weight: bold;
+  padding-bottom: 0.3rem;
+}
+.userInfomationEmail {
+  font-size: 14px;
+  color: #848484;
+}
+.userInfomationHeaderAvatar {
+  width: 3rem;
+  height: 3rem;
+}
+.userInfomationHeaderAvatar img {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.userInfomationSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.7rem;
+  border-bottom: #e3e3e3 1px solid;
+  margin-bottom: 1.5rem;
+}
+.userInfomationSectionIcon {
+  display: flex;
+  align-items: center;
+}
+.userInfomationSectionName {
+  color: #959499;
+  font-size: 14px;
+  padding-left: 0.7rem;
+}
+.userInfomationSectionContent {
+  font-weight: bold;
+  font-size: 14px;
+}
+.userInfomationComponent {
+  height: calc(100vh - 9rem);
+  overflow: auto;
 }

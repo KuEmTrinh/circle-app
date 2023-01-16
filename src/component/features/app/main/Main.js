@@ -11,44 +11,59 @@ import MainDashboard from "../../dashboard/main/MainDashboard";
 import Circle from "./../list/circle/Circle";
 import CircleHome from "../home/CircleHome";
 import Notifi from "../notifi/Notifi";
-function NeedLogin() {
-  return (
-    <>
-      <p>You are should login</p>
-    </>
-  );
-}
+import Update from "./Update";
+import NeedLogin from "./NeedLogin";
+import NotFound from "./NotFound";
+import "./Main.css";
 
 export default function Main() {
   let userRole = useSelector((state) => state.login.data.role);
   let isSystemAdmin = userRole?.includes("systemAdmin");
   //   const [user, setUser] = useState(false);
   const loginStatus = useSelector((state) => state.login.login);
+  const userInfo = useSelector((state) => state.login.data);
   return (
     <>
       <Header />
       <Routes>
-        <Route path="/">
-          <Route path="list" element={<List />} />
-          <Route path="list/:circleId/circle_details" element={<Circle />} />
-          {loginStatus ? (
-            <>
-              <Route
-                index
-                element={isSystemAdmin ? <MainDashboard /> : <Home />}
-              />
-              <Route path="account" element={<Account />} />
-              <Route path="notifi" element={<Notifi />} />
-              <Route path="chat/:circleId" element={<Chat />} />
-              <Route
-                path=":circleId/:circleName/circle_home"
-                element={<CircleHome />}
-              />
-            </>
-          ) : (
+        {loginStatus ? (
+          <>
+            {userInfo?.registed ? (
+              <>
+                <Route path="/">
+                  <Route path="list" element={<List />} />
+                  <Route
+                    path="list/:circleId/circle_details"
+                    element={<Circle />}
+                  />
+                  <Route
+                    index
+                    element={isSystemAdmin ? <MainDashboard /> : <Home />}
+                  />
+                  <Route path="account" element={<Account />} />
+                  <Route path="notifi" element={<Notifi />} />
+                  <Route path="chat/:circleId" element={<Chat />} />
+                  <Route
+                    path=":circleId/:circleName/circle_home"
+                    element={<CircleHome />}
+                  />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </>
+            ) : (
+              <>
+                <Route path="*" element={<Update userInfo={userInfo} />} />
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<NeedLogin />} />
+            <Route path="/list" element={<List />} />
+            <Route path="list/:circleId/circle_details" element={<Circle />} />
             <Route path="*" element={<NeedLogin />} />
-          )}
-        </Route>
+          </>
+        )}
       </Routes>
       <Nav />
     </>
