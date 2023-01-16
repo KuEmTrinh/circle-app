@@ -62,6 +62,7 @@ function LoginComponent() {
         emailVerified: user.emailVerified,
         uid: user.uid,
         photoURL: user.photoURL,
+        registed: false,
         role: ["user"],
       });
   };
@@ -117,7 +118,6 @@ export default function Header() {
       .doc(user.uid)
       .onSnapshot((doc) => {
         if (doc.exists) {
-          console.log(user);
           dispatch(saveLoginInfo(doc.data()));
         }
       });

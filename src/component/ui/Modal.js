@@ -7,14 +7,18 @@ export default function Modal(props) {
       {props.show ? (
         <div className="overlayModal">
           <div className={"modal " + props.className}>
-            <div
-              className="closeIcon"
-              onClick={() => {
-                props.onClose();
-              }}
-            >
-              <CloseIcon></CloseIcon>
-            </div>
+            {props.showClose !== false ? (
+              <div
+                className="closeIcon"
+                onClick={() => {
+                  props.onClose();
+                }}
+              >
+                <CloseIcon></CloseIcon>
+              </div>
+            ) : (
+              ""
+            )}
             <div className="modalContent">{props.children}</div>
           </div>
         </div>
