@@ -160,7 +160,7 @@ function NewCircleComponent({ userInfo }) {
           setCreateCircleToggle(false);
         }}
       >
-        <TitleText>サークル新規</TitleText>
+        <TitleText>新規サークル</TitleText>
         <div className="creatNewCircleModalInputBox">
           {preview ? (
             <div className="circleImagePreview">
@@ -269,7 +269,7 @@ function NewCircleComponent({ userInfo }) {
           setCreateCircleToggle(true);
         }}
       >
-        新しサークル新規
+        新規サークル
       </Button>
       {/* {console.log(fileMembers)} */}
     </>
