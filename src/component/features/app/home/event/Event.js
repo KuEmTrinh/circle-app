@@ -37,6 +37,19 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function Event() {
+  function convertTimeToString(time) {
+    // Create a new date object using the provided time string
+    var date = new Date(time);
+    // Get the year, month, and date from the date object
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    // Add leading zeroes to the month and day if necessary
+    month = month < 10 ? "0" + month : month;
+    day = day < 10 ? "0" + day : day;
+    // Return the date in the desired format
+    return year + "年" + month + "月" + day + "日";
+  }
   const isCircleAdmin = useSelector((state) => state.circle.isCircleAdmin);
   let { circleId } = useParams();
   const [file, setFile] = useState("");
@@ -101,9 +114,12 @@ export default function Event() {
     setEditEventInfo(childData);
   };
 
-  const confirmCreateEvent = (url) => {
+  const confirmCreateEvent = async (url) => {
     let createItem = { ...newEventInfor };
     createItem.photoUrl = url;
+    let convertTime = await convertTimeToString(createItem.time);
+    createItem.time = await convertTime;
+    console.log(createItem);
     const query = db
       .collection("circle")
       .doc(circleId)
