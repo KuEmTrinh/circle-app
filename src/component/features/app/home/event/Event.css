@@ -1,54 +1,57 @@
-.eventPage{
-    margin-top: 20px;
-    
-    height: 485px;
-    width: 100%;
-    overflow: scroll;
+.eventPage {
+  margin-top: 20px;
+
+  height: 485px;
+  width: 100%;
+  overflow: scroll;
 }
 
-.eventItem{
-    margin-bottom: 19px;
-    padding: 15px 10px;
-    border: 1px dotted #C13450;
-    border-radius: 20px;
-    position: relative;
+.eventItem {
+  position: relative;
 }
-.eventName{
-    font-size: 20px;
-    padding-left: 10px;
-    margin-bottom: 13px;
-    font-weight: bolder;
+.eventName p {
+  font-weight: bold;
+  font-size: 18px;
 }
-.eventImage img{
-    max-width: 100%;
-    object-fit: contain;
-    border-radius: 10px;
-    margin-bottom: 12px;
+.eventImage img {
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 12px;
 }
-.eventSetting{
-    position:absolute;
-    top: 10px;
-    right: 15px;
+.eventAdd {
+  position: fixed;
+  bottom: 100px;
+  right: 50%;
+  transform: translateX(25%);
+  width: 50px;
+  height: 50px;
+  background-color: #c13450;
+  border-radius: 10px;
 }
-.eventAdd{
-    position:fixed;
-    bottom: 100px;
-    right: 50%;
-    transform: translateX(25%);
-    width: 50px;
-    height: 50px;
-    background-color: #C13450;
-    border-radius: 10px;
+.eventAddIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
-.eventAddIcon{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  
+.eventDetailImfor {
+  margin: 5px;
+  /* font-weight: 600; */
+  font-size: 15px;
 }
-.eventDetailImfor{
-    margin:5px;
-    /* font-weight: 600; */
-    font-size: 15px;
+.eventImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.eventImage {
+  width: 100%;
+  height: 10rem;
+  margin-bottom: 1rem;
+  z-index: 998;
+}
+
+.css-3bmhjh-MuiPaper-root-MuiPopover-paper {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
 }

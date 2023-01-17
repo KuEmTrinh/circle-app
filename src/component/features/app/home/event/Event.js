@@ -24,12 +24,20 @@ import { db } from "../../../../../app/firebase";
 import Modal from "../../../../ui/Modal";
 import TitleText from "../../../../ui/TitleText";
 import ButtonComponent from "../../../../ui/ButtonComponent";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../../../../app/firebase";
+import TimerIcon from "@mui/icons-material/Timer";
+import PlaceIcon from "@mui/icons-material/Place";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import GroupIcon from "@mui/icons-material/Group";
+import EventNoteIcon from "@mui/icons-material/EventNote";
 import "./Event.css";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function Event() {
   let { circleId } = useParams();
+  const [file, setFile] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [typeOfActive, setTypeOfActive] = useState(); // ["createEvent", "editEven"]
   const [eventDeleteToggle, setEventDeleteToggle] = useState(false);
@@ -90,13 +98,36 @@ export default function Event() {
     setEditEventInfo(childData);
   };
 
-  const createEvent = () => {
+  const confirmCreateEvent = (url) => {
+    let createItem = { ...newEventInfor };
+    createItem.photoUrl = url;
     const query = db
       .collection("circle")
       .doc(circleId)
       .collection("event")
-      .add(newEventInfor);
+      .add(createItem);
     return query;
+  };
+  const createEvent = () => {
+    if (!file) {
+      const url =
+        "https://us.123rf.com/450wm/yehorlisnyi/yehorlisnyi2104/yehorlisnyi210400016/167492439-no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-comin.jpg?ver=6";
+      confirmCreateEvent(url);
+    } else {
+      const storageRef = ref(storage, `/files/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (err) => console.log(err),
+        () => {
+          // downbload url
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            confirmCreateEvent(url);
+          });
+        }
+      );
+    }
   };
 
   const editEventConfirm = () => {
@@ -154,87 +185,124 @@ export default function Event() {
                 return (
                   <>
                     <div className="eventItem">
-                      <div className="eventName">{event.name}</div>
-                      <div className="eventImage">
-                        <img src="https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"></img>
-                      </div>
-                      <div className="eventTimeBox eventDetailImfor">
-                        <span className=""> 日時: </span>
-                        <span className="">{event.time}</span>
-                      </div>
-                      <div className="eventPlaceBox eventDetailImfor">
-                        <span className=""> 場所: </span>
-                        <span className="">{event.place}</span>
-                      </div>
-                      <div className="eventMoneyBox eventDetailImfor">
-                        <span className=""> 料金: </span>
-                        <span className="">{event.money} 円</span>
-                      </div>
-                      <div className="eventPeopleBox eventDetailImfor">
-                        <span className=""> 最大人数: </span>
-                        <span className="">{event.maxMembers}人</span>
-                      </div>
-                      <div className="eventContentBox eventDetailImfor">
-                        <span className=""> イベント内容: </span>
-                        <span className="">{event.content}</span>
-                      </div>
-                      <div className="eventSetting">
-                        <MoreHorizIcon
-                          fontSize="large"
-                          onClick={(e) => {
-                            setEditEvent(event);
-                            handleClick(e);
-                          }}
-                        ></MoreHorizIcon>
-                        <Popover
-                          id={id}
-                          open={open}
-                          anchorEl={anchorEl}
-                          onClose={handleClose}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "right",
-                          }}
-                        >
-                          <Typography>
-                            <MenuList
-                              className="circlePopup"
-                              autoFocusItem={open}
-                              id="composition-menu"
-                              aria-labelledby="composition-button"
+                      <div className="userInfomationBox">
+                        <div className="eventImage">
+                          <img src={event.photoUrl}></img>
+                        </div>
+                        <div className="userInfomationSection">
+                          <div className="eventName">
+                            <p>{event.name}</p>
+                          </div>
+                          <div className="eventSetting">
+                            <div className="eventSettingIcon">
+                              <MoreHorizIcon
+                                onClick={(e) => {
+                                  setEditEvent(event);
+                                  handleClick(e);
+                                }}
+                                color={"primary"}
+                              ></MoreHorizIcon>
+                            </div>
+                            <Popover
+                              id={id}
+                              open={open}
+                              anchorEl={anchorEl}
+                              onClose={handleClose}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                              }}
                             >
-                              <MenuItem
-                                className="menuPopup"
-                                onClick={async () => {
-                                  await openCircleEditDialog();
-                                  setTypeOfActive("editEvent");
-                                }}
-                              >
-                                <ModeEditIcon
-                                  className="menuPopupIcon"
-                                  fontSize="small"
-                                />
-                                イベント編集
-                              </MenuItem>
-                              <MenuItem
-                                className="menuPopup"
-                                onClick={() => {
-                                  deleteEventOpenToggle(event.id);
-                                }}
-                              >
-                                <DeleteIcon
-                                  className="menuPopupIcon"
-                                  fontSize="small"
-                                />
-                                イベント削除
-                              </MenuItem>
-                            </MenuList>
-                          </Typography>
-                        </Popover>
+                              <Typography>
+                                <MenuList
+                                  className="circlePopup"
+                                  autoFocusItem={open}
+                                  id="composition-menu"
+                                  aria-labelledby="composition-button"
+                                >
+                                  <MenuItem
+                                    className="menuPopup"
+                                    onClick={async () => {
+                                      await openCircleEditDialog();
+                                      setTypeOfActive("editEvent");
+                                    }}
+                                  >
+                                    <ModeEditIcon
+                                      className="menuPopupIcon"
+                                      fontSize="small"
+                                    />
+                                    イベント編集
+                                  </MenuItem>
+                                  <MenuItem
+                                    className="menuPopup"
+                                    onClick={() => {
+                                      deleteEventOpenToggle(event.id);
+                                    }}
+                                  >
+                                    <DeleteIcon
+                                      className="menuPopupIcon"
+                                      fontSize="small"
+                                    />
+                                    イベント削除
+                                  </MenuItem>
+                                </MenuList>
+                              </Typography>
+                            </Popover>
+                          </div>
+                        </div>
+                        <div className="userInfomationSection">
+                          <div className="userInfomationSectionIcon">
+                            <TimerIcon color="deepGrey"></TimerIcon>
+                            <p className="userInfomationSectionName">日時</p>
+                          </div>
+                          <div className="userInfomationSectionContent">
+                            <p>{event.time}</p>
+                          </div>
+                        </div>
+                        <div className="userInfomationSection">
+                          <div className="userInfomationSectionIcon">
+                            <PlaceIcon color="deepGrey"></PlaceIcon>
+                            <p className="userInfomationSectionName">場所</p>
+                          </div>
+                          <div className="userInfomationSectionContent">
+                            {event.place}
+                          </div>
+                        </div>
+                        <div className="userInfomationSection">
+                          <div className="userInfomationSectionIcon">
+                            <PaymentsIcon color="deepGrey"></PaymentsIcon>
+                            <p className="userInfomationSectionName">料金</p>
+                          </div>
+                          <div className="userInfomationSectionContent">
+                            <p>{event.money}</p>
+                          </div>
+                        </div>
+                        <div className="userInfomationSection">
+                          <div className="userInfomationSectionIcon">
+                            <GroupIcon color="deepGrey"></GroupIcon>
+                            <p className="userInfomationSectionName">
+                              最大人数
+                            </p>
+                          </div>
+                          <div className="userInfomationSectionContent">
+                            <p>{event.maxMembers}</p>
+                          </div>
+                        </div>
+                        <div className="userInfomationSection">
+                          <div className="userInfomationSectionIcon">
+                            <EventNoteIcon color="deepGrey"></EventNoteIcon>
+                            <p className="userInfomationSectionName">
+                              イベント内容
+                            </p>
+                          </div>
+                          <div className="userInfomationSectionContent">
+                            <p>{event.content}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </>
@@ -305,6 +373,8 @@ export default function Event() {
             )}
             {typeOfActive == "createEvent" && (
               <CreateEvent
+                file={file}
+                setFile={setFile}
                 circleId={circleId}
                 parentCallback={callbackFunction}
               ></CreateEvent>
