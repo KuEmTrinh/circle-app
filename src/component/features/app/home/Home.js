@@ -37,6 +37,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function MyCircleItem({ circle }) {
+  console.log(circle);
   const timeLineRef = useRef([]);
   ///
   let userInfo = useSelector((state) => state.login.data);
@@ -80,24 +81,6 @@ function MyCircleItem({ circle }) {
       .update(newCircleInfomation);
     return query;
   };
-  // Get all member in Circle
-  // const getAllMemberOfCircle = () => {
-  //   const query = db
-  //     .collection("circle")
-  //     .doc(circle.id)
-  //     .collection("member")
-  //     .onSnapshot((querySnapshot) => {
-  //       const data = [];
-  //       querySnapshot.docs.map((doc) => {
-  //         let item = doc.data();
-  //         item.id = doc.id;
-  //         data.push(item);
-  //       });
-  //       setMemberList(data);
-  //     });
-
-  //   return query;
-  // };
 
   // Function outCircle
   const deleteCircleInCircleListOfUser = () => {
@@ -283,7 +266,7 @@ function MyCircleItem({ circle }) {
             <CardMedia
               component="img"
               height="100"
-              image="https://images.unsplash.com/photo-1661956602139-ec64991b8b16?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1265&q=80"
+              image={circle.imgUrl}
               alt="Paella dish"
             />
           </Link>
@@ -317,16 +300,23 @@ export default function Home() {
       chunks.push(circleJoinedList.slice(i, i + chunkSize));
     }
 
-    const snapshots = await Promise.all(chunks.map(chunk => {
-      return db.collection('circle').where(firebase.firestore.FieldPath.documentId(), 'in', chunk).get();
-    }));
+    const snapshots = await Promise.all(
+      chunks.map((chunk) => {
+        return db
+          .collection("circle")
+          .where(firebase.firestore.FieldPath.documentId(), "in", chunk)
+          .get();
+      })
+    );
 
     const data = [];
-    snapshots.flatMap(snapshot => snapshot.docs).forEach(doc => {
-      let item = doc.data();
-      item.id = doc.id;
-      data.push(item);
-    });
+    snapshots
+      .flatMap((snapshot) => snapshot.docs)
+      .forEach((doc) => {
+        let item = doc.data();
+        item.id = doc.id;
+        data.push(item);
+      });
     console.log(data);
     setCircleList(data);
   }
