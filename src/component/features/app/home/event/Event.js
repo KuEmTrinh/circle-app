@@ -31,11 +31,13 @@ import PlaceIcon from "@mui/icons-material/Place";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import GroupIcon from "@mui/icons-material/Group";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import { useSelector } from "react-redux";
 import "./Event.css";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function Event() {
+  const isCircleAdmin = useSelector((state) => state.circle.isCircleAdmin);
   let { circleId } = useParams();
   const [file, setFile] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -87,6 +89,7 @@ export default function Event() {
   useEffect(() => {
     getEvents();
   }, []);
+
   // Create Event Function
   const [newEventInfor, setNewEventInfor] = useState();
   const callbackFunction = (childData) => {
@@ -195,13 +198,17 @@ export default function Event() {
                           </div>
                           <div className="eventSetting">
                             <div className="eventSettingIcon">
-                              <MoreHorizIcon
-                                onClick={(e) => {
-                                  setEditEvent(event);
-                                  handleClick(e);
-                                }}
-                                color={"primary"}
-                              ></MoreHorizIcon>
+                              {isCircleAdmin ? (
+                                <MoreHorizIcon
+                                  onClick={(e) => {
+                                    setEditEvent(event);
+                                    handleClick(e);
+                                  }}
+                                  color={"primary"}
+                                ></MoreHorizIcon>
+                              ) : (
+                                ""
+                              )}
                             </div>
                             <Popover
                               id={id}
@@ -313,18 +320,22 @@ export default function Event() {
             "loading"
           )}
         </div>
-        <div className="eventAdd">
-          <div className="eventAddIcon">
-            <AddIcon
-              fontSize="large"
-              sx={{ color: pink[50] }}
-              onClick={() => {
-                openCircleEditDialog();
-                setTypeOfActive("createEvent");
-              }}
-            ></AddIcon>
+        {isCircleAdmin ? (
+          <div className="eventAdd">
+            <div className="eventAddIcon">
+              <AddIcon
+                fontSize="large"
+                sx={{ color: pink[50] }}
+                onClick={() => {
+                  openCircleEditDialog();
+                  setTypeOfActive("createEvent");
+                }}
+              ></AddIcon>
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
       <Dialog
         fullScreen

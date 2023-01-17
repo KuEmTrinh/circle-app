@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   id: "",
   name: "",
+  members: "",
+  isCircleAdmin: false,
 };
 
 export const circleSlice = createSlice({
@@ -10,13 +12,19 @@ export const circleSlice = createSlice({
   initialState,
   reducers: {
     saveCircleInfo: (state, action) => {
-      console.log(action.payload);
       state.id = action.payload.id;
       state.name = action.payload.name;
+    },
+    saveCircleMembers: (state, action) => {
+      state.members = action.payload;
+    },
+    checkCircleAdmin: (state, action) => {
+      state.isCircleAdmin = action.payload;
     },
   },
 });
 
-export const { saveCircleInfo } = circleSlice.actions;
+export const { saveCircleInfo, saveCircleMembers, checkCircleAdmin } =
+  circleSlice.actions;
 
 export default circleSlice.reducer;

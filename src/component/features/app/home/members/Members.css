@@ -132,3 +132,9 @@
 .wrapButton {
   margin-right: 1rem;
 }
+.circleJoiningText{
+  color: #888888;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 1rem 0;
+}

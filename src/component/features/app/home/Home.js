@@ -37,14 +37,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function MyCircleItem({ circle }) {
-  console.log(circle);
   const timeLineRef = useRef([]);
-  ///
   let userInfo = useSelector((state) => state.login.data);
   const [openDialog, setOpenDialog] = useState(false);
   const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
   const [editCircleInfo, setEditCircleInfo] = useState("");
-  const [memberList, setMemberList] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;

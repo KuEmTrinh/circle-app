@@ -74,7 +74,7 @@ function MemberJoinListComponent({ memberList, circleId }) {
         {<FiberManualRecordIcon fontSize="small" />}
         <p>参加したいメンバーリスト</p>
       </div>
-      {registerList ? (
+      {registerList != "" ? (
         <>
           {registerList.map((el) => {
             return (
@@ -87,7 +87,7 @@ function MemberJoinListComponent({ memberList, circleId }) {
           })}
         </>
       ) : (
-        ""
+        <p className="circleJoiningText">参加申請人がいません。</p>
       )}
     </div>
   );
@@ -181,36 +181,18 @@ function MemberJoinComponent({ registerMember, circleId }) {
 }
 
 export default function Members({ circleId }) {
-  const [memberList, setMemberList] = useState("");
-
-  //useEffect
-  useEffect(() => {
-    fetchCircleMemberData();
-  }, []);
-
-  //function
-  const fetchCircleMemberData = () => {
-    const query = db
-      .collection("circle")
-      .doc(circleId)
-      .collection("member")
-      .onSnapshot((querySnapshot) => {
-        const data = [];
-        querySnapshot.docs.map((doc) => {
-          let item = doc.data();
-          item.id = doc.id;
-          data.push(item);
-        });
-        setMemberList(data);
-      });
-    return query;
-  };
+  const memberList = useSelector((state) => state.circle.members);
+  const isCircleAdmin = useSelector((state) => state.circle.isCircleAdmin);
   return (
     <div className="memberPage">
-      <MemberJoinListComponent
-        memberList={memberList}
-        circleId={circleId}
-      ></MemberJoinListComponent>
+      {isCircleAdmin ? (
+        <MemberJoinListComponent
+          memberList={memberList}
+          circleId={circleId}
+        ></MemberJoinListComponent>
+      ) : (
+        ""
+      )}
       <MemberListComponent memberList={memberList}></MemberListComponent>
     </div>
   );
