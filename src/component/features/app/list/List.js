@@ -84,7 +84,7 @@ function CircleItem({ circle }) {
 export default function List() {
   return (
     <div className="listBox">
-      <p className="circleListTitle">五者執行部111111111111111</p>
+      <p className="circleListTitle">五者執行部</p>
       <CircleListComponent circleType={"五者執行部"}></CircleListComponent>
       <p className="circleListTitle">体育会系</p>
       <CircleListComponent circleType={"体育会系"}></CircleListComponent>
