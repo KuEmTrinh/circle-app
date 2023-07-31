@@ -27,25 +27,40 @@ function CircleItemComponent({ circle }) {
     return month + "月" + day + "日 " + hours + "時" + min + "分";
   };
 
-  const confirmCircle = async (circle) => {
-    await db.collection("circle").doc(circle.id).update({
-      status: true,
-    });
-    await db.collection("circle").doc(circle.id).collection("member").add({
-      role: "circleAdmin",
-      userName: circle.registerUsername,
-      userId: circle.registerUid,
-      userPhotoURL: circle.registerUserPhotoURL,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      status: true,
-    });
-    await db
-      .collection("user")
-      .doc(circle.registerUid)
-      .update({
-        circleList: firebase.firestore.FieldValue.arrayUnion(circle.id),
-      });
+  const getNameForRegister = async (uid) => {
+    try {
+      const query = await db.collection("user").doc(uid).get();
+      let userName = query.data().name;
+      console.log(userName);
+      return userName;
+    } catch (error) {}
   };
+
+  const confirmCircle = async (circle) => {
+    try {
+      let userName = await getNameForRegister(circle.registerUid);
+      await db.collection("circle").doc(circle.id).update({
+        status: true,
+      });
+      await db.collection("circle").doc(circle.id).collection("member").add({
+        role: "circleAdmin",
+        userName: userName, // Make sure this is a valid string value.
+        userId: circle.registerUid,
+        userPhotoURL: circle.registerUserPhotoURL,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        status: true,
+      });
+      await db
+        .collection("user")
+        .doc(circle.registerUid)
+        .update({
+          circleList: firebase.firestore.FieldValue.arrayUnion(circle.id),
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Modal
