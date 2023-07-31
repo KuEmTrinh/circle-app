@@ -40,7 +40,7 @@
 .messageItem:not(:first-child) {
   margin-top: 15px;
 }
-.messageItemOnly{
+.messageItemOnly {
   margin-top: 2px;
   margin-left: 3rem;
 }
@@ -97,4 +97,24 @@
 }
 .messageUserNameLeft {
   margin-right: 15px;
+}
+
+.chatImagePreview {
+  position: absolute;
+  top: -55px;
+}
+.chatImagePreview img {
+  width: auto;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.messageImage {
+  margin-right: calc(20px + 3rem);
+  border-radius: 5px;
+  margin-top: 5px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
