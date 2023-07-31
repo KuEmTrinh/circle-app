@@ -9,8 +9,7 @@ import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./List.css";
-import { db } from "../../../../app/firebase";
-import { firebase } from "../../../../app/firebase";
+import { db, firebase } from "../../../../app/firebase";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
 import { arrayUnion } from "firebase/firestore";
@@ -28,11 +27,11 @@ function CircleItemComponent({ circle }) {
     return month + "月" + day + "日 " + hours + "時" + min + "分";
   };
 
-  const confirmCircle = (circle) => {
-    db.collection("circle").doc(circle.id).update({
+  const confirmCircle = async (circle) => {
+    await db.collection("circle").doc(circle.id).update({
       status: true,
     });
-    db.collection("circle").doc(circle.id).collection("member").add({
+    await db.collection("circle").doc(circle.id).collection("member").add({
       role: "circleAdmin",
       userName: circle.registerUsername,
       userId: circle.registerUid,
@@ -40,10 +39,11 @@ function CircleItemComponent({ circle }) {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       status: true,
     });
-    db.collection("user")
+    await db
+      .collection("user")
       .doc(circle.registerUid)
       .update({
-        circleList: arrayUnion(circle.id),
+        circleList: firebase.firestore.FieldValue.arrayUnion(circle.id),
       });
   };
   return (
