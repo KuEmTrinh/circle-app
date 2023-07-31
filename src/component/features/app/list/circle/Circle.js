@@ -47,6 +47,14 @@ function CircleJoinComponent({ circleId, circleName }) {
     }
   };
   const circleJoinConfirm = async () => {
+    // const userId = userInfo.uid;
+    // await db
+    //   .collection("user")
+    //   .doc(userId)
+    //   .update({
+    //     circleList: firebase.firestore.FieldValue.arrayUnion(circleId),
+    //   });
+
     const query = db
       .collection("circle")
       .doc(circleId)

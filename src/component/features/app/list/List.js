@@ -6,7 +6,7 @@ import CardMedia from "@mui/material/CardMedia";
 import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import { red } from "@mui/material/colors";
+// import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import { db } from "../../../../app/firebase";
