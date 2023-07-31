@@ -37,6 +37,7 @@ function CircleItemComponent({ circle }) {
   };
 
   const confirmCircle = async (circle) => {
+    console.log(circle);
     try {
       let userName = await getNameForRegister(circle.registerUid);
       await db.collection("circle").doc(circle.id).update({
@@ -55,6 +56,16 @@ function CircleItemComponent({ circle }) {
         .doc(circle.registerUid)
         .update({
           circleList: firebase.firestore.FieldValue.arrayUnion(circle.id),
+        });
+      // Create notigicaion
+      await db
+        .collection("user")
+        .doc(circle.registerUid)
+        .collection("notification")
+        .add({
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          message: circle.name + "のサークル申請できました。",
+          read: false,
         });
     } catch (error) {
       console.log(error);
