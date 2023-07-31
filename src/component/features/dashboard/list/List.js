@@ -12,9 +12,10 @@ import "./List.css";
 import { db, firebase } from "../../../../app/firebase";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
-import { arrayUnion } from "firebase/firestore";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+
+import User from "../User/User";
 function CircleItemComponent({ circle }) {
   const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
   const toDateTime = (secs) => {
@@ -206,7 +207,7 @@ export default function List() {
         ></CircleListComponent>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <User />
       </TabPanel>
     </>
   );
