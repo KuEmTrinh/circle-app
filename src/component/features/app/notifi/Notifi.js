@@ -113,9 +113,7 @@ export default function Notifi() {
                   </div>
                   {el.circleId ? (
                     <Link
-                      to={
-                        "/" + el.circleId + "/" + el.circleName + "/circle_home"
-                      }
+                    to={"/" + el.circleId + "/" + el.circleName + "/circle_home"}
                     >
                       <Button>見る</Button>
                     </Link>
