@@ -4,127 +4,88 @@ import { useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import "./Notifi.css";
+
 export default function Notifi() {
   const userId = useSelector((state) => state.login.data.uid);
-  const [notifications, setNotifications] = useState();
+  const [notifications, setNotifications] = useState([]);
+
   useEffect(() => {
     fetchNotifi();
   }, []);
+
   const fetchNotifi = async () => {
-    const query = db
-      .collection("user")
-      .doc(userId)
-      .collection("notification")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((querySnapshot) => {
-        const data = [];
-        querySnapshot.docs.map((doc) => {
-          let item = doc.data();
-          item.id = doc.id;
-          data.push(item);
-        });
+    try {
+      const querySnapshot = await db
+        .collection("user")
+        .doc(userId)
+        .collection("notification")
+        .orderBy("createdAt", "desc")
+        .get();
 
-        console.log(data);
-
-        setNotifications(data);
+      const data = querySnapshot.docs.map((doc) => {
+        const item = doc.data();
+        item.id = doc.id;
+        return item;
       });
-    return query;
+
+      setNotifications(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
   };
+
   const getJapaneseDay = (secs) => {
-    var seconds = secs; // Example seconds data
-    var date = new Date(seconds * 1000);
-
-    var months = [
-      "1月",
-      "2月",
-      "3月",
-      "4月",
-      "5月",
-      "6月",
-      "7月",
-      "8月",
-      "9月",
-      "10月",
-      "11月",
-      "12月",
+    const date = new Date(secs * 1000);
+    const months = [
+      "1月", "2月", "3月", "4月", "5月", "6月",
+      "7月", "8月", "9月", "10月", "11月", "12月",
     ];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
 
-    var month = months[date.getMonth()];
-    var day = date.getDate();
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-
-    var dateString = month + " " + day + "日 " + hours + "時 " + minutes + "分";
-
-    return dateString; // Output: "9月 25日 16時 19分"
+    return `${month} ${day}日 ${hours}時 ${minutes}分`;
   };
 
   const changeReadStatus = (NotifiId) => {
-    const query = db
-      .collection("user")
-      .doc(userId)
-      .collection("notification")
-      .doc(NotifiId)
-      .update({
-        read: true,
-      });
-    return query;
+    try {
+      db.collection("user")
+        .doc(userId)
+        .collection("notification")
+        .doc(NotifiId)
+        .update({
+          read: true,
+        });
+    } catch (error) {
+      console.error("Error updating read status:", error);
+    }
   };
+
   return (
     <div className="notificationBox">
       <p className="notificationBoxTitle">お知らせ</p>
       <div className="notificationItems">
-        {notifications?.map((el) => {
-          return (
-            <>
-              {el.read ? (
-                <div className="notificationItem" key={el.id}>
-                  <div className="greyPoint"></div>
-                  <div className="notificationItemContentBox">
-                    <p className="notificationItemContent">{el.message}</p>
-                    <p className="notificationItemTime">
-                      {getJapaneseDay(el.createdAt.seconds)}
-                    </p>
-                  </div>
-                  {el.circleId ? (
-                    <Link
-                    to={"/" + el.circleId + "/" + el.circleName + "/circle_home"}
-                    >
-                      <Button>見る</Button>
-                    </Link>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              ) : (
-                <div
-                  className="notificationItem"
-                  onClick={() => {
-                    changeReadStatus(el.id);
-                  }}
-                  key={el.id}
-                >
-                  <div className="bluePoint"></div>
-                  <div className="notificationItemContentBox">
-                    <p className="notificationItemContent">{el.message}</p>
-                    <p className="notificationItemTime">
-                      {getJapaneseDay(el.createdAt.seconds)}
-                    </p>
-                  </div>
-                  {el.circleId ? (
-                    <Link
-                    to={"/" + el.circleId + "/" + el.circleName + "/circle_home"}
-                    >
-                      <Button>見る</Button>
-                    </Link>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              )}
-            </>
-          );
-        })}
+        {notifications.map((el) => (
+          <div
+            className={`notificationItem ${el.read ? "" : "unread"}`}
+            key={el.id}
+            onClick={() => el.read || changeReadStatus(el.id)}
+          >
+            <div className={`${el.read ? "greyPoint" : "bluePoint"}`}></div>
+            <div className="notificationItemContentBox">
+              <p className="notificationItemContent">{el.message}</p>
+              <p className="notificationItemTime">
+                {getJapaneseDay(el.createdAt.seconds)}
+              </p>
+            </div>
+            {el.circleId && (
+              <Link to={`/${el.circleId}/${el.circleName}/circle_home`}>
+                <Button>見る</Button>
+              </Link>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

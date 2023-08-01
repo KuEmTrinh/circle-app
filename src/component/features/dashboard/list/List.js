@@ -64,6 +64,8 @@ function CircleItemComponent({ circle }) {
         .doc(circle.registerUid)
         .collection("notification")
         .add({
+          circleId: circle.id,
+          circleName: circle.name,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           message: circle.name + "のサークル申請できました。",
           read: false,
