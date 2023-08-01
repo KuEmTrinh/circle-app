@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../../../../app/firebase";
 import { useSelector } from "react-redux";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 import "./Notifi.css";
 export default function Notifi() {
   const userId = useSelector((state) => state.login.data.uid);
@@ -84,6 +86,15 @@ export default function Notifi() {
                       {getJapaneseDay(el.createdAt.seconds)}
                     </p>
                   </div>
+                  {el.circleId ? (
+                    <Link
+                      to={el.circleId + "/" + el.circleName + "/circle_home"}
+                    >
+                      <Button>見る</Button>
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               ) : (
                 <div
@@ -100,6 +111,15 @@ export default function Notifi() {
                       {getJapaneseDay(el.createdAt.seconds)}
                     </p>
                   </div>
+                  {el.circleId ? (
+                    <Link
+                      to={el.circleId + "/" + el.circleName + "/circle_home"}
+                    >
+                      <Button>見る</Button>
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               )}
             </>
