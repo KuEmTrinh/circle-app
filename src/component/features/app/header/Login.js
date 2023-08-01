@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from "react";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import LoginIcon from "@mui/icons-material/Login";
-import {
-  saveLoginInfo,
-} from "../../../slice/loginSlice";
+import { saveLoginInfo } from "../../../slice/loginSlice";
 import { authentication, db } from "../../../../app/firebase";
 import { useDispatch } from "react-redux";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Modal from "../../../ui/Modal";
+import { Button } from "@mui/material";
 
 export default function Login() {
+  const [show, setShow] = useState(false);
 
   const setUserInfomationOnDatabase = async (user) => {
     db.collection("user")
@@ -50,16 +53,56 @@ export default function Login() {
       });
   };
   return (
-    <div className="loginBox">
-      <div
-        className="loginContent"
-        onClick={() => {
-          loginWithGmail();
+    <>
+      <Modal
+        show={show}
+        onClose={() => {
+          setShow(false);
         }}
       >
-        <p>Login</p>
-        <LoginIcon color="whiteColor" />
+        <Box
+          component="form"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            gap: 1,
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField id="outlined-basic" label="Email" variant="outlined" />
+          <TextField
+            id="outlined-basic"
+            label="Password"
+            variant="outlined"
+            type="password"
+          />
+          <Button variant="contained" fullWidth>
+            Login
+          </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() => {
+              loginWithGmail();
+            }}
+          >
+            GMAIL LOGIN
+          </Button>
+        </Box>
+      </Modal>
+      <div className="loginBox">
+        <div
+          className="loginContent"
+          onClick={() => {
+            setShow(true);
+          }}
+        >
+          <p>Login</p>
+          <LoginIcon color="whiteColor" />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
