@@ -5,17 +5,13 @@ import { authentication, db } from "../../../../app/firebase";
 import { signOut } from "firebase/auth";
 import { firebase } from "../../../../app/firebase";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  saveLoginInfo,
-  deleteUserInfo,
-} from "../../../slice/loginSlice";
+import { saveLoginInfo, deleteUserInfo } from "../../../slice/loginSlice";
 
 import Login from "./Login";
 
 function ContentComponent({ dispatch }) {
   let userInfo = useSelector((state) => state.login.data);
   // function
-
   const removeUserInfomation = async () => {
     dispatch(deleteUserInfo());
   };
@@ -23,6 +19,7 @@ function ContentComponent({ dispatch }) {
     signOut(authentication)
       .then((res) => {
         removeUserInfomation();
+        localStorage.removeItem("userToken");
         // console.log("da dang xuat");
       })
       .catch((error) => {
@@ -51,10 +48,30 @@ function ContentComponent({ dispatch }) {
 }
 
 export default function Header() {
+  let userToken = useSelector((state) => state.login.token);
+  useEffect(() => {
+    getInfomationWithLDAPUserToken(userToken);
+  }, [userToken]);
+
+  const getInfomationWithLDAPUserToken = (id) => {
+    getUserWithLDAPUserTokenId(id);
+  };
+
+  const getUserWithLDAPUserTokenId = async (id) => {
+    const userData = await db
+      .collection("user")
+      .doc(id)
+      .onSnapshot((querySnapshot) => {
+        dispatch(saveLoginInfo(querySnapshot.data()));
+        return setIsLogin(true);
+      });
+
+    return userData;
+  };
+
   const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-
   const getUserInfomation = async (user) => {
     db.collection("user")
       .doc(user.uid)
@@ -65,17 +82,21 @@ export default function Header() {
       });
   };
 
+  const checkLoginWithGmail = async () => {
+    await firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        getUserInfomation(user);
+        return setIsLogin(true);
+      } else {
+        return setIsLogin(false);
+      }
+    });
+    setIsLoading(true);
+  };
+
   const checkLogin = async () => {
     try {
-      await firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          getUserInfomation(user);
-          return setIsLogin(true);
-        } else {
-          return setIsLogin(false);
-        }
-      });
-      setIsLoading(true);
+      await checkLoginWithGmail();
     } catch (error) {
       console.log("error");
     }
@@ -83,6 +104,7 @@ export default function Header() {
   useEffect(() => {
     checkLogin();
   }, []);
+
   return (
     <div className="login">
       {isLoading ? (

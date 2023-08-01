@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Nav from "../nav/Nav";
 import List from "../list/List";
 import Header from "../header/Header";
@@ -16,7 +16,16 @@ import NeedLogin from "./NeedLogin";
 import NotFound from "./NotFound";
 import "./Main.css";
 
+import { useDispatch } from "react-redux";
+import { saveLDAPToken } from "../../../slice/loginSlice";
+
 export default function Main() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    let userTokenInLocalStorage = localStorage.getItem("userToken");
+    dispatch(saveLDAPToken(userTokenInLocalStorage));
+  }, []);
+
   let userRole = useSelector((state) => state.login.data.role);
   let isSystemAdmin = userRole?.includes("systemAdmin");
   //   const [user, setUser] = useState(false);
