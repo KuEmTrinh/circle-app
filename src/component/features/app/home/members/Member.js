@@ -94,7 +94,7 @@ function MemberJoinListComponent({ memberList, circleId }) {
 }
 
 function MemberJoinComponent({ registerMember, circleId }) {
-  let circleName = useSelector((state) => state.circle.name);
+  const circleName = useSelector((state) => state.circle.name);
   const registerMemberCancel = () => {
     const query = db
       .collection("circle")
@@ -130,6 +130,8 @@ function MemberJoinComponent({ registerMember, circleId }) {
       .doc(registerMember.userId)
       .collection("notification")
       .add({
+        circleId: circleId,
+        circleName: circleName,
         message: circleName + "に" + message,
         read: false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -166,10 +168,10 @@ function MemberJoinComponent({ registerMember, circleId }) {
         </div>
         <Button
           variant="contained"
-          onClick={() => {
-            registerMemberAccept();
-            addCircleIdForUser();
-            createNotification("参加出来ました");
+          onClick={async () => {
+            await registerMemberAccept();
+            await addCircleIdForUser();
+            await createNotification("参加出来ました");
           }}
         >
           <CheckCircleIcon />

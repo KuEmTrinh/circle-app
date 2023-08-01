@@ -21,6 +21,9 @@ export default function Notifi() {
           item.id = doc.id;
           data.push(item);
         });
+
+        console.log(data);
+
         setNotifications(data);
       });
     return query;
