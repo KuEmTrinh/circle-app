@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import "./Chat.css";
 import TextField from "@mui/material/TextField";
@@ -9,6 +9,8 @@ import { firebase } from "../../../../../app/firebase";
 import { useSelector } from "react-redux";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import imageCompression from "browser-image-compression";
+import ImageViewer from "react-simple-image-viewer";
+
 function ChatRoomInputBox({ circleId }) {
   const user = useSelector((state) => state.login.data);
   const [chatMessage, setChatMessage] = useState();
@@ -192,11 +194,8 @@ function ChatMessage({ message, userId, messagePre }) {
                 <div className="messageContentLeftOnly">
                   <div className="messageText">{message.message}</div>
                 </div>
-
                 {message.imageUrl ? (
-                  <div className="messageImage">
-                    <img src={message.imageUrl} />
-                  </div>
+                  <ChatImageViewer imageUrl={message.imageUrl} />
                 ) : (
                   ""
                 )}
@@ -292,6 +291,53 @@ function ChatRoom({ circleId }) {
     <>
       <ChatMessages circleId={circleId}></ChatMessages>
       <ChatRoomInputBox circleId={circleId} />
+    </>
+  );
+}
+
+function ChatImageViewer({ imageUrl }) {
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const images = [imageUrl];
+
+  const openImageViewer = useCallback((index) => {
+    setCurrentImage(index);
+    setIsViewerOpen(true);
+  }, []);
+
+  const closeImageViewer = () => {
+    setCurrentImage(0);
+    setIsViewerOpen(false);
+  };
+  return (
+    <>
+      {/* <div className="messageImage">
+        <img src="" />
+      </div> */}
+      {images.map((src, index) => (
+        <div className="messageImage">
+          <img
+            src={src}
+            onClick={() => openImageViewer(index)}
+            width="300"
+            key={index}
+            style={{ margin: "2px" }}
+            alt=""
+          />
+        </div>
+      ))}
+      {isViewerOpen && (
+        <ImageViewer
+          src={images}
+          currentIndex={currentImage}
+          onClose={closeImageViewer}
+          disableScroll={false}
+          backgroundStyle={{
+            backgroundColor: "rgba(0,0,0,0.9)",
+          }}
+          closeOnClickOutside={true}
+        />
+      )}
     </>
   );
 }
