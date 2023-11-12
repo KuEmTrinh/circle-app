@@ -10,6 +10,9 @@ import { useSelector } from "react-redux";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import imageCompression from "browser-image-compression";
 import ImageViewer from "react-simple-image-viewer";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import ChatMessageAction from "./ChatMessageAction";
 
 function ChatRoomInputBox({ circleId }) {
   const user = useSelector((state) => state.login.data);
@@ -161,11 +164,19 @@ function ChatRoomInputBox({ circleId }) {
   );
 }
 
-function ChatMessage({ message, userId, messagePre }) {
+function ChatMessage({ message, userId, messagePre, circleId }) {
   let show = true;
   if (messagePre?.userId == message?.userId) {
     show = false;
   }
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <>
       {userId == message.userId ? (
@@ -176,7 +187,22 @@ function ChatMessage({ message, userId, messagePre }) {
                 <p className="messageUserName messageUserNameLeft">
                   {message.userName}
                 </p>
-                <div className="messageContentLeft">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <ChatMessageAction
+                    handleClose={handleClose}
+                    message={message}
+                    circleId={circleId}
+                  />
+                </Menu>
+                <div className="messageContentLeft" onClick={handleClick}>
                   <div className="messageText">{message.message}</div>
                 </div>
               </div>
@@ -191,7 +217,22 @@ function ChatMessage({ message, userId, messagePre }) {
           ) : (
             <div className="messageItemLeftOnly">
               <div className="messageBody">
-                <div className="messageContentLeftOnly">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <ChatMessageAction
+                    handleClose={handleClose}
+                    message={message}
+                    circleId={circleId}
+                  />
+                </Menu>
+                <div className="messageContentLeftOnly" onClick={handleClick}>
                   <div className="messageText">{message.message}</div>
                 </div>
                 {message.imageUrl ? (
@@ -254,7 +295,9 @@ function ChatMessages({ circleId }) {
       .onSnapshot((querySnapshot) => {
         const data = [];
         querySnapshot.docs.map((doc) => {
-          data.push(doc.data());
+          let item = doc.data();
+          item.id = doc.id;
+          data.push(item);
         });
         setMessages(data);
         messagesEndPoint.current?.scrollIntoView({ behavior: "smooth" });
@@ -273,6 +316,7 @@ function ChatMessages({ circleId }) {
                   message={message}
                   userId={userId}
                   index={index}
+                  circleId={circleId}
                 />
               );
             })}
