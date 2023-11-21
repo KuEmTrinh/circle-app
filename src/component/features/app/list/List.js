@@ -27,7 +27,10 @@ function CircleListComponent({ circleType }) {
         querySnapshot.docs.map((doc) => {
           let item = doc.data();
           item.id = doc.id;
-          data.push(item);
+          if (item?.isDisable == true) {
+          } else {
+            data.push(item);
+          }
         });
         // console.log(data);
         setCircleList(data);

@@ -9,15 +9,15 @@ import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./List.css";
-import { db, firebase } from "../../../../app/firebase";
-import Modal from "../../../ui/Modal";
-import ButtonComponent from "../../../ui/ButtonComponent";
+import { db } from "../../../../app/firebase";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import User from "../User/User";
+import ListButton from "./ListButton";
 function CircleItemComponent({ circle }) {
-  const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
+  const status = circle.status;
+  const isDisable = circle?.isDisable;
   const toDateTime = (secs) => {
     var time = new Date(1970, 1, 0, 9);
     time.setSeconds(secs);
@@ -28,86 +28,19 @@ function CircleItemComponent({ circle }) {
     return month + "月" + day + "日 " + hours + "時" + min + "分";
   };
 
-  const getNameForRegister = async (uid) => {
-    try {
-      const query = await db.collection("user").doc(uid).get();
-      let userName = query.data().name;
-      console.log(userName);
-      return userName;
-    } catch (error) {}
-  };
-
-  const confirmCircle = async (circle) => {
-    console.log(circle);
-    try {
-      let userName = await getNameForRegister(circle.registerUid);
-      await db.collection("circle").doc(circle.id).update({
-        status: true,
-      });
-      await db.collection("circle").doc(circle.id).collection("member").add({
-        role: "circleAdmin",
-        userName: userName, // Make sure this is a valid string value.
-        userId: circle.registerUid,
-        userPhotoURL: circle.registerUserPhotoURL,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        status: true,
-      });
-      await db
-        .collection("user")
-        .doc(circle.registerUid)
-        .update({
-          circleList: firebase.firestore.FieldValue.arrayUnion(circle.id),
-        });
-      // Create notigicaion
-      await db
-        .collection("user")
-        .doc(circle.registerUid)
-        .collection("notification")
-        .add({
-          circleId: circle.id,
-          circleName: circle.name,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          message: circle.name + "のサークル申請できました。",
-          read: false,
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <>
-      <Modal
-        show={circleDetailsToggle}
-        onClose={() => {
-          setCircleDetailsToggle(false);
-        }}
-      >
-        <p className="subTitle">情報を確認</p>
-        <p>ここはサークル確認情報を追加</p>
-        <div className="center sp-ar">
-          <ButtonComponent mode="cancel">キャンセル</ButtonComponent>
-          <ButtonComponent
-            onClick={() => {
-              confirmCircle(circle);
-              setCircleDetailsToggle(false);
-            }}
-          >
-            同意
-          </ButtonComponent>
-        </div>
-      </Modal>
       <TableRow
         key={circle.id}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-        onClick={() => {
-          setCircleDetailsToggle(true);
-        }}
       >
         <TableCell align="left">{circle.name}</TableCell>
         <TableCell align="right">{circle.registerUsername}</TableCell>
         <TableCell align="right">{circle.circleType}</TableCell>
         <TableCell align="right">{toDateTime(circle.createdAt)}</TableCell>
+        <TableCell align="right">
+          <ListButton status={status} isDisable={isDisable} circle={circle} />
+        </TableCell>
       </TableRow>
     </>
   );
@@ -126,6 +59,7 @@ function CircleListComponent({ circleList }) {
                 <TableCell align="right">申請者</TableCell>
                 <TableCell align="right">タイプ</TableCell>
                 <TableCell align="right">日時</TableCell>
+                <TableCell align="right">操作</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -165,21 +99,36 @@ function TabPanel(props) {
 export default function List() {
   const [registeringList, setRegisteringList] = useState();
   const [registedcircleList, setRegistedcircleList] = useState();
+  const [disableList, setDisableList] = useState();
   useEffect(() => {
     fetchCircleData();
   }, []);
   const fetchCircleData = () => {
     db.collection("circle").onSnapshot((querySnapshot) => {
-      const data = [];
+      let registeringListData = [];
+      let registedCircleListData = [];
+      let disableCircleListData = [];
       querySnapshot.docs.map((doc) => {
         let item = doc.data();
         item.id = doc.id;
-        data.push(item);
+        if (item?.isDisable == true) {
+          item.isDisable = true;
+        } else {
+          item.isDisable = false;
+        }
+
+        console.log(item);
+        if (item.status == false) {
+          registeringListData.push(item);
+        } else if (item.status == true && item.isDisable == false) {
+          registedCircleListData.push(item);
+        } else if (item.status == true && item.isDisable == true) {
+          disableCircleListData.push(item);
+        }
       });
-      let registeringListData = data.filter((el) => el.status == false);
-      let registedcircleListData = data.filter((el) => el.status == true);
       setRegisteringList(registeringListData);
-      setRegistedcircleList(registedcircleListData);
+      setRegistedcircleList(registedCircleListData);
+      setDisableList(disableCircleListData);
     });
   };
   const [value, setValue] = React.useState(0);
@@ -197,11 +146,12 @@ export default function List() {
         >
           <Tab label="申請中" />
           <Tab label="申請済み" />
-          <Tab label="削除" />
+          <Tab label="休止中" />
+          <Tab label="ユーザ" />
         </Tabs>
       </div>
       <TabPanel value={value} index={0}>
-        <CircleListComponent circleList={registeringList}></CircleListComponent>
+        <CircleListComponent circleList={registeringList} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <CircleListComponent
@@ -209,6 +159,9 @@ export default function List() {
         ></CircleListComponent>
       </TabPanel>
       <TabPanel value={value} index={2}>
+        <CircleListComponent circleList={disableList}></CircleListComponent>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
         <User />
       </TabPanel>
     </>
