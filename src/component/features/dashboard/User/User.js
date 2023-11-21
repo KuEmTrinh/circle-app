@@ -71,6 +71,26 @@ export default function User() {
     );
   });
 
+  // 追加: ユーザ削除機能の関数
+const handleDeleteUser = async (userId) => {
+  try {
+    // Firebaseでユーザを削除
+    await db.collection("user").doc(userId).delete();
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    // エラー処理を追加: ユーザを削除できなかった場合にエラーメッセージを表示するなど
+  }
+};
+
+// ユーザ一覧内の削除ボタンのクリック時の処理
+const handleUserDeleteClick = (userId) => {
+  // 確認メッセージなどを表示して、ユーザの削除を確認するダイアログを表示するなど
+  if (window.confirm("本当にこのユーザを削除しますか？")) {
+    handleDeleteUser(userId);
+  }
+};
+
+
   const confirmAddRole = async () => {
     try {
       if (role.length > 0 && editUser) {
@@ -170,36 +190,45 @@ export default function User() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow
-                    key={user.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {user.name}
-                    </TableCell>
-                    <TableCell align="right">{user.email}</TableCell>
-                    <TableCell align="right">
-                      <Stack direction="row" spacing={1} alignItems="flex-end">
-                        {user.role?.map((role) => {
-                          return <Chip label={role} key={role} />;
-                        })}
-                      </Stack>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          setShow(true);
-                          setEditUser(user);
-                        }}
-                      >
-                        + Role
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+  {filteredUsers.map((user) => (
+    <TableRow
+      key={user.id}
+      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+    >
+      <TableCell component="th" scope="row">
+        {user.name}
+      </TableCell>
+      <TableCell align="right">{user.email}</TableCell>
+      <TableCell align="right">
+        <Stack direction="row" spacing={1} alignItems="flex-end">
+          {user.role?.map((role) => {
+            return <Chip label={role} key={role} />;
+          })}
+        </Stack>
+      </TableCell>
+      <TableCell align="right">
+        <Button
+          variant="contained"
+          onClick={() => {
+            setShow(true);
+            setEditUser(user);
+          }}
+        >
+          + Role
+        </Button>
+        {/* ユーザ削除ボタンの追加 */}
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => handleUserDeleteClick(user.id)}
+        >
+          削除
+        </Button>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
             </Table>
           </TableContainer>
         </div>

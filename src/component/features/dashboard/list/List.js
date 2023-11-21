@@ -9,116 +9,72 @@ import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import "./List.css";
-import { db, firebase } from "../../../../app/firebase";
-import Modal from "../../../ui/Modal";
+import { db } from "../../../../app/firebase";
 import ButtonComponent from "../../../ui/ButtonComponent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import User from "../User/User";
-function CircleItemComponent({ circle }) {
-  const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
-  const toDateTime = (secs) => {
-    var time = new Date(1970, 1, 0, 9);
-    time.setSeconds(secs);
-    let month = time.getMonth();
-    let day = time.getDate();
-    let hours = time.getHours();
-    let min = time.getMinutes();
-    return month + "月" + day + "日 " + hours + "時" + min + "分";
-  };
 
-  const getNameForRegister = async (uid) => {
-    try {
-      const query = await db.collection("user").doc(uid).get();
-      let userName = query.data().name;
-      console.log(userName);
-      return userName;
-    } catch (error) {}
-  };
+// 新しいtoDateTime関数を定義
+function toDateTime(secs) {
+  var time = new Date(1970, 1, 0, 9);
+  time.setSeconds(secs);
+  let month = time.getMonth();
+  let day = time.getDate();
+  let hours = time.getHours();
+  let min = time.getMinutes();
+  return month + "月" + day + "日 " + hours + min + "分";
+}
 
-  const confirmCircle = async (circle) => {
-    console.log(circle);
-    try {
-      let userName = await getNameForRegister(circle.registerUid);
-      await db.collection("circle").doc(circle.id).update({
-        status: true,
-      });
-      await db.collection("circle").doc(circle.id).collection("member").add({
-        role: "circleAdmin",
-        userName: userName, // Make sure this is a valid string value.
-        userId: circle.registerUid,
-        userPhotoURL: circle.registerUserPhotoURL,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        status: true,
-      });
-      await db
-        .collection("user")
-        .doc(circle.registerUid)
-        .update({
-          circleList: firebase.firestore.FieldValue.arrayUnion(circle.id),
-        });
-      // Create notigicaion
-      await db
-        .collection("user")
-        .doc(circle.registerUid)
-        .collection("notification")
-        .add({
-          circleId: circle.id,
-          circleName: circle.name,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          message: circle.name + "のサークル申請できました。",
-          read: false,
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+function CircleItemComponent({ circle, onApprove, onReject, showOperationCell }) {
   return (
     <>
-      <Modal
-        show={circleDetailsToggle}
-        onClose={() => {
-          setCircleDetailsToggle(false);
-        }}
-      >
-        <p className="subTitle">情報を確認</p>
-        <p>ここはサークル確認情報を追加</p>
-        <div className="center sp-ar">
-          <ButtonComponent mode="cancel">キャンセル</ButtonComponent>
-          <ButtonComponent
-            onClick={() => {
-              confirmCircle(circle);
-              setCircleDetailsToggle(false);
-            }}
-          >
-            同意
-          </ButtonComponent>
-        </div>
-      </Modal>
       <TableRow
         key={circle.id}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-        onClick={() => {
-          setCircleDetailsToggle(true);
-        }}
       >
         <TableCell align="left">{circle.name}</TableCell>
         <TableCell align="right">{circle.registerUsername}</TableCell>
         <TableCell align="right">{circle.circleType}</TableCell>
         <TableCell align="right">{toDateTime(circle.createdAt)}</TableCell>
+        {showOperationCell && (
+          <TableCell align="right">
+            {circle.inActive ? (
+              <ButtonComponent
+                mode="danger"
+                onClick={() => onReject(circle)}
+              >
+                削除
+              </ButtonComponent>
+            ) : (
+              <>
+                <ButtonComponent
+                  mode="approve"
+                  onClick={() => onApprove(circle)}
+                >
+                  承認
+                </ButtonComponent>
+                <ButtonComponent
+                  mode="reject"
+                  onClick={() => onReject(circle)}
+                >
+                  拒否
+                </ButtonComponent>
+              </>
+            )}
+          </TableCell>
+        )}
       </TableRow>
     </>
   );
 }
 
-function CircleListComponent({ circleList }) {
-  //function
+function CircleListComponent({ circleList, onApprove, onReject, showOperationCell }) {
   return (
     <div className="circleRegisterList">
       {circleList ? (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} style={{ maxHeight: '500px', overflowY: 'auto' }}>
           <Table sx={{ minWidth: "100%" }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -126,11 +82,20 @@ function CircleListComponent({ circleList }) {
                 <TableCell align="right">申請者</TableCell>
                 <TableCell align="right">タイプ</TableCell>
                 <TableCell align="right">日時</TableCell>
+                {showOperationCell && (
+                  <TableCell align="right">操作</TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
               {circleList.map((circle) => (
-                <CircleItemComponent circle={circle}></CircleItemComponent>
+                <CircleItemComponent
+                  key={circle.id}
+                  circle={circle}
+                  onApprove={onApprove}
+                  onReject={onReject}
+                  showOperationCell={showOperationCell}
+                ></CircleItemComponent>
               ))}
             </TableBody>
           </Table>
@@ -163,11 +128,14 @@ function TabPanel(props) {
 }
 
 export default function List() {
-  const [registeringList, setRegisteringList] = useState();
-  const [registedcircleList, setRegistedcircleList] = useState();
+  const [registeringList, setRegisteringList] = useState([]);
+  const [registedcircleList, setRegistedcircleList] = useState([]);
+  const [inActiveCircleList, setinActiveCircleList] = useState([]); // 新しいステート
+
   useEffect(() => {
     fetchCircleData();
   }, []);
+
   const fetchCircleData = () => {
     db.collection("circle").onSnapshot((querySnapshot) => {
       const data = [];
@@ -176,41 +144,101 @@ export default function List() {
         item.id = doc.id;
         data.push(item);
       });
-      let registeringListData = data.filter((el) => el.status == false);
-      let registedcircleListData = data.filter((el) => el.status == true);
+      let registeringListData = data.filter((el) => !el.status && !inActive);
+      let registedcircleListData = data.filter((el) => el.status && !el.inActive);
+      let inActiveCirclesData = data.filter((el) => el.ststus && el.inActive);
       setRegisteringList(registeringListData);
       setRegistedcircleList(registedcircleListData);
+      setinActiveCircleList(inActiveCirclesData);
     });
+  }
+
+  const handleinActiveCircle = async (circle) => {
+    if (window.confirm("このサークルを非表示にしますか？")) {
+      try {
+        // サークルの表示を非表示に変更
+        const updatedCircle = { ...circle, inActive: true, status: false};
+        await db.collection("circle").doc(circle.id).set(updatedCircle);
+
+      } catch (error) {
+        console.error("サークルの非表示化中にエラーが発生しました: ", error);
+      }
+    }
   };
+
+  const handleApproveCircle = async (circle) => {
+    if (window.confirm("このサークルを承認しますか？")) {
+      try {
+        await db.collection("circle").doc(circle.id).update({ status: true });
+      } catch (error) {
+        console.error("サークルの承認中にエラーが発生しました: ", error);
+      }
+    }
+  };
+
+  const handleRejectCircle = async (circle) => {
+    if (window.confirm("このサークルを拒否しますか？")) {
+      try {
+        // サークルの表示を非表示に変更
+        const updatedCircle = { ...circle, inActive: true };
+        await db.collection("circle").doc(circle.id).set(updatedCircle);
+
+        // 削除したサークルを休止中サークルリストに追加
+        setinActiveCircleList([...inActiveCircleList, updatedCircle]);
+      } catch (error) {
+        console.error("サークルの非表示化中にエラーが発生しました: ", error);
+      }
+    }
+  };
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
   return (
-    <>
+    <div>
       <div className="center mt-1 mbt-1">
         <Tabs
           value={value}
           onChange={handleChange}
-          aria-label="disabled tabs example"
+          aria-label="circle list tabs"
         >
-          <Tab label="申請中" />
-          <Tab label="申請済み" />
-          <Tab label="削除" />
+          <Tab label="申請中サークル" />
+          <Tab label="サークル一覧" />
+          <Tab label="休止中サークル" />
+          <Tab label="ユーザ一覧" />
         </Tabs>
       </div>
       <TabPanel value={value} index={0}>
-        <CircleListComponent circleList={registeringList}></CircleListComponent>
+        <CircleListComponent
+          circleList={registeringList}
+          showOperationCell={true}
+          onApprove={handleApproveCircle}
+          onReject={handleRejectCircle}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <CircleListComponent
           circleList={registedcircleList}
-        ></CircleListComponent>
+          showOperationCell={true}
+          onApprove={handleApproveCircle}
+          onReject={handleRejectCircle}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
+        <CircleListComponent
+          circleList={inActiveCircleList}
+          showOperationCell={true}
+          onApprove={handleApproveCircle}
+          onReject={handleRejectCircle}
+        />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
         <User />
       </TabPanel>
-    </>
+      
+    </div>
   );
 }

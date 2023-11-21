@@ -99,7 +99,7 @@ export default function EditCircle(props) {
   const [percent, setPercent] = useState(0);
   const [file, setFile] = useState("");
   const [preview, setPreview] = useState();
-  const [circleType, setCircleType] = useState("");
+  const [, setCircleType] = useState("");
   const [editCircleInfo, setEditCircleInfo] = useState({
     name: props.circle.name,
     male: props.circle.male || 0,
