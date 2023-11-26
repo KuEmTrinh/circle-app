@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./User.css";
 import Paper from "@mui/material/Paper";
 import TableContainer from "@mui/material/TableContainer";
@@ -24,8 +24,8 @@ export default function User() {
   const [users, setUsers] = useState([]);
   const [searchValue, setSearchValue] = useState(""); // State for holding the search input value
   const [show, setShow] = useState(false);
-  const [editUser, setEditUser] = useState(null); // Changed to null as we don't need an initial value
-  const [role, setRole] = useState(""); // State for holding the selected role
+  const [editUser, setEditUser] = useState(null);
+  const userRoles = useRef();
 
   const fetchUserData = async () => {
     try {
@@ -53,15 +53,6 @@ export default function User() {
     setSearchValue(event.target.value);
   };
 
-  // Function to handle checkbox changes
-  const handleCheckboxChange = (event) => {
-    const roleName = event.target.name;
-    const checked = event.target.checked;
-
-    // Set the role state to the selected role or an empty string if unchecked
-    setRole(checked ? roleName : "");
-  };
-
   // Function to filter users based on the search input value
   const filteredUsers = users.filter((user) => {
     const lowerCaseSearchValue = searchValue.toLowerCase();
@@ -73,24 +64,22 @@ export default function User() {
 
   const confirmAddRole = async () => {
     try {
-      if (role.length > 0 && editUser) {
-        // Perform the update operation using arrayUnion with the entire role state array
-        await db
-          .collection("user")
-          .doc(editUser.id)
-          .update({
-            role: firebase.firestore.FieldValue.arrayUnion(role),
-          });
-      }
+      await db.collection("user").doc(editUser.id).update({
+        role: userRoles.current,
+      });
 
       // Reset the role state after successful update
-      setRole([]);
       setEditUser(null);
       setShow(false); // Close the modal after successful update
     } catch (error) {
       console.log("Error adding roles:", error);
       // Handle the error, e.g., show an error message to the user
     }
+  };
+  const getIsCheckValue = (role) => {
+    let isChecked = false;
+    isChecked = editUser.role.find((element) => element == role);
+    return isChecked;
   };
 
   return (
@@ -105,32 +94,29 @@ export default function User() {
           <>
             <p>Create Role for {editUser.name}</p>
             <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox onChange={handleCheckboxChange} name="五者執行部" />
-                }
+              <UserRoleCheckboxComponent
                 label="五者執行部"
+                isCheck={getIsCheckValue("五者執行部")}
+                userRoles={userRoles}
+                editUser={editUser}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox onChange={handleCheckboxChange} name="体育会系" />
-                }
+              <UserRoleCheckboxComponent
                 label="体育会系"
+                isCheck={getIsCheckValue("体育会系")}
+                userRoles={userRoles}
+                editUser={editUser}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox onChange={handleCheckboxChange} name="学術文化系" />
-                }
+              <UserRoleCheckboxComponent
                 label="学術文化系"
+                isCheck={getIsCheckValue("学術文化系")}
+                userRoles={userRoles}
+                editUser={editUser}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onChange={handleCheckboxChange}
-                    name="任意団体愛好会"
-                  />
-                }
+              <UserRoleCheckboxComponent
                 label="任意団体愛好会"
+                isCheck={getIsCheckValue("任意団体愛好会")}
+                userRoles={userRoles}
+                editUser={editUser}
               />
             </FormGroup>
             <Button
@@ -170,7 +156,7 @@ export default function User() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredUsers.map((user) => (
+                {filteredUsers?.map((user) => (
                   <TableRow
                     key={user.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -189,8 +175,9 @@ export default function User() {
                     <TableCell align="right">
                       <Button
                         variant="contained"
-                        onClick={() => {
+                        onClick={async () => {
                           setShow(true);
+                          userRoles.current = await user.role;
                           setEditUser(user);
                         }}
                       >
@@ -205,5 +192,34 @@ export default function User() {
         </div>
       </div>
     </>
+  );
+}
+
+function UserRoleCheckboxComponent(props) {
+  const [isChecked, setIsChecked] = useState(props.isCheck);
+  let userRoles = props.userRoles.current;
+  const handleChangeCheckedValue = async () => {
+    if (isChecked) {
+      let updateUserRoles = await userRoles.filter(
+        (element) => element != props.label
+      );
+      props.userRoles.current = await updateUserRoles;
+    } else {
+      props.userRoles.current.push(props.label);
+    }
+    setIsChecked(!isChecked);
+    return;
+  };
+  return (
+    <FormControlLabel
+      control={
+        <Checkbox
+          onChange={handleChangeCheckedValue}
+          name={props.label}
+          checked={isChecked}
+        />
+      }
+      label={props.label}
+    />
   );
 }
