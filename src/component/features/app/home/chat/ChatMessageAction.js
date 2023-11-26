@@ -7,10 +7,52 @@ import Modal from "../../../../ui/Modal";
 import TitleText from "../../../../ui/TitleText";
 import ButtonComponent from "../../../../ui/ButtonComponent";
 import { db } from "../../../../../app/firebase";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Divider from "@mui/material/Divider";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export default function ChatMessageAction(props) {
+  const reactions = [
+    {
+      icon: <ThumbUpIcon />,
+      label: "like",
+    },
+    {
+      icon: <ThumbDownIcon />,
+      label: "dislike",
+    },
+    {
+      icon: <FavoriteIcon />,
+      label: "heart",
+    },
+  ];
+  const handleReaction = async (action) => {
+    try {
+      const updatedReactionValue = !reaction[action];
+      setReaction((prev) => ({
+        ...prev,
+        [action]: updatedReactionValue,
+      }));
+      const updateObject = {
+        [`${action}`]: updatedReactionValue,
+      };
+      const reactionQuery = await db
+        .collection("circle")
+        .doc(props.circleId)
+        .collection("chat")
+        .doc(props.message.id)
+        .update({
+          react: {
+            updateObject,
+          },
+        });
+
+      return reactionQuery;
+    } catch (error) {}
+  };
+  const [reaction, setReaction] = useState(props.message.react);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [messageContent, setMessagesContent] = useState(props.message.message);
@@ -86,6 +128,18 @@ export default function ChatMessageAction(props) {
         <IconButton aria-label="delete">
           <DeleteIcon onClick={handleShowDeleteModal} />
         </IconButton>
+        <Divider orientation="vertical" flexItem />
+        {reactions.map((reaction, index) => (
+          <IconButton
+            key={index}
+            aria-label={reaction.label}
+            onClick={() => {
+              handleReaction(reaction.label);
+            }}
+          >
+            {reaction.icon}
+          </IconButton>
+        ))}
       </Stack>
     </>
   );
