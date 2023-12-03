@@ -27,7 +27,13 @@ export default function Main() {
   }, []);
 
   let userRole = useSelector((state) => state.login.data.role);
-  let isSystemAdmin = userRole?.includes("systemAdmin");
+  let userRoleAdmin = [
+    "systemAdmin",
+    "体育会系",
+    "学術文化系",
+    "任意団体愛好会",
+  ];
+  let isSystemAdmin = userRole?.some((role) => userRoleAdmin.includes(role));
   //   const [user, setUser] = useState(false);
   const loginStatus = useSelector((state) => state.login.login);
   const userInfo = useSelector((state) => state.login.data);
@@ -40,6 +46,8 @@ export default function Main() {
             {userInfo?.registed ? (
               <>
                 <Route path="/">
+                  {" "}
+                  　
                   <Route path="list" element={<List />} />
                   <Route
                     path="list/:circleId/circle_details"

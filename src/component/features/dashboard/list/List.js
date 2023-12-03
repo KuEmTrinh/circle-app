@@ -12,6 +12,7 @@ import "./List.css";
 import { db } from "../../../../app/firebase";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useSelector } from "react-redux";
 
 import User from "../User/User";
 import ListButton from "./ListButton";
@@ -100,9 +101,16 @@ export default function List() {
   const [registeringList, setRegisteringList] = useState();
   const [registedcircleList, setRegistedcircleList] = useState();
   const [disableList, setDisableList] = useState();
+  const userRole = useSelector((state) => state.login.data.role);
+  const isSystemAdmin = userRole?.includes("systemAdmin");
   useEffect(() => {
     fetchCircleData();
   }, []);
+
+  const checkHaveRoleForThisCircle = (type) => {
+    return userRole?.includes(type);
+  };
+
   const fetchCircleData = () => {
     db.collection("circle").onSnapshot((querySnapshot) => {
       let registeringListData = [];
@@ -116,14 +124,17 @@ export default function List() {
         } else {
           item.isDisable = false;
         }
+        let shouldProcessItem =
+          isSystemAdmin || checkHaveRoleForThisCircle(item.circleType);
 
-        console.log(item);
-        if (item.status == false) {
-          registeringListData.push(item);
-        } else if (item.status == true && item.isDisable == false) {
-          registedCircleListData.push(item);
-        } else if (item.status == true && item.isDisable == true) {
-          disableCircleListData.push(item);
+        if (shouldProcessItem) {
+          if (item.status === false) {
+            registeringListData.push(item);
+          } else if (item.isDisable) {
+            disableCircleListData.push(item);
+          } else {
+            registedCircleListData.push(item);
+          }
         }
       });
       setRegisteringList(registeringListData);
@@ -147,7 +158,7 @@ export default function List() {
           <Tab label="申請中" />
           <Tab label="申請済み" />
           <Tab label="休止中" />
-          <Tab label="ユーザ" />
+          {isSystemAdmin ? <Tab label="ユーザ" /> : ""}
         </Tabs>
       </div>
       <TabPanel value={value} index={0}>
