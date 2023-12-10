@@ -1,0 +1,27 @@
+.dialogContent {
+  padding: 15px 0;
+}
+.dialogFooter {
+  display: flex;
+}
+
+.dialogBody {
+  padding: 30px;
+  min-width: 280px;
+}
+.mDialogBody {
+  padding: 20px;
+  min-width: 80%;
+}
+
+.titleComponent {
+  font-weight: 600;
+  font-size: 16px;
+  color: #C13450;
+}
+
+.headerWithIcon {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Modal from "../../../ui/Modal";
 import ButtonComponent from "../../../ui/ButtonComponent";
+import CircleModal from "../../../ui/CircleModal";
 import { db, firebase } from "../../../../app/firebase";
 
 export default function ListButton(props) {
-  const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
   const [disableOpen, setDisableOpen] = useState(false);
   const [unDisableOpen, setUnDisableOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const onConfirmDelete = async (circle) => {
     try {
@@ -29,6 +28,88 @@ export default function ListButton(props) {
     }
   };
 
+  return (
+    <>
+      <Modal
+        show={unDisableOpen}
+        onClose={() => {
+          setUnDisableOpen(false);
+        }}
+      >
+        <p className="subTitle">回復にする？</p>
+        <Button
+          variant="text"
+          onClick={() => {
+            setUnDisableOpen(false);
+          }}
+        >
+          キャンセル
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            onChangeDisableStatus(props.circle, false);
+          }}
+        >
+          同意
+        </Button>
+      </Modal>
+      <Modal
+        show={disableOpen}
+        onClose={() => {
+          setDisableOpen(false);
+        }}
+      >
+        <p className="subTitle">休止中にする？</p>
+        <ButtonComponent mode="cancel">キャンセル</ButtonComponent>
+        <ButtonComponent
+          onClick={() => {
+            onChangeDisableStatus(props.circle, true);
+          }}
+        >
+          同意
+        </ButtonComponent>
+      </Modal>
+
+      {props.status == true ? (
+        <>
+          {props.isDisable == false ? (
+            <Button
+              variant="contained"
+              onClick={() => {
+                setDisableOpen(true);
+              }}
+            >
+              休止中
+            </Button>
+          ) : (
+            <>
+              <Button variant="text" onClick={() => {}}>
+                削除
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setUnDisableOpen(true);
+                }}
+              >
+                回復
+              </Button>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <RegisteringButtonsComponent {...props} />
+        </>
+      )}
+    </>
+  );
+}
+
+function RegisteringButtonsComponent(props) {
+  const [circleDetailsToggle, setCircleDetailsToggle] = useState(false);
+  const [circleCancel, setCircleCancel] = useState(false);
   const confirmCircle = async (circle) => {
     try {
       let userName = await getNameForRegister(circle.registerUid);
@@ -75,48 +156,27 @@ export default function ListButton(props) {
     } catch (error) {}
   };
 
+  const circleRegisterCancel = async (circle) => {
+    try {
+      await db.collection("circle").doc(circle.id).delete();
+      await db
+        .collection("user")
+        .doc(circle.registerUid)
+        .collection("notification")
+        .add({
+          circleId: circle.id,
+          circleName: circle.name,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          message: circle.name + "のサークル申請が拒否されました。",
+          read: false,
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <Modal
-        show={unDisableOpen}
-        onClose={() => {
-          setUnDisableOpen(false);
-        }}
-      >
-        <p className="subTitle">回復にする？</p>
-        <Button
-          variant="text"
-          onClick={() => {
-            setUnDisableOpen(false);
-          }}
-        >
-          キャンセル
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => {
-            onChangeDisableStatus(props.circle, false);
-          }}
-        >
-          同意
-        </Button>
-      </Modal>
-      <Modal
-        show={disableOpen}
-        onClose={() => {
-          setDisableOpen(false);
-        }}
-      >
-        <p className="subTitle">休止中にする？</p>
-        <ButtonComponent mode="cancel">キャンセル</ButtonComponent>
-        <ButtonComponent
-          onClick={() => {
-            onChangeDisableStatus(props.circle, true);
-          }}
-        >
-          同意
-        </ButtonComponent>
-      </Modal>
       <Modal
         show={circleDetailsToggle}
         onClose={() => {
@@ -137,43 +197,32 @@ export default function ListButton(props) {
           </ButtonComponent>
         </div>
       </Modal>
-      {props.status == true ? (
-        <>
-          {props.isDisable == false ? (
-            <Button
-              variant="contained"
-              onClick={() => {
-                setDisableOpen(true);
-              }}
-            >
-              休止中
-            </Button>
-          ) : (
-            <>
-              <Button variant="text" onClick={() => {}}>
-                削除
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setUnDisableOpen(true);
-                }}
-              >
-                回復
-              </Button>
-            </>
-          )}
-        </>
-      ) : (
-        <Button
-          variant="contained"
-          onClick={() => {
-            setCircleDetailsToggle(true);
-          }}
-        >
-          同意
-        </Button>
-      )}
+      <CircleModal
+        show={circleCancel}
+        onClose={() => {
+          setCircleCancel(false);
+        }}
+        confirm={() => {
+          circleRegisterCancel(props.circle);
+        }}
+        title={props.circle.name + " サークル申請を拒否"}
+      ></CircleModal>
+      <Button
+        variant="text"
+        onClick={() => {
+          setCircleCancel(true);
+        }}
+      >
+        拒否
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          setCircleDetailsToggle(true);
+        }}
+      >
+        同意
+      </Button>
     </>
   );
 }

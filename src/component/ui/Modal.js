@@ -14,7 +14,7 @@ export default function Modal(props) {
                   props.onClose();
                 }}
               >
-                <CloseIcon></CloseIcon>
+                <CloseIcon />
               </div>
             ) : (
               ""
