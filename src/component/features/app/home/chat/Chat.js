@@ -11,6 +11,9 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import imageCompression from "browser-image-compression";
 import ImageViewer from "react-simple-image-viewer";
 import MenuItem from "@mui/material/MenuItem";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import Menu from "@mui/material/Menu";
 import ChatMessageAction from "./ChatMessageAction";
 
@@ -164,6 +167,50 @@ function ChatRoomInputBox({ circleId }) {
   );
 }
 
+function ChatMessageReactions(props) {
+  const getReactionCount = (label) => {
+    if (props.reactions && typeof props.reactions[label] !== "undefined") {
+      return props.reactions[label].length;
+    }
+    return 0;
+  };
+  const reactions = [
+    {
+      icon: <ThumbUpIcon color="primary" fontSize="small" />,
+      label: "like",
+      count: getReactionCount("like"),
+    },
+    {
+      icon: <ThumbDownIcon color="primary" fontSize="small" />,
+      label: "dislike",
+      count: getReactionCount("dislike"),
+    },
+    {
+      icon: <FavoriteIcon color="primary" fontSize="small" />,
+      label: "heart",
+      count: getReactionCount("heart"),
+    },
+  ];
+  return (
+    <div className="reactionBox">
+      {reactions.map((reaction) => {
+        return (
+          <>
+            {reaction.count > 0 ? (
+              <div className="messageReactIconBox">
+                <div className="messageReactIcon">{reaction.icon}</div>
+                <span className="messageReactCount">{reaction.count}</span>
+              </div>
+            ) : (
+              ""
+            )}
+          </>
+        );
+      })}
+    </div>
+  );
+}
+
 function ChatMessage({ message, userId, messagePre, circleId }) {
   let show = true;
   if (messagePre?.userId == message?.userId) {
@@ -205,6 +252,7 @@ function ChatMessage({ message, userId, messagePre, circleId }) {
                 <div className="messageContentLeft" onClick={handleClick}>
                   <div className="messageText">{message.message}</div>
                 </div>
+                <ChatMessageReactions reactions={message.reactions} />
               </div>
               <div className="messagePhoto">
                 <img
@@ -235,6 +283,7 @@ function ChatMessage({ message, userId, messagePre, circleId }) {
                 <div className="messageContentLeftOnly" onClick={handleClick}>
                   <div className="messageText">{message.message}</div>
                 </div>
+                <ChatMessageReactions reactions={message.reactions} />
                 {message.imageUrl ? (
                   <ChatImageViewer imageUrl={message.imageUrl} />
                 ) : (
@@ -256,18 +305,50 @@ function ChatMessage({ message, userId, messagePre, circleId }) {
                 />
               </div>
               <div className="messageBody">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <ChatMessageAction
+                    handleClose={handleClose}
+                    message={message}
+                    circleId={circleId}
+                  />
+                </Menu>
                 <p className="messageUserName">{message.userName}</p>
-                <div className="messageContent">
+                <div className="messageContent" onClick={handleClick}>
                   <div className="messageText">{message.message}</div>
                 </div>
+                <ChatMessageReactions reactions={message.reactions} />
               </div>
             </div>
           ) : (
             <div className="messageItemOnly">
               <div className="messageBody">
-                <div className="messageContent">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <ChatMessageAction
+                    handleClose={handleClose}
+                    message={message}
+                    circleId={circleId}
+                  />
+                </Menu>
+                <div className="messageContent" onClick={handleClick}>
                   <div className="messageText">{message.message}</div>
                 </div>
+                <ChatMessageReactions reactions={message.reactions} />
               </div>
             </div>
           )}
